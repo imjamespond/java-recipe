@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:common.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <import resource="classpath:spring/spring-rpc.xml"/>
+    <import resource="classpath:spring/context-managed.xml"/>
+    <import resource="classpath:spring/context-hibernate.xml"/>
+    <import resource="classpath:spring/context-security.xml"/>
+    <import resource="classpath:spring/context-jredis.xml"/>
+
+</beans>

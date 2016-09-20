@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+
+    <bean id="remotingUserSecurityService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${remoting.url}/user/UserSecurityService"/>
+        <property name="serviceInterface" value="com.pengpeng.user.service.IUserSecurityService"/>
+        <property name="overloadEnabled" value="true"></property>
+    </bean>
+    <bean id="remotingUserSocialService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${remoting.url}/user/SocialService"/>
+        <property name="serviceInterface" value="com.pengpeng.user.service.ISocialService"/>
+        <property name="overloadEnabled" value="true"></property>
+    </bean>
+    <bean id="remotingUserDataService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${remoting.url}/user/UserSocialService"/>
+        <property name="serviceInterface" value="com.pengpeng.user.service.IUserDataService"/>
+        <property name="overloadEnabled" value="true"></property>
+    </bean>
+
+    <bean class="org.springframework.remoting.rmi.RmiServiceExporter">
+        <property name="serviceName" value="frontend" />
+        <property name="service" ref="frontendService" />
+        <property name="serviceInterface" value="com.pengpeng.stargame.rpc.IFrontendService" />
+        <property name="registryPort" value="${server.port}"/>
+    </bean>
+    <bean id="frontendService" class="com.pengpeng.stargame.rpc.FrontendServiceImpl"/>
+
+    <!--<bean id="rmiLogicService" class="org.springframework.remoting.rmi.RmiProxyFactoryBean">-->
+        <!--<property name="serviceUrl" value="${logic.rmi}" />-->
+        <!--<property name="serviceInterface" value="com.pengpeng.stargame.rpc.IBackendService" />-->
+        <!--<property name="refreshStubOnConnectFailure" value="true"/>-->
+    <!--</bean>-->
+
+    <!--<bean id="rmiStatusService" class="org.springframework.remoting.rmi.RmiProxyFactoryBean">-->
+        <!--<property name="serviceUrl" value="${status.rmi}" />-->
+        <!--<property name="serviceInterface" value="com.pengpeng.stargame.rpc.IStatusService" />-->
+        <!--<property name="refreshStubOnConnectFailure" value="true"/>-->
+    <!--</bean>-->
+
+</beans>

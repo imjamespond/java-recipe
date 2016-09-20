@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<decorators defaultdir="/layouts">
+	<excludes>
+		<pattern>/images/*</pattern>
+		<pattern>/styles/*</pattern>
+		<pattern>/scripts/*</pattern>
+		<pattern>/htmls/*</pattern>
+		<pattern>/plugins/*</pattern>
+		<pattern>/news/upload/*</pattern>
+		<pattern>/news/cover/*</pattern>
+		<pattern>/chapter/share/*</pattern>
+		<pattern>/manager/index</pattern>
+		<pattern>/manager/login*</pattern>
+	</excludes>
+	
+	<decorator name="default" page="default.jsp">
+		<pattern>/*</pattern>
+	</decorator>
+</decorators>

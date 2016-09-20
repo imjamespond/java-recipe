@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd"
+	default-autowire="byName">
+
+	<aop:aspectj-autoproxy proxy-target-class="true" />
+	<!-- 激活spring的注解. -->
+	<context:annotation-config />
+	<context:property-placeholder location="classpath:/var.properties" />
+	<!-- 扫描注解组件. -->
+	<context:component-scan base-package="com.james,targaryen">
+		<context:include-filter type="annotation"
+			expression="org.aspectj.lang.annotation.Aspect" />
+	</context:component-scan>
+
+	<!--<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"> 
+		<property name="location"> <value>var.properties</value> </property> </bean> -->
+
+	<!-- Connection factory: Apache Activemq ActiveMQConnectionFactory -->
+	<bean id="amqConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+		<constructor-arg index="0" value="${jms.broker.url}" />
+	</bean>
+
+	<!-- Connection factory: Spring JMS CachingConnectionFactory -->
+	<!-- using ActiveMQConnectionFactory -->
+	<bean id="connectionFactory"
+		class="org.springframework.jms.connection.CachingConnectionFactory">
+		<constructor-arg ref="amqConnectionFactory" />
+	</bean>
+
+	<!-- ActiveMQ Destination Queue Definition: ActiveMQQueue -->
+	<bean id="defaultDestination" class="org.apache.activemq.command.ActiveMQQueue">
+		<constructor-arg index="0" value="${jms.queue.name}" />
+	</bean>
+
+	<!-- 并创建了一个JmsTemplate，使用了之前创建的ConnectionFactory和Message Queue作为参数 -->
+	<!-- Dao Definition: JmsTemplate -->
+	<!-- using CachingConnectionFactory -->
+	<!-- using ActiveMQQueue -->
+	<bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+		<property name="connectionFactory" ref="connectionFactory" />
+		<property name="defaultDestination" ref="defaultDestination" />
+	</bean>
+
+	<!-- 最后自定义了一个MessageSender，使用该JmsTemplate进行消息发送。 -->
+	<!-- Message Sender Definition <bean id="messageSender" class="com.james.jms.MessageSender"> 
+		<constructor-arg index="0" ref="jmsTemplate" /> </bean> -->
+
+    <!--这个是队列目的地-->  
+    <bean id="queueDestination" class="org.apache.activemq.command.ActiveMQQueue">  
+        <constructor-arg>  
+            <value>queue</value>  
+        </constructor-arg>  
+    </bean>  
+	<!--这个是sessionAwareQueue目的地 -->
+	<bean id="sessionAwareQueue" class="org.apache.activemq.command.ActiveMQQueue">
+		<constructor-arg>
+			<value>sessionAwareQueue</value>
+		</constructor-arg>
+	</bean>
+	<!-- 消息监听器 -->
+	<bean id="consumerMessageListener"
+		class="com.james.jms.ConsumerMessageListener" />
+	<!-- 可以获取session的MessageListener -->
+	<bean id="consumerSessionAwareMessageListener"
+		class="com.james.jms.ConsumerSessionAwareMessageListener">
+		<property name="destination" ref="queueDestination" />
+	</bean>
+	<!-- 消息监听容器 -->
+	<bean id="jmsContainer"
+		class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<property name="connectionFactory" ref="connectionFactory" />
+		<property name="destination" ref="queueDestination" />
+		<property name="messageListener" ref="consumerMessageListener" />
+	</bean>
+
+	<bean id="sessionAwareListenerContainer"
+		class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<property name="connectionFactory" ref="connectionFactory" />
+		<property name="destination" ref="sessionAwareQueue" />
+		<property name="messageListener" ref="consumerSessionAwareMessageListener" />
+	</bean>
+
+</beans> 
+    

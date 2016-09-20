@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+ http://www.springframework.org/schema/context 
+ http://www.springframework.org/schema/context/spring-context-3.0.xsd
+ http://www.springframework.org/schema/aop
+ http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+
+    <bean id="propertyConfigurer"
+          class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>
+                    classpath:context.properties
+                </value>
+                <value>
+                    classpath:server.properties
+                </value>
+            </list>
+        </property>
+        <property name="systemPropertiesMode" value="2"/>
+    </bean>
+
+    <import resource="spring/context-managed.xml"/>
+    <import resource="backend-rpc.xml"/>
+
+    <bean id="messageSource"
+		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		  <property name="defaultEncoding" value="UTF-8" />
+		<property name="basenames">
+			<list>
+				<value>message</value>
+			</list>
+		</property>
+	</bean>
+    <!--  自定义的状态维护对象  -->
+    <bean id="gameServerMonitorService" class="com.pengpeng.stargame.rpc.LoginClientService">
+        <property name="nodeMonitor" ref="nodeMonitor"/>
+    </bean>
+
+    <bean class="org.springframework.remoting.rmi.RmiServiceExporter">
+        <property name="serviceName" value="NodeClient"/>
+        <property name="service" ref="gameServerMonitorService"/>
+        <property name="serviceInterface" value="com.pengpeng.stargame.managed.IClientService"/>
+        <property name="registryPort" value="${server.port}"/>
+    </bean>
+
+    <context:component-scan base-package="com.pengpeng.stargame">
+        <context:exclude-filter type="aspectj"
+                                expression="com.pengpeng.stargame.datasave..*"/>
+    </context:component-scan>
+</beans>

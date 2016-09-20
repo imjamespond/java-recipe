@@ -1,0 +1,55 @@
+<project xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+	<property name="jdk.version" value="1.7" />
+	<property name="source.encoding" value="UTF-8" />
+	<property name="repository.username" value="deployment" />
+	<property name="repository.password" value="1212" />
+	<property name="localRepository" value="C:/java/repository" />
+
+	<artifact:localRepository id="local.repository" path="${localRepository}"/>
+	
+	<artifact:dependencies pathId="dependency.classpath">
+	  <dependency groupId="org.glassfish" artifactId="javax.el" version="3.0.0" scope="provided"/>
+	</artifact:dependencies>
+	<artifact:pom id="pom.this" file="pom.xml" />
+	<artifact:dependencies filesetid="fileset.lib.runtime" pathid="path.lib.runtime" pomrefid="pom.this" usescope="runtime" type="jar" >
+	<localRepository refid="local.repository"/>
+	</artifact:dependencies>
+	<artifact:dependencies filesetid="fileset.lib.provided" pathid="path.lib.provided" pomrefid="pom.this" usescope="provided" type="jar" >
+	<localRepository refid="local.repository"/>
+	</artifact:dependencies>
+	<artifact:dependencies filesetid="fileset.lib.test" pathid="path.lib.test" pomrefid="pom.this" usescope="test" type="jar" >
+	<localRepository refid="local.repository"/>
+	</artifact:dependencies>
+
+	<artifact:install-provider artifactId="wagon-http" version="1.0" >
+    <localRepository refid="local.repository"/>
+  	</artifact:install-provider>
+<!---->
+	<artifact:remoteRepository id="local.release" url="http://127.0.0.1:8081/nexus/content/repositories/releases">
+		<releases enabled="true" />
+		<snapshots enabled="false" />
+		<authentication username="${repository.username}" password="${repository.password}" />
+	</artifact:remoteRepository>
+	<artifact:remoteRepository id="local.snapshot" url="http://127.0.0.1:8081/nexus/content/repositories/snapshots">
+		<releases enabled="false" />
+		<snapshots enabled="true" />
+		<authentication username="${repository.username}" password="${repository.password}" />
+	</artifact:remoteRepository>
+
+	<path id="classpath.project">
+		<path refid="path.lib.runtime" />
+		<path refid="path.lib.provided" />
+		<pathelement location="target/classes" />
+	</path>
+	<path id="classpath.project-test">
+		<path refid="classpath.project" />
+		<path refid="path.lib.test" />
+		<pathelement location="target/classes-test" />
+	</path>
+	
+	<path id="classpath.project.local">
+		<path refid="local.repository" />
+		<pathelement location="target/classes" />
+	</path>
+</project>
+

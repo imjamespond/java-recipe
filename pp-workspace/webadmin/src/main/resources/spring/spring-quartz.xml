@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+            http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- 每5分钟 刷新一次  在线人数-->
+    <!--<bean id="playerOnlineInfoManager" class="com.pengpeng.admin.stargame.manager.impl.PlayerOlineInfoManagerImpl" init-method="init"/>-->
+    <bean id="playerOnlineInfoManager" class="com.pengpeng.admin.stargame.manager.impl.PlayerOlineInfoManagerImpl"/>
+    <bean id="serverNodeScheduleJob0"
+          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="playerOnlineInfoManager"/>
+        <property name="targetMethod" value="timingSave"/>
+        <property name="concurrent" value="false"/>
+    </bean>
+    <bean id="serverNodeScheduleTrigger0" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail" ref="serverNodeScheduleJob0"/>
+        <property name="cronExpression" value="0 */5 * * * ? *"/>
+    </bean>
+    <!-- 每5分钟 刷新一次  在线人数  结束-->
+
+
+    <!-- 每周六 晚上21点 定时 执行筛选 家族明星助理功能-->
+    <bean id="serverNodeScheduleJob1"
+          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="playerOnlineInfoManager"/>
+        <property name="targetMethod" value="designate"/>
+        <property name="concurrent" value="false"/>
+    </bean>
+    <bean id="serverNodeScheduleTrigger1" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail" ref="serverNodeScheduleJob1"/>
+        <property name="cronExpression" value="0 0 22 ? * SAT"/>
+        <!--<property name="cronExpression" value="0 0 21 ? * SAT"/>-->
+    </bean>
+    <!-- 每周六定时 执行筛选 家族明星助理功能 结束 -->
+
+
+
+    <!-- 每天 12点 定时 执行筛选 小游戏排行功能-->
+    <bean id="serverNodeScheduleJob21"
+          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="playerOnlineInfoManager"/>
+        <property name="targetMethod" value="smallGameReward1"/>
+        <property name="concurrent" value="false"/>
+    </bean>
+    <bean id="serverNodeScheduleTrigger21" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail" ref="serverNodeScheduleJob21"/>
+        <property name="cronExpression" value="0 0 12 * * ?"/>
+        <!--<property name="cronExpression" value="0 0 21 ? * SAT"/>-->
+    </bean>
+    <bean id="serverNodeScheduleJob22"
+          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="playerOnlineInfoManager"/>
+        <property name="targetMethod" value="smallGameReward2"/>
+        <property name="concurrent" value="false"/>
+    </bean>
+    <bean id="serverNodeScheduleTrigger22" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail" ref="serverNodeScheduleJob22"/>
+        <property name="cronExpression" value="20 0 12 * * ?"/>
+        <!--<property name="cronExpression" value="0 0 21 ? * SAT"/>-->
+    </bean>
+    <bean id="serverNodeScheduleJob23"
+          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="playerOnlineInfoManager"/>
+        <property name="targetMethod" value="smallGameReward3"/>
+        <property name="concurrent" value="false"/>
+    </bean>
+    <bean id="serverNodeScheduleTrigger23" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail" ref="serverNodeScheduleJob23"/>
+        <property name="cronExpression" value="40 0 12 * * ?"/>
+        <!--<property name="cronExpression" value="0 0 21 ? * SAT"/>-->
+    </bean>
+    <!-- 每天 12点 定时 执行筛选 小游戏排行功能-->
+
+
+    <!-- 每 间隔一分钟 请求下游戏 ，控制场景掉落-->
+    <bean id="serverNodeScheduleJob3"
+          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="playerOnlineInfoManager"/>
+        <property name="targetMethod" value="executeGame"/>
+        <property name="concurrent" value="false"/>
+    </bean>
+    <bean id="serverNodeScheduleTrigger3" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail" ref="serverNodeScheduleJob3"/>
+        <property name="cronExpression" value="0 */1 * * * ? *"/>
+    </bean>
+    <!-- 每 间隔一分钟 请求下游戏 ，控制场景掉落 结束-->
+
+    <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <ref bean="serverNodeScheduleTrigger0"/>
+            </list>
+        </property>
+    </bean>
+    <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <ref bean="serverNodeScheduleTrigger1"/>
+                <ref bean="serverNodeScheduleTrigger21"/>
+                <ref bean="serverNodeScheduleTrigger22"/>
+                <ref bean="serverNodeScheduleTrigger23"/>
+            </list>
+        </property>
+    </bean>
+    <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <ref bean="serverNodeScheduleTrigger3"/>
+            </list>
+        </property>
+    </bean>
+</beans>

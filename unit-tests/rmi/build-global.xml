@@ -1,0 +1,66 @@
+ <project xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+
+	<target name="clean">
+		<delete dir="target" quiet="true">
+		</delete>
+		<mkdir dir="target" />
+		<mkdir dir="target/classes" />
+	</target>
+
+	<target name="compile">
+		<mkdir dir="target/classes" />
+		<javac srcdir="src/main/java" destdir="target/classes" source="${jdk.version}" target="${jdk.version}" debug="true" encoding="${source.encoding}">
+			<classpath>
+				<path refid="classpath.project" />
+			</classpath>
+		</javac>
+		<!--<property name="aaaaa" refid="classpath.project"/>
+		<echo message="see what is classpath.project: ${aaaaa}"/>-->
+
+	</target>
+
+	<target name="compile-test" depends="compile">
+		<mkdir dir="target/classes-test" />
+		<javac srcdir="src/main/test" destdir="target/classes-test" source="${jdk.version}" target="${jdk.version}" encoding="${source.encoding}">
+			<classpath>
+				<path refid="classpath.project-test" />
+			</classpath>
+		</javac>
+	</target>
+
+	<target name="dist" depends="compile">
+		<jar destfile="target/${app.name}-${app.version}.jar">
+			<fileset dir="target/classes">
+				<include name="cn/**" />
+				<include name="com/**" />
+			</fileset>
+			<!--include your conigration into jar
+			<fileset dir="src/main/resources" excludes="**/*.java"/>-->		
+		</jar>
+	</target>
+
+	<target name="dist-src" description="Archive Src">
+		<mkdir dir="target" />
+		<jar destfile="target/${app.name}-src-${app.version}.jar">
+			<fileset dir="src/main/java">
+				<include name="cn/**" />
+				<include name="com/**" />
+			</fileset>
+		</jar>
+	</target>
+
+	<target name="deploy" depends="install">
+	</target>
+
+	<target name="install" depends="dist">
+		<artifact:install file="target/${app.name}-${app.version}.jar">
+			<localRepository refid="local.repository" />
+			<pom refid="pom.this" />
+		</artifact:install>
+		<artifact:deploy file="target/${app.name}-${app.version}.jar">
+			<localRepository refid="local.repository" />
+			<remoteRepository refid="local.release" /><!---->
+			<pom refid="pom.this" />
+		</artifact:deploy>
+	</target>
+</project>

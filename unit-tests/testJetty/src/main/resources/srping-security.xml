@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:bean="http://www.springframework.org/schema/beans"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+                    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                    http://www.springframework.org/schema/security
+                    http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+
+	<http pattern="/assets/**" security="none" auto-config="true" />
+	<http pattern="/captcha/**" security="none" auto-config="true" />
+	<http pattern="/security/**" security="none" auto-config="true" />
+	<http pattern="/logout" security="none" auto-config="true" />
+	<http pattern="/favicon.ico" security="none" auto-config="true" />
+	<http pattern="/WEB-INF/jsp/common/denied.jsp" security="none"
+		auto-config="true" />
+	<http use-expressions="true" auto-config="true" path-type="regex"
+		access-denied-page="/WEB-INF/jsp/common/denied.jsp">
+
+		<intercept-url pattern="/index/user/.*"
+			access="hasAnyRole('ROLE_GM','ROLE_ADMIN')" />
+		<intercept-url pattern="/.*"
+			access="hasAnyRole('ROLE_GM','ROLE_ADMIN')" />
+
+		<form-login login-page="/security/login"
+			default-target-url="/" />
+
+		<logout logout-url="/j_spring_security_logout"
+			logout-success-url="/security/login" />
+
+		<session-management>
+			<concurrency-control max-sessions="1"
+				error-if-maximum-exceeded="true" />
+		</session-management><!-- -->
+	</http>
+
+	<!-- Customize user_detail_service only <authentication-manager> <authentication-provider 
+		ref="loginAuthenticationManager" user-service-ref="myUserDetailsService" 
+		> <password-encoder hash="md5"/> </authentication-provider> </authentication-manager> -->
+	<authentication-manager>
+		<authentication-provider ref="authenticationProvider" />
+	</authentication-manager>
+	<bean:bean id="authenticationProvider"
+		class="com.james.jetty.utils.MyAuthenticationProvider">
+		<beans:property name="userDetailsService" ref="myUserDetailsService"></beans:property>
+		<beans:property name="passwordEncoder" ref="passwordEncoder"></beans:property>
+	</bean:bean>
+	<bean:bean name="myUserDetailsService" class="com.james.jetty.utils.MyUserDetailsService" />
+	<bean:bean id="passwordEncoder"
+		class="org.springframework.security.authentication.encoding.Md5PasswordEncoder" />
+</beans:beans>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<decorators defaultdir="/layouts">
+	<excludes>
+		<pattern>/images/*</pattern>
+		<pattern>/css/*</pattern>
+		<pattern>/js/*</pattern>
+		<pattern>/htmls/*</pattern>
+		<pattern>/plugins/*</pattern>
+		<pattern>/fonts/*</pattern>
+		<pattern>/topic/upload*</pattern>
+		<pattern>/topic/save*</pattern>
+	</excludes>
+
+	<decorator name="default" page="default.jsp">
+		<pattern>/*</pattern>
+	</decorator>
+	
+	<decorator name="user" page="user.jsp">
+		<pattern>/user/bind*</pattern>
+		<pattern>/user/avatar*</pattern>
+		<pattern>/user/fcm*</pattern>
+		<pattern>/user/index*</pattern>
+		<pattern>/user/password*</pattern>
+		<pattern>/user/payDetail*</pattern>
+		<pattern>/user/rose*</pattern>
+		<pattern>/user/exchange*</pattern>
+		<pattern>/user/message*</pattern>
+		<pattern>/user/vip*</pattern>
+		<pattern>/user/record*</pattern>
+		<pattern>/user/integral*</pattern>
+		<pattern>/exchange/index*</pattern>
+		<pattern>/exchange/list*</pattern>
+		<pattern>/exchange/form*</pattern>
+	</decorator>
+	
+	<decorator name="topic" page="topic.jsp">
+		<pattern>/topic/*</pattern>
+	</decorator>
+	
+	<decorator name="webgame" page="webgame.jsp">
+		<pattern>/webgame/*</pattern>
+	</decorator>
+
+</decorators>

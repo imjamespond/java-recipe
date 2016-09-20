@@ -1,0 +1,58 @@
+*{
+    font-size:12px;
+}
+
+body {
+    font-family:helvetica,tahoma,verdana,sans-serif;
+    padding:20px;
+    font-size:12px;
+    margin:0;
+}
+
+.form-main{
+    margin: 0;
+    padding: 0;
+    text-align: left;
+    font-size: 12px;
+    overflow: hidden;
+}
+
+.form-row{
+    padding: 8px;
+    width: 100%;
+    height: auto;
+    border-bottom: 1px solid #D3D3D3;
+}
+
+.form-input{
+    width: 150px;
+    height: 20px;
+    line-height: 20px;
+    font-size: 12px;
+}
+
+label.form-lab-title{
+    width:100px;
+    display: block;
+    float:left;
+    text-align:right;
+    padding-right: 10px;
+    color: #000000;
+    font-weight: bold;
+}
+
+.form-width-150{
+    width: 150px;
+}
+
+.form-width-180{
+    width: 180px;
+}
+
+.form-center{
+    text-align: center;
+}
+
+.form-height-30{
+    height: 30px;
+}

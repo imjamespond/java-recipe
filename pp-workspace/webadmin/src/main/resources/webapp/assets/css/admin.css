@@ -1,0 +1,387 @@
+ul, li, dd, dt, dl, form {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+body {
+    padding: 0 2px;
+    margin: 0;
+    font-size: 12px;
+    font-family: Microsoft YaHei, simhei, Arial, verdana;
+}
+
+td {
+    font-size: 12px;
+    font-family: Microsoft YaHei, simhei, Arial, verdana;
+    /*padding: 4px;*/
+}
+
+p {
+    padding: 4px;
+    line-height: 16pt;
+    font-family: Microsoft YaHei, simhei, Arial, verdana;
+    font-size: 12px;
+    margin: 0 0 5px 0;
+    clear: both;
+}
+
+a {
+    color: #3366FF;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #FF6600;
+    text-decoration: underline;
+}
+
+/********TOP********/
+#logo {
+    background: url(../images/admin_01.jpg) repeat-x;
+    height: 58px;
+    font-size: 12px;
+    font-family: "";
+}
+
+#logo p {
+    margin: 0;
+    padding: 20px;
+}
+
+#logo a {
+    color: #FF3300;
+    text-decoration: underline;
+}
+
+#logo a:hover {
+    color: #FF0000;
+    text-decoration: none;
+}
+
+#nav {
+    background: url(../images/admin_06.jpg) repeat-x;
+    height: 35px;
+    font-size: 12px;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #515151;
+}
+
+/********LEFTMENU********/
+
+#menu {
+    width: 158px;
+    float: left;
+}
+
+#menu ul {
+    background: #e4e4e2;
+    float: left;
+    margin: 0;
+    padding: 4px;
+}
+
+#menu li {
+    width: 140px;
+    height: 25px;
+    background: #FFF;
+    border-bottom: 1px #bababa dashed;
+    font-size: 12px;
+    font-family: "";
+    padding: 0 5px;
+    list-style: none;
+    line-height: 25px;
+}
+
+#menu li {
+    width: 140px;
+    height: 25px;
+    background: #FFF;
+    border-bottom: 1px #bababa dashed;
+    font-size: 12px;
+    font-family: "";
+    padding: 0 5px;
+    list-style: none;
+    line-height: 25px;
+}
+
+.main_class {
+    background: #e4e4e2 url(../images/admin_03.jpg) repeat-x bottom;
+    font-size: 12px;
+    padding: 0 0 0 8px;
+    height: 25px;
+    line-height: 25px;
+    float: left;
+    width: 145px;
+    font-weight: bold;
+}
+
+/********划线（实线、虚线）********/
+.boder_bottom_solid {
+    border-bottom: 1px solid #c6c6c6;
+    /*padding: 5px;*/
+}
+
+.boder_left_solid {
+    border-left: 1px solid #c6c6c6;
+    padding: 5px;
+}
+
+.boder_right_solid {
+    border-right: 1px solid #c6c6c6;
+    padding: 5px;
+}
+
+.boder_bottom_dashed {
+    border-bottom: 1px dashed #c6c6c6;
+    padding: 5px;
+}
+
+/********li列表********/
+.list_ul {
+    overflow: auto;
+}
+
+.list_ul ul {
+    margin: 0;
+    padding: 0;
+}
+
+.list_ul li {
+    text-align: center;
+    float: left;
+    list-style: none;
+    margin-right: 5px;
+}
+
+.list_ul a {
+    display: block;
+    padding: 5px;
+}
+
+.list_ul a:hover {
+    background: #E8FBFF;
+}
+
+/********翻页********/
+.page {
+    width: auto;
+    overflow: auto;
+    padding-top: 5px;
+}
+
+.page ul {
+    height: 25px;
+    float: left;
+}
+
+.page li {
+    font-size: 12px;
+    font-family: Microsoft YaHei, simhei, Arial, verdana;
+    text-align: center;
+    float: left;
+    list-style: none;
+    margin-right: 3px;
+    border: 1px solid #33CCFF;
+    background: #FFF;
+    vertical-align: middle;
+}
+
+.page li a {
+    display: block;
+    padding: 1px 5px;
+    text-decoration: none;
+}
+
+.page li a:hover {
+    background: #E8FBFF;
+    text-decoration: none;
+}
+
+/**左侧树型菜单样式:START*/
+.menutree .folder .open {
+    background: url("../images/minus.gif") no-repeat 0 3px;
+    padding-left: 12px;
+}
+
+.menutree .folder .close {
+    background: url("../images/plus.gif") no-repeat 0 3px;
+    padding-left: 12px;
+}
+
+.menutree .leaf span {
+    background: url("../images/leaf.gif") no-repeat 0 3px;
+    padding-left: 12px;
+}
+
+.menutree {
+    zoom: 1;
+}
+
+.menutree a {
+    color: #000;
+    cursor: pointer;
+    display: block;
+    line-height: 25px;
+    text-decoration: none;
+}
+
+.menutree a:visited {
+    text-decoration: none;
+}
+
+.menutree a:hover {
+    background-color: #ECEDEF;
+    text-decoration: none;
+    color: blue;
+
+}
+
+.menutree a:link {
+
+}
+
+.menutree .level0 .folder {
+    padding-left: 5px;
+}
+
+.menutree .level0 .leaf {
+    padding-left: 10px;
+}
+
+.menutree .level1 .leaf {
+    padding-left: 30px;
+}
+
+.menutree .level1 .folder {
+    padding-left: 20px;
+}
+
+.menutree .level1 .leaf {
+    padding-left: 40px;
+}
+
+.menutree .selected {
+    background-color: white;
+    text-decoration: none;
+    font-weight: bolder;
+}
+
+/**左侧树型菜单样式:END*/
+
+body.menuwrapper {
+    background-color: #e4e4e2;
+    margin: 0;
+    padding: 0;
+}
+
+.mRed14 {
+    color: #cc0000;
+    font-size: 14px;
+}
+
+.mRed {
+    color: red;
+    font-size: 14px;
+}
+
+.mGreen14 {
+    color: #008000;
+    font-size: 14px;
+}
+
+.dialog-shadow {
+    position: absolute;
+    z-index: 998;
+    top: 0;
+    width: 100%;
+    background-color: #181818;
+    -moz-opacity: 0.5;
+    opacity: 0.5;
+    filter: alpha(opacity = 50);
+}
+
+.dialog-overlay {
+    position: absolute;
+    z-index: 999;
+    top: 0;
+    width: 100%;
+}
+
+.dialog {
+    display: none;
+    position: absolute;
+    z-index: 1000;
+    width: 480px;
+    background-color: #fff;
+    border: 8px #ccc solid;
+}
+
+.dialog .head {
+    position: relative;
+    height: 40px;
+    line-height: 25px;
+    padding: 20px 20px 0 20px;
+    border: 1px #aaa solid;
+    border-bottom: 0;
+}
+
+.dialog .head .title {
+    float: left;
+    color: #f79526;
+    font-size: 14px;
+    font-weight: bold;
+    text-indent: 10px;
+}
+
+.dialog .head .close {
+    float: right;
+    display: none;
+    width: 16px;
+    height: 16px;
+    background: url(../images/del.gif) no-repeat;
+    cursor: pointer;
+}
+
+.dialog .body {
+    padding: 0 20px 20px 20px;
+    overflow: hidden;
+    border: 1px #aaa solid;
+    border-top: none;
+}
+
+.popup {
+    display: none;
+}
+
+.f-white {
+    color: #fff;
+}
+
+.f-grey {
+    color: #7f7f7f;
+}
+
+.f-black {
+    color: #333;
+}
+
+.f-red {
+    color: #ff0000;
+}
+
+.f-blue {
+    color: #0088de;
+}
+
+.f-orange {
+    color: #f9901a;
+}
+
+.f-green {
+    color: #0f820d;
+}
+
+
+
+	

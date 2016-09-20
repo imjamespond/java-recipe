@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:bean="http://www.springframework.org/schema/beans"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+                    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                    http://www.springframework.org/schema/security
+                    http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+
+	<http pattern="/assets/**" security="none" auto-config="true" />
+	<http pattern="/user/reg/**" security="none" auto-config="true" />
+	<http pattern="/security/login" security="none" auto-config="true" />
+	<http pattern="/logout" security="none" auto-config="true" />
+	<http pattern="/favicon.ico" security="none" auto-config="true" />
+	<http pattern="/WEB-INF/jsp/common/denied.jsp" security="none"
+		auto-config="true" />
+	<http use-expressions="true" auto-config="true" path-type="regex"
+		access-denied-page="/WEB-INF/jsp/common/denied.jsp">
+
+		<intercept-url pattern="/"
+			access="hasAnyRole('ROLE_GM','ROLE_ADMIN','ROLE_DIRECTOR','ROLE_MANAGER','ROLE_OPERATOR','ROLE_MAIN_DESIGNER','ROLE_DESIGNER','ROLE_NUMERICAL_DESIGNER')" />
+		<intercept-url pattern="^/.*Rule.*$"
+			access="hasAnyRole('ROLE_ADMIN','ROLE_DIRECTOR','ROLE_MAIN_DESIGNER','ROLE_DESIGNER','ROLE_NUMERICAL_DESIGNER')" />
+		<intercept-url pattern="^/.*ActionModel.*$"
+			access="hasAnyRole('ROLE_ADMIN','ROLE_DIRECTOR','ROLE_MANAGER','ROLE_MAIN_DESIGNER','ROLE_OPERATOR','ROLE_NUMERICAL_DESIGNER')" />
+		<intercept-url pattern="^/.*[player,message].*$"
+			access="hasAnyRole('ROLE_ADMIN','ROLE_DIRECTOR','ROLE_MANAGER','ROLE_MAIN_DESIGNER','ROLE_OPERATOR','ROLE_NUMERICAL_DESIGNER')" />
+		<intercept-url pattern="^/.*$" access="hasRole('ROLE_ADMIN')" />
+		<intercept-url pattern="^/analyse/.*$"
+			access="hasAnyRole('ROLE_ADMIN','ROLE_DIRECTOR','ROLE_MANAGER','ROLE_MAIN_DESIGNER','ROLE_OPERATOR','ROLE_NUMERICAL_DESIGNER')" />
+		<!--<intercept-url pattern="/**" access="denyAll" /> -->
+		<form-login login-page="/security/login"
+			default-target-url="/" />
+
+		<logout logout-url="/j_spring_security_logout"
+			logout-success-url="/security/login" />
+		<remember-me user-service-ref="myUserDetailsService" />
+		<session-management> <concurrency-control max-sessions="1" error-if-maximum-exceeded="true"/> 
+		</session-management><!-- -->
+	</http>
+
+
+    <authentication-manager alias="myAuthenticationManager">  
+        <authentication-provider ref="authenticationProvider">  
+        </authentication-provider>  
+    </authentication-manager>  
+    
+	<bean:bean id="myUserDetailsService"
+		class="org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl">
+		<beans:property name="dataSource" ref="dataSource" />
+	</bean:bean>
+	
+    <beans:bean id="authenticationProvider"   
+        class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">  
+            <beans:property name="userDetailsService" ref="myUserDetailsService" />  
+            <!--显示用户错误信息-->  
+            <beans:property name="hideUserNotFoundExceptions" value="false" />  
+            <beans:property name="passwordEncoder" ref="md5password"></beans:property > 
+    </beans:bean>  
+    <!-- 密码加密策略 -->  
+    <beans:bean name="md5password" class="org.springframework.security.authentication.encoding.Md5PasswordEncoder"></beans:bean>  
+
+</beans:beans>

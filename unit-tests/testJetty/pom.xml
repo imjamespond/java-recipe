@@ -1,0 +1,137 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.james</groupId>
+	<artifactId>jetty</artifactId>
+	<version>1.0</version>
+	<packaging>jar</packaging>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<spring.version>3.1.4.RELEASE</spring.version>
+		<jetty.version>9.2.2.v20140723</jetty.version>
+	</properties>
+
+	<repositories>
+		<repository>
+			<name>james-local</name>
+			<id>james-local</id>
+			<url>http://127.0.0.1:8081/nexus/content/groups/public/</url>
+		</repository>
+	</repositories>
+
+	<dependencies>
+		<!-- spring mvc -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+
+		<!-- spring security -->
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-web</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-config</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-taglibs</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+
+
+		<!-- jetty Support -->
+		<!-- Http... Support -->
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-webapp</artifactId>
+			<version>${jetty.version}</version>
+		</dependency>
+
+
+
+		<!-- JSP EL JSTL TagLibs Support,check detail in dependency hierarchy tab 
+			below <dependency> <groupId>org.eclipse.jetty.orbit</groupId> <artifactId>javax.servlet.jsp</artifactId> 
+			<version>2.2.0.v201112011158</version> </dependency> -->
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-jsp</artifactId>
+			<version>${jetty.version}</version>
+		</dependency>
+
+		<!-- EL Support 
+		<dependency>
+			<groupId>org.glassfish</groupId>
+			<artifactId>javax.el</artifactId>
+			<version>3.0.0</version>
+		</dependency>-->
+
+
+		<!-- JSTL Support <dependency> <groupId>org.eclipse.jetty.orbit</groupId> 
+			<artifactId>javax.servlet.jsp.jstl</artifactId> <version>1.2.0.v201105211821</version> 
+			</dependency> javax.servlet.HttpConstraintElement Problem!!! -->
+
+
+		<!-- taglibs Support <dependency> <groupId>org.eclipse.jetty.orbit</groupId> 
+			<artifactId>org.apache.taglibs.standard.glassfish</artifactId> <version>1.2.0.v201112081803</version> 
+			</dependency> -->
+		<!-- json -->
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+			<version>1.9.13</version>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-core-asl</artifactId>
+			<version>1.9.13</version>
+		</dependency>
+
+		<!-- ehcache <dependency> <groupId>net.sf.ehcache</groupId> <artifactId>ehcache</artifactId> 
+			<version>1.6.2</version> </dependency> <dependency> <groupId>com.octo.captcha</groupId> 
+			<artifactId>jcaptcha-all</artifactId> <version>1.0-RC6</version> <exclusions> 
+			<exclusion> <groupId>org.springframework</groupId> <artifactId>spring</artifactId> 
+			</exclusion> </exclusions> </dependency> -->
+		<dependency>
+			<groupId>com.github.cage</groupId>
+			<artifactId>cage</artifactId>
+			<version>1.0</version>
+		</dependency>
+
+		<!-- third party jar -->
+		<dependency>
+			<groupId>com.james</groupId>
+			<artifactId>commons</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.james</groupId>
+			<artifactId>hibernate</artifactId>
+			<version>1.0</version>
+		</dependency>
+	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>

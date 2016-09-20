@@ -1,0 +1,837 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE taglib PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN"
+        "http://java.sun.com/dtd/web-jsptaglibrary_1_2.dtd">
+<taglib>
+
+    <tlib-version>2.2</tlib-version>
+    <jsp-version>1.2</jsp-version>
+    <short-name>jamestaglib Taglib</short-name>
+    <uri>/jamestaglib</uri>
+    <display-name>jamestaglib Taglib</display-name>
+    <description><![CDATA[pengpeng JSP Taglib]]></description>
+
+    <tag>
+
+        <name>translate</name>
+        <tag-class>com.pengpeng.common.ui.tags.TranslateConstantsTag</tag-class>
+        <body-content>empty</body-content>
+        <description><![CDATA[Translate a code into a title value from the OptionHelper]]></description>
+
+        <attribute>
+            <name>code</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[The Code value to the Title]]></description>
+
+        </attribute>
+
+        <attribute>
+            <name>typeCode</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description>
+                <![CDATA[A type value defined in the com.pengpeng.common.constants.OptionConstants]]></description>
+
+        </attribute>
+
+        <attribute>
+            <name>subTypeCode</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description>
+                <![CDATA[When using a typeCode as OptionConstants.CITY, this field should be set to get the Title correctly]]></description>
+
+        </attribute>
+
+        <attribute>
+            <name>wwCode</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[A code property name defined in xwork value stack]]></description>
+
+        </attribute>
+
+        <attribute>
+            <name>wwTypeCode</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[A type property name defined in xwork value stack]]></description>
+
+        </attribute>
+
+        <attribute>
+            <name>wwSubTypeCode</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[A sub type property name defined in xwork value stack]]></description>
+
+        </attribute>
+
+        <attribute>
+            <name>cssClass</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[The css class to use]]></description>
+
+        </attribute>
+
+        <attribute>
+            <name>style</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[The css style to use]]></description>
+
+        </attribute>
+
+        <attribute>
+            <name>defaultValue</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[The default value]]></description>
+
+        </attribute>
+
+        <attribute>
+            <name>isHtml</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[The isHtml value]]></description>
+
+        </attribute>
+    </tag>
+
+
+    <tag>
+
+        <name>select</name>
+        <tag-class>com.pengpeng.common.ui.tags.SelectTag</tag-class>
+        <body-content>empty</body-content>
+        <description>
+            <![CDATA[Generate an option list with a map, a list of com.pengpeng.common.ui.Option, or a OptionConstants' constants value as a type code]]></description>
+        <attribute>
+            <name>typeCode</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description>
+                <![CDATA[A type value defined in the com.pengpeng.common.constants.OptionConstants]]></description>
+
+        </attribute>
+        <attribute>
+            <name>id</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.util.Map</type>
+
+            <description><![CDATA[The HTML's id element]]></description>
+
+        </attribute>
+
+        <attribute>
+            <name>optionMap</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.util.Map</type>
+
+            <description><![CDATA[Map to generate an option list]]></description>
+
+        </attribute>
+
+        <attribute>
+            <name>optionList</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.util.Collection</type>
+
+            <description><![CDATA[List of Option to generate an option list]]></description>
+
+        </attribute>
+
+        <attribute>
+            <name>subTypeCode</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description>
+                <![CDATA[When using a typeCode as OptionConstants.CITY, this field should be set to get the Title correctly]]></description>
+
+        </attribute>
+        <attribute>
+            <name>cssClass</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[The css class to use]]></description>
+
+        </attribute>
+
+        <attribute>
+            <name>style</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[The css style to use]]></description>
+
+        </attribute>
+
+        <attribute>
+            <name>onblur</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[The HTML onblur event]]></description>
+
+        </attribute>
+
+        <attribute>
+            <name>onfocus</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[The HTML onfocus event]]></description>
+
+        </attribute>
+        <attribute>
+            <name>tabIndex</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[The HTML tabIndex attribute]]></description>
+
+        </attribute>
+        <attribute>
+            <name>name</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[The name for the SELECT object, it's a HTML tag property]]></description>
+
+        </attribute>
+
+        <attribute>
+            <name>selectedValue</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[The selected value for the select]]></description>
+
+        </attribute>
+
+        <attribute>
+            <name>wwTypeCode</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[TypeCode value store in xwork value stack context!]]></description>
+
+        </attribute>
+
+        <attribute>
+            <name>wwSubTypeCode</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[SubTypeCode value store in xwork value stack context!]]></description>
+
+        </attribute>
+
+        <attribute>
+            <name>wwSelectedValue</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[The selected value stored in xwork value stack]]></description>
+
+        </attribute>
+
+        <attribute>
+            <name>emptyOptionValue</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[The value property's value for the empty option]]></description>
+
+        </attribute>
+        <attribute>
+            <name>emptyOptionTitle</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[The value property's value for the empty option]]></description>
+
+        </attribute>
+
+        <attribute>
+            <name>enableEmptyOption</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[Add an empty option when this tag is defined]]></description>
+
+        </attribute>
+
+        <attribute>
+            <name>childId</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description>
+                <![CDATA[A child select element you want to load datas according to this selection element's change]]></description>
+        </attribute>
+
+        <attribute>
+            <name>childType</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[Child type where the child option should find its values from]]></description>
+        </attribute>
+
+        <attribute>
+            <name>onchange</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[HTML onchange attribute]]></description>
+
+        </attribute>
+
+        <attribute>
+            <name>onerror</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[HTML onerror attribute]]></description>
+
+        </attribute>
+
+        <attribute>
+            <name>onload</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[HTML onload attribute]]></description>
+
+        </attribute>
+
+        <attribute>
+            <name>onmouseout</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[HTML onmouseout attribute]]></description>
+
+        </attribute>
+
+        <attribute>
+            <name>onmouseover</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[HTML onmouseover attribute]]></description>
+
+        </attribute>
+
+        <attribute>
+            <name>onclick</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[HTML onclick attribute]]></description>
+
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>pagelist</name>
+        <tag-class>com.pengpeng.common.ui.tags.PageListTag</tag-class>
+        <body-content>JSP</body-content>
+        <description><![CDATA[Page list tag help you split your records into lists]]></description>
+
+        <attribute>
+            <name>name</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[Name of the form]]></description>
+
+        </attribute>
+        <attribute>
+            <name>mobilePage</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description><![CDATA[Name of the form]]></description>
+        </attribute>
+
+        <attribute>
+            <name>style</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[Style of the form]]></description>
+
+        </attribute>
+
+        <attribute>
+            <name>action</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[Submit action to the form]]></description>
+
+        </attribute>
+
+        <attribute>
+            <name>method</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[Submit method to the form]]></description>
+
+        </attribute>
+
+        <attribute>
+            <name>selector</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.Object</type>
+
+            <description>
+                <![CDATA[An object including all page split items.It should be an instance of com.pengpeng.common.ui.PageSelector ]]></description>
+
+        </attribute>
+
+        <attribute>
+            <name>var</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[prefix for all inputs inside the form]]></description>
+
+        </attribute>
+
+        <attribute>
+            <name>showText</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[Indicates whether to show numbers as page select items]]></description>
+
+        </attribute>
+
+        <attribute>
+            <name>show</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[How many pages to show for each time]]></description>
+
+        </attribute>
+
+        <attribute>
+            <name>sumText</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[How your page information should be display,you can use some simple
+            syntax to instead of some meaningful properties of the @selecotr:
+            %[cC] -- The current page displaying
+            %[tT] -- Total pages that can be displayed
+            %[rR] -- Total record counts
+            %combo|COMBO -- Shows a combo box to select and display the current page and the total page
+            ]]></description>
+
+        </attribute>
+
+        <attribute>
+            <name>sumClass</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[The css class to the summary text]]></description>
+
+        </attribute>
+
+        <attribute>
+            <name>onsubmit</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[Onsubmit event]]></description>
+
+        </attribute>
+        <attribute>
+            <name>showFirstEnd</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[Indicates whether to show first page link and last page link]]></description>
+        </attribute>
+        <attribute>
+            <name>loop</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description><![CDATA[Indicates  previous page link and next page link whether loop]]></description>
+        </attribute>
+
+        <attribute>
+            <name>hideIfOnly</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description><![CDATA[Indicates whether to show pagination where that only 1 page]]></description>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>pageLinklist</name>
+        <tag-class>com.pengpeng.common.ui.tags.PageLinkTag</tag-class>
+        <body-content>JSP</body-content>
+        <description><![CDATA[Page list tag help you split your records into lists]]></description>
+
+        <attribute>
+            <name>name</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[Name of the form]]></description>
+
+        </attribute>
+
+        <attribute>
+            <name>style</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[Style of the form]]></description>
+
+        </attribute>
+
+        <attribute>
+            <name>action</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[Submit action to the form]]></description>
+
+        </attribute>
+
+        <attribute>
+            <name>method</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[Submit method to the form]]></description>
+
+        </attribute>
+
+        <attribute>
+            <name>selector</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.Object</type>
+
+            <description>
+                <![CDATA[An object including all page split items.It should be an instance of com.pengpeng.common.ui.PageSelector ]]></description>
+
+        </attribute>
+
+        <attribute>
+            <name>var</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[prefix for all inputs inside the form]]></description>
+
+        </attribute>
+
+        <attribute>
+            <name>showText</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[Indicates whether to show numbers as page select items]]></description>
+
+        </attribute>
+
+        <attribute>
+            <name>show</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[How many pages to show for each time]]></description>
+
+        </attribute>
+
+        <attribute>
+            <name>sumText</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[How your page information should be display,you can use some simple
+              syntax to instead of some meaningful properties of the @selecotr:
+              %[cC] -- The current page displaying
+              %[tT] -- Total pages that can be displayed
+              %[rR] -- Total record counts
+              %combo|COMBO -- Shows a combo box to select and display the current page and the total page
+              ]]></description>
+
+        </attribute>
+
+        <attribute>
+            <name>sumClass</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[The css class to the summary text]]></description>
+
+        </attribute>
+
+        <attribute>
+            <name>onsubmit</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[Onsubmit event]]></description>
+
+        </attribute>
+        <attribute>
+            <name>showFirstEnd</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+
+            <description><![CDATA[Indicates whether to show first page link and last page link]]></description>
+        </attribute>
+        <attribute>
+            <name>loop</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description><![CDATA[Indicates  previous page link and next page link whether loop]]></description>
+        </attribute>
+
+        <attribute>
+            <name>hideIfOnly</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description><![CDATA[Indicates whether to show pagination where that only 1 page]]></description>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>text</name>
+        <tag-class>com.pengpeng.common.ui.tags.TextTag</tag-class>
+        <body-content>JSP</body-content>
+        <description><![CDATA[Text tag help you to manage your output text]]></description>
+
+        <attribute>
+            <name>id</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description><![CDATA[The html ID element of the text span]]></description>
+        </attribute>
+        <attribute>
+            <name>clearHTML</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description><![CDATA[The html ID element of the text span]]></description>
+        </attribute>
+        <attribute>
+            <name>displayLength</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description><![CDATA[The length should the text display]]></description>
+        </attribute>
+        <attribute>
+            <name>style</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>Support the STYLE attribute</description>
+        </attribute>
+        <attribute>
+            <name>more</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description><![CDATA[The tail content after the text body]]></description>
+        </attribute>
+        <attribute>
+            <name>showMore</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description><![CDATA[Indicates whether the 'more' element should be displayed]]></description>
+        </attribute>
+        <attribute>
+            <name>escape</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description><![CDATA[Escape the content from HTML]]></description>
+        </attribute>
+        <attribute>
+            <name>cssClass</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description><![CDATA[The css class to use]]></description>
+        </attribute>
+        <attribute>
+            <name>convertHTML</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description><![CDATA[convertHTML the content from HTML]]></description>
+        </attribute>
+        <attribute>
+            <name>isTrim</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description><![CDATA[Trim the content from HTML]]></description>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>repeat</name>
+        <tag-class>com.pengpeng.common.ui.tags.RepeatTag</tag-class>
+        <body-content>JSP</body-content>
+        <description>This tag can repeat the body content for many times</description>
+
+        <attribute>
+            <name>id</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+
+        <attribute>
+            <name>style</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+
+        <attribute>
+            <name>cssClass</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+
+        <attribute>
+            <name>times</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <description>Times your body content should be repeat</description>
+        </attribute>
+    </tag>
+
+    <tag>
+        <name>checkbox</name>
+        <tag-class>com.pengpeng.common.ui.tags.CheckBoxTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <name>id</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.util.Map</type>
+        </attribute>
+
+        <attribute>
+            <name>name</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+
+        <attribute>
+            <name>typeCode</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+
+        <attribute>
+            <name>wwSelectedValue</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+
+        <attribute>
+            <name>splitor</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+
+    </tag>
+
+    <tag>
+
+        <name>checkboxTranslate</name>
+        <tag-class>com.pengpeng.common.ui.tags.CheckBoxTranslateTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <name>id</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.util.Map</type>
+        </attribute>
+
+        <attribute>
+            <name>typeCode</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+
+        <attribute>
+            <name>wwSelectedValue</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+
+        <attribute>
+            <name>splitor</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+
+    </tag>
+
+    <tag>
+        <name>radio</name>
+        <tag-class>com.pengpeng.common.ui.tags.RadioTag</tag-class>
+        <body-content>empty</body-content>
+        <attribute>
+            <name>id</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.util.Map</type>
+        </attribute>
+
+        <attribute>
+            <name>name</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+
+        <attribute>
+            <name>typeCode</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+
+        <attribute>
+            <name>wwSelectedValue</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+
+        <attribute>
+            <name>splitor</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+
+    </tag>
+
+
+</taglib>

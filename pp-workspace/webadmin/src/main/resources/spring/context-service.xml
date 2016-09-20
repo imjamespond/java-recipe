@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC
+        "-//SPRING//DTD BEAN//EN"
+        "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+
+    <bean id="springContextUtil" class="com.pengpeng.framework.utils.SpringContextUtil"/>
+
+    <bean id="configLoader" class="com.pengpeng.common.config.ConfigLoader"/>
+
+    <bean id="m5Config" class="com.pengpeng.common.config.M5Config">
+        <property name="loader" ref="configLoader"/>
+    </bean>
+
+   <!-- <bean id="verifyCodeDAO" class="com.pengpeng.common.dao.VerifyCodeDAO">
+        <property name="sessionFactory" ref="masterSessionFactory"/>
+    </bean>
+    <bean id="verifyCodeService" class="com.pengpeng.common.service.impl.VerifyCodeServiceImpl">
+        <property name="verifyCodeDAO" ref="verifyCodeDAO"/>
+    </bean>
+
+    &lt;!&ndash; DAO BEANS &ndash;&gt;
+    <bean id="adminFunctionDAO" class="com.pengpeng.admin.dao.AdminFunctionDAO">
+        <property name="sessionFactory" ref="masterSessionFactory"/>
+    </bean>
+
+    <bean id="adminUserDAO" class="com.pengpeng.admin.dao.AdminUserDAO">
+        <property name="sessionFactory" ref="masterSessionFactory"/>
+    </bean>
+
+    <bean id="adminUserRoleDAO" class="com.pengpeng.admin.dao.AdminUserRoleDAO">
+        <property name="sessionFactory" ref="masterSessionFactory"/>
+    </bean>
+
+
+    <bean id="configDAO" class="com.pengpeng.common.config.ConfigDAO">
+        <property name="sessionFactory" ref="masterSessionFactory"/>
+    </bean>
+
+    <bean id="adminRoleDAO" class="com.pengpeng.admin.dao.AdminRoleDAO">
+        <property name="sessionFactory" ref="masterSessionFactory"/>
+    </bean>
+
+    &lt;!&ndash; SERVICE BEANS &ndash;&gt;
+    <bean id="adminFunctionService"
+          class="com.pengpeng.admin.service.impl.AdminFunctionServiceImpl">
+        <property name="adminFunctionDAO" ref="adminFunctionDAO"/>
+    </bean>
+
+    <bean id="adminUserRoleService"
+          class="com.pengpeng.admin.service.impl.AdminUserRoleServiceImpl">
+        <property name="adminUserRoleDAO" ref="adminUserRoleDAO"/>
+    </bean>
+
+    <bean id="adminUserService"
+          class="com.pengpeng.admin.service.impl.AdminUserServiceImpl">
+        <property name="adminUserDAO" ref="adminUserDAO"/>
+    </bean>
+
+    <bean id="adminRoleService"
+          class="com.pengpeng.admin.service.impl.AdminRoleServiceImpl">
+        <property name="adminRoleDAO" ref="adminRoleDAO"/>
+    </bean>
+
+    <bean id="sysLogDAO" class="com.pengpeng.admin.dao.SysLogDAO">
+        <property name="sessionFactory" ref="masterSessionFactory"/>
+    </bean>
+
+    <bean id="sysLogService"
+          class="com.pengpeng.admin.service.impl.SysLogServiceImpl">
+        <property name="sysLogDAO" ref="sysLogDAO"/>
+    </bean>
+
+    <bean id="adminGroupDAO" class="com.pengpeng.admin.dao.AdminGroupDAO">
+        <property name="sessionFactory" ref="masterSessionFactory"/>
+    </bean>
+
+    <bean id="adminGroupService"
+          class="com.pengpeng.admin.service.impl.AdminGroupServiceImpl">
+        <property name="adminGroupDAO" ref="adminGroupDAO"/>
+    </bean>-->
+
+</beans>
+

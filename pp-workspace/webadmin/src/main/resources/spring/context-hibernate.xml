@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+    <!--<bean id="ruleTransactionManager"-->
+    <!--class="org.springframework.orm.hibernate3.HibernateTransactionManager">-->
+    <!--<property name="sessionFactory" ref="ruleSession" />-->
+    <!--</bean>-->
+    <!--<bean id="ruleSource"-->
+    <!--class="org.springframework.jdbc.datasource.DriverManagerDataSource"-->
+    <!-->-->
+    <!--<description>以下是正确的c3p0配置</description>-->
+    <!--<property name="driverClassName" value="${hibernate.driverClassName}" />-->
+    <!--<property name="url" value="${db.rule.url}" />-->
+    <!--<property name="username" value="${db.rule.username}"></property>-->
+    <!--<property name="password" value="${db.rule.password}"></property>-->
+    <!--</bean>-->
+
+    <!-- c3po连接池 -->
+    <bean id="valueSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+        <property name="driverClass">
+            <value>${hibernate.driverClassName}</value>
+        </property>
+        <property name="jdbcUrl">
+            <value>${db.value.url}</value>
+        </property>
+        <property name="user">
+            <value>${db.value.username}</value>
+        </property>
+        <property name="password">
+            <value>${db.value.password}</value>
+        </property>
+        <property name="idleConnectionTestPeriod">
+            <value>3600</value>
+        </property>
+    </bean>
+
+    <!-- c3po连接池 -->
+    <bean id="ruleSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+        <property name="driverClass">
+            <value>${hibernate.driverClassName}</value>
+        </property>
+        <property name="jdbcUrl">
+            <value>${db.rule.url}</value>
+        </property>
+        <property name="user">
+            <value>${db.rule.username}</value>
+        </property>
+        <property name="password">
+            <value>${db.rule.password}</value>
+        </property>
+        <property name="idleConnectionTestPeriod">
+            <value>3600</value>
+        </property>
+    </bean>
+    <bean id="ruleSession"
+          class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+        <property name="dataSource" ref="ruleSource" />
+        <property name="annotatedClasses">
+            <list>
+                <value>com.pengpeng.stargame.player.rule.WordRule</value>
+                <value>com.pengpeng.stargame.player.rule.PlayerRule</value>
+                <value>com.pengpeng.stargame.player.rule.SceneRule</value>
+                <value>com.pengpeng.stargame.player.rule.TransferRule</value>
+                <value>com.pengpeng.stargame.player.rule.BaseGiftRule</value>
+
+                <value>com.pengpeng.stargame.player.rule.ActiveRule</value>
+                <value>com.pengpeng.stargame.player.rule.ActiveRewardRule</value>
+
+                <value>com.pengpeng.stargame.farm.rule.FarmLevelRule</value>
+                <value>com.pengpeng.stargame.farm.rule.FarmOrderRule</value>
+                <value>com.pengpeng.stargame.farm.rule.FarmSeedRule</value>
+                <value>com.pengpeng.stargame.farm.rule.FarmWareHouseRule</value>
+                <value>com.pengpeng.stargame.qinma.rule.QinMaFarmRule</value>
+                <value>com.pengpeng.stargame.farm.rule.BaseItemRule</value>
+                <value>com.pengpeng.stargame.fashion.rule.FashionItemRule</value>
+                <value>com.pengpeng.stargame.fashion.rule.FashionItemRule</value>
+                <value>com.pengpeng.stargame.room.rule.RoomItemRule</value>
+                <value>com.pengpeng.stargame.qinma.rule.QinMaRoomRule</value>
+
+                <value>com.pengpeng.stargame.piazza.rule.MoneyTreeRule</value>
+                <value>com.pengpeng.stargame.piazza.rule.FamilyBuildingRule</value>
+                <value>com.pengpeng.stargame.piazza.rule.FamilyRule</value>
+                <value>com.pengpeng.stargame.piazza.rule.ActiveControlRule</value>
+                <value>com.pengpeng.stargame.piazza.rule.IdentityRule</value>
+                <value>com.pengpeng.stargame.task.rule.TaskRule</value>
+                <value>com.pengpeng.stargame.task.rule.ChaptersRule</value>
+
+                <value>com.pengpeng.stargame.lottery.rule.LotteryRule</value>
+                <value>com.pengpeng.stargame.lottery.rule.LotteryTypeRule</value>
+
+                <value>com.pengpeng.stargame.small.game.rule.SmallGameRule</value>
+
+                <value>com.pengpeng.admin.stargame.model.UserActionModel</value>
+                <value>com.pengpeng.admin.stargame.model.PlayerActionModel</value>
+                <value>com.pengpeng.admin.stargame.model.PlayerOlineInfoModel</value>
+
+                <value>com.pengpeng.admin.stargame.model.PlayerHarvestActionModel</value>
+                <value>com.pengpeng.admin.stargame.model.PlayerActivityActionModel</value>
+                <value>com.pengpeng.admin.stargame.model.PlayerBuyActionModel</value>
+                <value>com.pengpeng.admin.stargame.model.PlayerItemModel</value>
+                <value>com.pengpeng.admin.stargame.model.PlayerFarmComplimentActionModel</value>
+                <value>com.pengpeng.admin.stargame.model.PlayerLoginActionModel</value>
+                <value>com.pengpeng.admin.stargame.model.PlayerLotteryActionModel</value>
+                <value>com.pengpeng.admin.stargame.model.PlayerMapActionModel</value>
+                <value>com.pengpeng.admin.stargame.model.PlayerOrderResetActionModel</value>
+                <value>com.pengpeng.admin.stargame.model.PlayerPioneerActionModel</value>
+                <value>com.pengpeng.admin.stargame.model.PlayerRechargeActionModel</value>
+                <value>com.pengpeng.admin.stargame.model.PlayerRegisterModel</value>
+                <value>com.pengpeng.admin.stargame.model.PlayerSaleActionModel</value>
+                <value>com.pengpeng.admin.stargame.model.PlayerTaskActionModel</value>
+                <value>com.pengpeng.admin.stargame.model.PlayerGivingActionModel</value>
+                <value>com.pengpeng.admin.stargame.model.PlayerMoneyTreeActionModel</value>
+                <value>com.pengpeng.admin.stargame.model.PlayerFamilyActionModel</value>
+                <value>com.pengpeng.admin.stargame.model.PlayerFamilyAwardActionModel</value>
+                <value>com.pengpeng.admin.stargame.model.PlayerDecorationActionModel</value>
+                <value>com.pengpeng.admin.stargame.model.PlayerDonationActionModel</value>
+
+                <value>com.pengpeng.admin.stargame.model.UserModel</value>
+            </list>
+        </property>
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.hbm2ddl.auto">
+                    update
+                </prop>
+                <prop key="hibernate.hbm2ddl.characterEncoding">
+                    utf8
+                </prop>
+                <prop key="hibernate.dialect">
+                    ${hibernate.dialect}
+                </prop>
+                <prop key="hibernate.show_sql">
+                    ${hibernate.show_sql}
+                </prop>
+                <prop key="hibernate.format_sql">
+                    ${hibernate.format_sql}
+                </prop>
+                <prop key="hibernate.generate_statistics">
+                    ${hibernate.generate_statistics}
+                </prop>
+                <prop key="hibernate.jdbc.batch_size">
+                    ${hibernate.jdbc.batch_size}
+                </prop>
+                <prop key="hibernate.jdbc.fetch_size">
+                    ${hibernate.jdbc.fetch_size}
+                </prop>
+                <prop key="hibernate.query.factory_class">
+                    org.hibernate.hql.classic.ClassicQueryTranslatorFactory
+                </prop>
+                <!-- cache -->
+                <!--
+                        <prop key="hibernate.cache.provider_class">${hibernate.cache.provider_class}</prop>
+                        <prop key="hibernate.cache.use_query_cache">${hibernate.cache.use_query_cache}</prop>
+                    -->
+            </props>
+        </property>
+    </bean>
+
+    <bean id="springTemplete" class="org.springframework.orm.hibernate3.HibernateTemplate">
+        <property name="sessionFactory" ref="ruleSession"/>
+    </bean>
+    <bean name="jdbcTemelate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="valueSource"></property>
+    </bean>
+
+
+</beans>

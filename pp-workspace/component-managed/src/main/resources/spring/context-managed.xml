@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+            http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="nodeConfig" class="com.pengpeng.stargame.managed.NodeConfig" init-method="init"/>
+    <bean id="nodeMonitor" class="com.pengpeng.stargame.managed.NodeMonitor" init-method="start" depends-on="nodeConfig"/>
+    <bean id="manageServiceProxy" class="com.pengpeng.stargame.managed.ManageServiceProxy" init-method="init"/>
+
+    <bean id="serverNodeScheduleJob"
+          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="nodeMonitor"/>
+        <property name="targetMethod" value="onState"/>
+        <property name="concurrent" value="false"/>
+    </bean>
+    <bean id="serverNodeScheduleTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail" ref="serverNodeScheduleJob"/>
+        <property name="cronExpression" value="*/5 * * * * ? *"/>
+    </bean>
+
+    <bean id="simpleClientService" class="com.pengpeng.stargame.managed.SimpleClientService">
+        <property name="nodeMonitor" ref="nodeMonitor"/>
+    </bean>
+
+    <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <ref bean="serverNodeScheduleTrigger"/>
+            </list>
+        </property>
+    </bean>
+</beans>

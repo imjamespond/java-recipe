@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+    <constant name="struts.i18n.encoding" value="UTF-8"/>
+    <constant name="devMode" value="true"/>
+    <constant name="struts.devMode" value="true"/>
+    <constant name="struts.action.extension" value="do"/>
+    <constant name="struts.ognl.allowStaticMethodAccess" value="true"/>
+
+    <package name="global" extends="struts-default">
+
+        <action name="dashboard" class="DashboardAction" method="index">
+            <result name="success">/WEB-INF/pages/dashboard.jsp</result>
+        </action>
+
+        <action name="servers" class="DashboardAction" method="servers">
+            <result name="success">/WEB-INF/pages/servers.jsp</result>
+        </action>
+
+        <action name="detail" class="InstanceAction" method="detail">
+            <result name="success">/WEB-INF/pages/detail.jsp</result>
+            <result name="dashboard" type="redirect">/dashboard.do</result>
+        </action>
+
+        <action name="manage" class="InstanceAction" method="manage">
+            <result name="success">/WEB-INF/pages/detail.jsp</result>
+        </action>
+    </package>
+
+</struts>

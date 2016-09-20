@@ -1,0 +1,73 @@
+<project xmlns:artifact="antlib:org.apache.maven.artifact.ant" name="james-jetty" basedir=".">
+	<property name="app.version" value="1.0" />
+	<property name="app.name" value="james-jetty" />
+	<import file="properties.xml" />
+	<import file="build-global.xml" />
+	
+	<echo message="user.home: ${user.home}"/>
+
+	
+	<!--部署至nexus-->
+	<target name="deploy" depends="install">
+		<!--清理-->
+		<delete dir="target/game" />
+		
+		<!--copy runtime 依赖包-->
+		<mkdir dir="target/game/lib" />
+		<copy todir="target/game/lib" flatten="true">
+			<fileset refid="fileset.lib.runtime" />
+		</copy>
+		<copy todir="target/game/lib" file="target/${app.name}-${app.version}.jar" />
+
+		<!--copy 项目 src/main/resources路径 中的所有文件-->
+		<mkdir dir="target/game/conf" />
+		<copy todir="target/game/conf" flatten="true">
+			<fileset dir="src/main/resources">
+				<include name="**" />
+			</fileset>
+		</copy>
+		
+		<!--copy excel and generate csv 文件
+		<mkdir dir="target/chess/data" />
+		<copy todir="target/chess/data" flatten="true">
+			<fileset dir="data">
+				<include name="*.xls" />
+			</fileset>
+		</copy>
+				
+		<antcall target="datagen" />
+		<copy todir="target/chess/data" flatten="true">
+			<fileset dir="target/classes/data">
+				<include name="*.csv" />
+			</fileset>
+		</copy>
+-->
+		<!--copy configurations for eclipse debugging-->
+		<copy todir="target/classes" flatten="true">
+			<fileset dir="target/game/conf">
+				<include name="**" />
+			</fileset>
+		</copy>
+		<!--
+		<copy todir="target/classes/data" flatten="true">
+			<fileset dir="target/chess/data">
+				<include name="**" />
+			</fileset>
+		</copy>
+		-->
+
+	</target>
+<!--
+	<target name="datagen">
+		<mkdir dir="target/classes/data" />
+		<java classname="cn.gecko.commons.data.DataGenerate">
+			<arg value="cn" />
+			<arg value="com" />
+			<classpath>
+				<path refid="classpath.project" />
+			</classpath>
+		</java>
+	</target>-->
+
+
+</project>

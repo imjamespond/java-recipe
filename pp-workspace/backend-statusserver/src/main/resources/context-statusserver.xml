@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+
+    <bean id="propertyConfigurer"
+          class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>
+                    classpath:context.properties
+                </value>
+                <value>
+                    classpath:server.properties
+                </value>
+            </list>
+        </property>
+        <property name="systemPropertiesMode" value="2"/>
+    </bean>
+
+    <bean id="messageSource"
+		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		  <property name="defaultEncoding" value="UTF-8" />
+		<property name="basenames">
+			<list>
+				<value>message</value>
+			</list>
+		</property>
+	</bean>
+    <import resource="context-jredis.xml"/>
+    <import resource="spring/context-managed.xml"/>
+
+    <context:component-scan base-package="com.pengpeng.stargame">
+    </context:component-scan>
+    <bean class="org.springframework.remoting.rmi.RmiServiceExporter">
+        <property name="serviceName" value="status" />
+        <property name="service" ref="statusService" />
+        <property name="serviceInterface" value="com.pengpeng.stargame.rpc.IStatusService" />
+        <!-- <property name="registryHost" value="192.168.10.134" /> -->
+        <!-- <property name="servicePort" value="2899" /> -->
+        <property name="registryPort" value="${server.port}"/>
+    </bean>
+
+    <bean id="statusService" class="com.pengpeng.stargame.rpc.StatusServiceImpl"/>
+
+    <bean class="org.springframework.remoting.rmi.RmiServiceExporter">
+        <property name="serviceName" value="NodeClient"/>
+        <property name="service" ref="monitorService"/>
+        <property name="serviceInterface" value="com.pengpeng.stargame.managed.IClientService"/>
+        <property name="registryPort" value="${server.port}"/>
+    </bean>
+    <!--  自定义的状态维护对象  -->
+    <bean id="monitorService" class="com.pengpeng.stargame.rpc.MonitorService">
+        <property name="nodeMonitor" ref="nodeMonitor"/>
+    </bean>
+
+    <bean id="valueSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+        <property name="driverClass">
+            <value>${hibernate.driverClassName}</value>
+        </property>
+        <property name="jdbcUrl">
+            <value>${db.value.url}</value>
+        </property>
+        <property name="user">
+            <value>${db.value.username}</value>
+        </property>
+        <property name="password">
+            <value>${db.value.password}</value>
+        </property>
+        <property name="idleConnectionTestPeriod">
+            <value>3600</value>
+        </property>
+    </bean>
+
+    <bean name="jdbcTemelate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="valueSource"></property>
+    </bean>
+</beans>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+
+    <bean id="propertyConfigurer"
+          class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>
+                    classpath:context.properties
+                </value>
+                <value>
+                    classpath*:server.properties
+                </value>
+            </list>
+        </property>
+        <property name="systemPropertiesMode" value="2"/>
+    </bean>
+
+	<bean id="messageSource"
+		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		  <property name="defaultEncoding" value="UTF-8" />
+		<property name="basenames">
+			<list>
+				<value>message</value>
+			</list>
+		</property>
+	</bean>
+
+    <import resource="context-jredis.xml"/>
+    <import resource="spring/context-managed.xml"/>
+
+    <context:component-scan base-package="com.pengpeng.stargame">
+        <context:include-filter type="annotation" expression="com.pengpeng.stargame.annotation.EventAnnotation"/>
+    </context:component-scan>
+
+    <!--<bean id="statusService2" class="org.springframework.remoting.rmi.RmiProxyFactoryBean">-->
+        <!--<property name="serviceUrl" value="${status.rmi}"/>-->
+        <!--<property name="serviceInterface" value="com.pengpeng.stargame.rpc.IStatusService"/>-->
+        <!--<property name="refreshStubOnConnectFailure" value="true"/>-->
+    <!--</bean>-->
+
+    <bean class="org.springframework.remoting.rmi.RmiServiceExporter">
+        <property name="serviceName" value="logic" />
+        <property name="service" ref="logicService" />
+        <property name="serviceInterface" value="com.pengpeng.stargame.rpc.IBackendService" />
+        <property name="registryPort" value="${server.port}"/>
+    </bean>
+    <bean id="logicService" class="com.pengpeng.stargame.rpc.BackendServiceImpl"/>
+    <!--  自定义的状态维护对象  -->
+    <bean id="frontendServiceProxy" class="com.pengpeng.stargame.rpc.FrontendServiceProxy">
+           <property name="nodeMonitor" ref="nodeMonitor"/>
+    </bean>
+
+    <bean class="org.springframework.remoting.rmi.RmiServiceExporter">
+        <property name="serviceName" value="NodeClient"/>
+        <property name="service" ref="frontendServiceProxy"/>
+        <property name="serviceInterface" value="com.pengpeng.stargame.managed.IClientService"/>
+        <property name="registryPort" value="${server.port}"/>
+    </bean>
+
+    <bean id="remotingUserSecurityService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${remoting.url}/user/UserSecurityService"/>
+        <property name="serviceInterface" value="com.pengpeng.user.service.IUserSecurityService"/>
+        <property name="overloadEnabled" value="true"></property>
+    </bean>
+    <bean id="remotingUserSocialService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${remoting.url}/user/SocialService"/>
+        <property name="serviceInterface" value="com.pengpeng.user.service.ISocialService"/>
+        <property name="overloadEnabled" value="true"></property>
+    </bean>
+    <bean id="remotingUserDataService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${remoting.url}/user/UserDataService"/>
+        <property name="serviceInterface" value="com.pengpeng.user.service.IUserDataService"/>
+        <property name="overloadEnabled" value="true"></property>
+    </bean>
+
+    <bean id="remotingCommonService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${remoting.url}/common/CommonService"/>
+        <property name="serviceInterface" value="com.pengpeng.common.service.ICommonService"/>
+        <property name="overloadEnabled" value="true"></property>
+    </bean>
+    <bean id="remotingMusicBoxService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${remoting.url}/user/MusicBoxService"/>
+        <property name="serviceInterface" value="com.pengpeng.user.service.IMusicBoxService"/>
+        <property name="overloadEnabled" value="true"></property>
+    </bean>
+    <bean name="remotingLiveVideoService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceUrl" value="${remoting.url}/user/LiveVideoService"/>
+        <property name="serviceInterface" value="com.pengpeng.user.service.ILiveVideoService"/>
+        <property name="overloadEnabled" value="true"></property>
+    </bean>
+
+     <bean id="chatrpc" class="com.pengpeng.stargame.player.cmd.ChatRpc">
+         <property name="environment" value="${environment}" />
+     </bean>
+
+    <bean id="asyDataDao" class="com.pengpeng.stargame.datasave.AsyDataDaoImpl">
+        <property name="table_num" value="${table_num}" />
+    </bean>
+
+</beans>

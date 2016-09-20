@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+ http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+
+    <!--<bean id="redisConfig" class="redis.clients.jedis.JedisPoolConfig">-->
+    <!--<property name="maxActive" value="1"/>-->
+    <!--<property name="maxIdle" value="5"/>-->
+    <!--<property name="maxWait" value="5"/>-->
+    <!--<property name="testOnBorrow" value="false"/>-->
+    <!--<property name="testOnReturn" value="true"/>-->
+    <!--<property name="testWhileIdle" value="true"/>-->
+    <!--</bean>-->
+    <!--<bean id="redisUtil" class="com.com.pengpeng.stargamee.dao.RedisUtil" init-method="init" destroy-method="destory">-->
+    <!--<property name="address">-->
+    <!--<value>${redis.hosts}</value>-->
+    <!--</property>-->
+    <!--<property name="maxActive">-->
+    <!--<value>${redis.maxActive}</value>-->
+    <!--</property>-->
+    <!--<property name="maxWait">-->
+    <!--<value>${redis.maxWait}</value>-->
+    <!--</property>-->
+    <!--<property name="maxIdle">-->
+    <!--<value>${redis.maxIdle}</value>-->
+    <!--</property>-->
+    <!--</bean>-->
+
+    <!-- jedis shard信息配置 -->
+    <!--<bean id="jedis.shardInfo" class="redis.clients.jedis.JedisShardInfo">-->
+    <!--<constructor-arg index="0" value="*.*.*.*" />-->
+    <!--<constructor-arg index="1" value="6379" />-->
+    <!--</bean>-->
+
+    <!-- jedis shard pool配置 -->
+    <!--<bean id="shardedJedisPool" class="redis.clients.jedis.ShardedJedisPool">-->
+    <!--<constructor-arg index="0" ref="jedisPoolConfig" />-->
+    <!--<constructor-arg index="1">-->
+    <!--<list>-->
+    <!--<ref bean="jedis.shardInfo" />-->
+    <!--</list>-->
+    <!--</constructor-arg>-->
+    <!--</bean>-->
+
+
+    <!-- jedis 连接池配置-->
+    <bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+        <property name="maxActive" value="${redis.maxActive}"/>
+        <property name="maxIdle" value="${redis.maxIdle}"/>
+        <property name="maxWait" value="${redis.maxWait}"/>
+        <property name="testOnBorrow" value="${redis.testOnBorrow}"/>
+    </bean>
+
+    <!--多redis服务器配置-->
+    <!-- jedis 多个服务器配置-->
+    <!--<bean id="jedisShardInfo1" class="redis.clients.jedis.JedisShardInfo">-->
+    <!--<constructor-arg index="0" value="${redis2.ip}" />-->
+    <!--<constructor-arg index="1" value="${redis.port}" type="int" />-->
+    <!--</bean>-->
+
+    <!--<bean id="jedisShardInfo2" class="redis.clients.jedis.JedisShardInfo">-->
+    <!--<constructor-arg index="0" value="${redis.ip}" />-->
+    <!--<constructor-arg index="1" value="${redis.port}" type="int" />-->
+    <!--</bean>-->
+
+    <!--<bean id="shardedJedisPool" class="redis.clients.jedis.ShardedJedisPool">-->
+    <!--<constructor-arg index="0" ref="jedisPoolConfig" />-->
+    <!--<constructor-arg index="1">-->
+    <!--<list>-->
+    <!--<ref bean="jedisShardInfo1" />-->
+    <!--<ref bean="jedisShardInfo2"/>-->
+    <!--</list>-->
+    <!--</constructor-arg>-->
+    <!--</bean>-->
+    <!--<bean id="jedisFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"-->
+    <!--p:poolConfig-ref="jedisPoolConfig"-->
+    <!--p:usePool="true">-->
+    <!--<property name="shardInfo" value="shardedJedisPool"/>-->
+    <!--</bean>-->
+    <!--多redis服务器配置-->
+
+    <!--单个redis服务器配置-->
+    <bean id="jedisFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"
+          p:poolConfig-ref="jedisPoolConfig"
+          p:usePool="true" p:hostName="${redis.hosts}" p:port="${redis.port}">
+    </bean>
+    <!--单个redis服务器配置-->
+
+    <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate"
+          p:connectionFactory-ref="jedisFactory">
+        <property name="connectionFactory" ref="jedisFactory"/>
+        <property name="defaultSerializer">
+            <bean class="org.springframework.data.redis.serializer.StringRedisSerializer"></bean>
+        </property>
+        <!--<property name="KeySerializer">-->
+        <!--<bean class="org.springframework.data.redis.serializer.StringRedisSerializer"></bean>-->
+        <!--</property>-->
+        <!--<property name="ValueSerializer">-->
+        <!--<bean class="org.springframework.data.redis.serializer.StringRedisSerializer">-->
+        <!--</bean>-->
+        <!--</property>-->
+        <!--<property name="HashKeySerializer">-->
+        <!--<bean class="org.springframework.data.redis.serializer.StringRedisSerializer"></bean>-->
+        <!--</property>-->
+        <!--<property name="HashValueSerializer">-->
+        <!--<bean class="org.springframework.data.redis.serializer.StringRedisSerializer"></bean>-->
+        <!--</property>-->
+    </bean>
+
+
+    <!--redis  1 -->
+
+
+    <bean id="jedisFactory1" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"
+          p:poolConfig-ref="jedisPoolConfig"
+          p:usePool="true" p:hostName="${redis.hosts1}" p:port="${redis.port1}">
+    </bean>
+    <bean id="redisTemplate1" class="org.springframework.data.redis.core.RedisTemplate"
+          p:connectionFactory-ref="jedisFactory1">
+        <property name="defaultSerializer">
+            <bean class="org.springframework.data.redis.serializer.StringRedisSerializer"></bean>
+        </property>
+    </bean>
+
+
+    <!--redis  2 -->
+
+    <bean id="jedisFactory2" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"
+          p:poolConfig-ref="jedisPoolConfig"
+          p:usePool="true" p:hostName="${redis.hosts2}" p:port="${redis.port2}">
+    </bean>
+    <bean id="redisTemplate2" class="org.springframework.data.redis.core.RedisTemplate"
+          p:connectionFactory-ref="jedisFactory2">
+        <property name="defaultSerializer">
+            <bean class="org.springframework.data.redis.serializer.StringRedisSerializer"></bean>
+        </property>
+    </bean>
+
+
+    <!--redis  3-->
+
+
+    <bean id="jedisFactory3" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"
+          p:poolConfig-ref="jedisPoolConfig"
+          p:usePool="true" p:hostName="${redis.hosts3}" p:port="${redis.port3}">
+    </bean>
+    <bean id="redisTemplate3" class="org.springframework.data.redis.core.RedisTemplate"
+          p:connectionFactory-ref="jedisFactory3">
+        <property name="defaultSerializer">
+            <bean class="org.springframework.data.redis.serializer.StringRedisSerializer"></bean>
+        </property>
+    </bean>
+
+
+    <!--redis  4 -->
+
+    <bean id="jedisFactory4" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"
+          p:poolConfig-ref="jedisPoolConfig"
+          p:usePool="true" p:hostName="${redis.hosts4}" p:port="${redis.port4}">
+    </bean>
+    <bean id="redisTemplate4" class="org.springframework.data.redis.core.RedisTemplate"
+          p:connectionFactory-ref="jedisFactory4">
+        <property name="defaultSerializer">
+            <bean class="org.springframework.data.redis.serializer.StringRedisSerializer"></bean>
+        </property>
+    </bean>
+
+    <!--redis  4 -->
+
+    <bean id="jedisFactory5" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"
+          p:poolConfig-ref="jedisPoolConfig"
+          p:usePool="true" p:hostName="${redis.hosts}" p:port="6385">
+    </bean>
+    <bean id="redisTemplate5" class="org.springframework.data.redis.core.RedisTemplate"
+          p:connectionFactory-ref="jedisFactory5">
+        <property name="defaultSerializer">
+            <bean class="org.springframework.data.redis.serializer.StringRedisSerializer"></bean>
+        </property>
+    </bean>
+
+
+    <bean id="redisDB" class="com.pengpeng.stargame.dao.RedisDB" >
+        <property name="redisTemplate" ref="redisTemplate"/>
+        <property name="environment" value="${environment}"/>
+        <property name="serverNum" value="${redis.server.num}"/>
+        <property name="redisTemplateList">
+            <list>
+                <ref bean="redisTemplate1"></ref>
+                <ref bean="redisTemplate2"></ref>
+                <ref bean="redisTemplate3"></ref>
+                <ref bean="redisTemplate4"></ref>
+            </list>
+        </property>
+    </bean>
+
+</beans>

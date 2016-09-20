@@ -1,0 +1,9 @@
+<script type="text/javascript" src="http://assets.pengpeng.com/js/jquery/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="http://assets.pengpeng.com/bootstrap/2.3.1/js/bootstrap.min.js"></script>
+<link href="http://assets.pengpeng.com/bootstrap/2.3.1/css/bootstrap.css" rel="stylesheet">
+<link href="http://assets.pengpeng.com/bootstrap/2.3.1/css/bootstrap-responsive.css" rel="stylesheet">
+<style type="text/css">
+    body{
+        font-size:12px;
+    }
+</style>

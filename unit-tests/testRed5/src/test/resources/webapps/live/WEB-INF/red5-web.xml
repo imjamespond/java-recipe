@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:lang="http://www.springframework.org/schema/lang"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd                            
+    http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang-3.1.xsd">
+	
+	<context:annotation-config />
+	<context:component-scan base-package="com.metasoft.flying.node.rpc" />
+	<context:component-scan base-package="com.metasoft.flying.node.service" />
+		
+	<bean id="placeholderConfig" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+	    <property name="location" value="/WEB-INF/red5-web.properties" />
+	</bean>
+	
+	<bean id="web.context" class="org.red5.server.Context" autowire="byType" />
+	
+	<bean id="web.scope" class="org.red5.server.scope.WebScope" init-method="register">
+		<property name="server" ref="red5.server" />
+		<property name="parent" ref="global.scope" />
+		<property name="context" ref="web.context" />
+		<property name="handler" ref="web.handler" />
+		<property name="contextPath" value="${webapp.contextPath}" />
+		<property name="virtualHosts" value="${webapp.virtualHosts}" />
+	</bean>
+
+	<bean id="web.handler" class="com.metasoft.flying.node.service.Red5ApplicationAdapter" />
+	<bean id="rpc.echo" class="com.metasoft.flying.node.rpc.EchoServiceImpl" />
+	<bean id="rpc.red5" class="com.metasoft.flying.node.rpc.Red5ServiceImpl" >
+		<property name="adapter" ref="web.handler" />
+	</bean>	
+	<bean id="node.client" class=" com.metasoft.flying.node.service.NodeClient" init-method="init">
+		<property name="adapter" ref="rpc.echo" />
+		<property name="echoService" ref="rpc.echo" />
+		<property name="red5Service" ref="rpc.red5" />	
+	</bean>		
+</beans>

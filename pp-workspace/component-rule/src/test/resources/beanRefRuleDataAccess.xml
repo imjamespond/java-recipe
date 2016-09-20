@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+	<!--<bean id="ruleTransactionManager"-->
+		<!--class="org.springframework.orm.hibernate3.HibernateTransactionManager">-->
+		<!--<property name="sessionFactory" ref="ruleSession" />-->
+	<!--</bean>-->
+	<!--<bean id="ruleSource"-->
+		<!--class="org.springframework.jdbc.datasource.DriverManagerDataSource"-->
+		<!-->-->
+		<!--<description>以下是正确的c3p0配置</description>-->
+		<!--<property name="driverClassName" value="${hibernate.driverClassName}" />-->
+		<!--<property name="url" value="${db.rule.url}" />-->
+		<!--<property name="username" value="${db.rule.username}"></property>-->
+		<!--<property name="password" value="${db.rule.password}"></property>-->
+	<!--</bean>-->
+    <!-- c3po连接池 -->
+    <bean id="ruleSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+        <property name="driverClass">
+            <value>${hibernate.driverClassName}</value>
+        </property>
+        <property name="jdbcUrl">
+            <value>${db.rule.url}</value>
+        </property>
+        <property name="user">
+            <value>${db.rule.username}</value>
+        </property>
+        <property name="password">
+            <value>${db.rule.password}</value>
+        </property>
+    </bean>
+	<bean id="ruleSession"
+		class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+		<property name="dataSource" ref="ruleSource" />
+		<property name="annotatedClasses">
+			<list>
+                <!--<value>com.com.pengpeng.stargamee.role.rule.PlayerRule</value>-->
+                <value>com.pengpeng.stargame.rule.role.SceneRule</value>
+                <!--<value>com.com.pengpeng.stargamee.role.rule.NpcRule</value>-->
+                <value>com.pengpeng.stargame.rule.role.TransferRule</value>
+
+                <!-- 				<value>com.tongyi.foxcom.rule.impl.ItemData</value> -->
+<!-- 				<value>com.tongyi.foxcom.rule.tech.TechData</value> -->
+			</list>
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.hbm2ddl.auto">update</prop>
+				<prop key="hibernate.hbm2ddl.characterEncoding">
+					utf8
+				</prop>
+				<prop key="hibernate.dialect">
+					${hibernate.dialect}
+				</prop>
+				<prop key="hibernate.show_sql">
+					${hibernate.show_sql}
+				</prop>
+				<prop key="hibernate.format_sql">
+					${hibernate.format_sql}
+				</prop>
+				<prop key="hibernate.generate_statistics">
+					${hibernate.generate_statistics}
+				</prop>
+				<prop key="hibernate.jdbc.batch_size">
+					${hibernate.jdbc.batch_size}
+				</prop>
+				<prop key="hibernate.jdbc.fetch_size">
+					${hibernate.jdbc.fetch_size}
+				</prop>
+				<prop key="hibernate.query.factory_class">
+					org.hibernate.hql.classic.ClassicQueryTranslatorFactory
+				</prop>
+				<!-- cache -->
+				<!-- 
+					<prop key="hibernate.cache.provider_class">${hibernate.cache.provider_class}</prop>
+					<prop key="hibernate.cache.use_query_cache">${hibernate.cache.use_query_cache}</prop>
+				-->
+			</props>
+		</property>
+	</bean>
+
+</beans>

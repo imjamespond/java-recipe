@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
+
+	<bean
+		class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+		<property name="messageConverters">
+			<list>
+				<bean
+					class="org.springframework.http.converter.StringHttpMessageConverter">
+					<property name="supportedMediaTypes">
+						<list>
+							<value>text/plain;charset=UTF-8</value>
+						</list>
+					</property>
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+	<mvc:annotation-driven />
+	<context:component-scan base-package="com.qianxun.web" />
+
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver" />
+
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/views/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+
+	<mvc:interceptors>
+		<bean class="com.qianxun.web.SecurityInterceptor">
+			<property name="managerService" ref="managerService" />
+			<property name="freeList">
+				<list>
+					<value>^/manager/login</value>
+					<value>^/manager/logout</value>
+				</list>
+			</property>
+			<property name="resourceMap">
+				<map>
+					<entry key="stage">
+						<list>
+							<value>^/$</value>
+							<value>^/manager/change/</value>
+							<value>^/manager/password</value>
+							<value>^/manager/success</value>
+							<value>^/stage/</value>
+						</list>
+					</entry>
+					<entry key="user">
+						<list>
+							<value>^/$</value>
+							<value>^/manager/change/</value>
+							<value>^/manager/password</value>
+							<value>^/manager/success</value>
+							<value>^/user/</value>
+						</list>
+					</entry>
+					<entry key="game">
+						<list>
+							<value>^/$</value>
+							<value>^/manager/change/</value>
+							<value>^/manager/password</value>
+							<value>^/manager/success</value>
+							<value>^/game/</value>
+						</list>
+					</entry>
+					<entry key="manager">
+						<list>
+							<value>^/$</value>
+							<value>^/manager/</value>
+						</list>
+					</entry>
+				</map>
+			</property>
+		</bean>
+	</mvc:interceptors>
+
+</beans>

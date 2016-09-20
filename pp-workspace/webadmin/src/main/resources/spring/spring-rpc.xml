@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bean="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="
+            http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+
+    <bean id="redisKeyValueDB" class="com.pengpeng.stargame.dao.RedisKeyValueDB">
+    </bean>
+    <bean id="asyDataDao" class="com.pengpeng.stargame.datasave.AsyDataDaoImpl">
+        <property name="table_num" value="${table_num}" />
+    </bean>
+    <bean id="asave" class="com.pengpeng.asy.Asy" init-method="save">
+        <property name="dataDao"  ref="asyDataDao"></property>
+    </bean>
+    <bean id="playerRpcRemote" class="com.pengpeng.stargame.rpc.PlayerRpcRemote"/>
+    <bean id="gmRpcRemote" class="com.pengpeng.stargame.rpc.GmRpcRemote"/>
+    <bean id="farmPkgRpcRemote" class="com.pengpeng.stargame.rpc.FarmPkgRpcRemote"/>
+    <bean id="fashionPkgRpcRemote" class="com.pengpeng.stargame.rpc.FashionPkgRpcRemote"/>
+    <bean id="familyInfoRpcRemote" class="com.pengpeng.stargame.rpc.FamilyInfoRpcRemote"/>
+    <bean id="familyManagerRpcRemote" class="com.pengpeng.stargame.rpc.FamilyManagerRpcRemote"/>
+    <bean id="roomRpcRemote" class="com.pengpeng.stargame.rpc.RoomRpcRemote"/>
+    <bean id="statusRemote" class="com.pengpeng.stargame.rpc.StatusRemote"/>
+    <bean id="taskRpcRemote" class="com.pengpeng.stargame.rpc.TaskRpcRemote"/>
+    <bean id="backendServiceProxy" class="com.pengpeng.stargame.rpc.BackendServiceProxy"/>
+    <bean id="familyAssistantRpcRemote" class="com.pengpeng.stargame.rpc.FamilyAssistantRpcRemote"/>
+    <bean id="apiRpcRemote" class="com.pengpeng.stargame.rpc.ApiRpcRemote"/>
+    <bean id="payMemberRpcRemote" class="com.pengpeng.stargame.rpc.PayMemberRpcRemote"/>
+    <bean id="smallGameRpcRemote" class="com.pengpeng.stargame.rpc.SmallGameRpcRemote"/>
+    <bean id="mailRpcRemote" class="com.pengpeng.stargame.rpc.MailRpcRemote"/>
+
+</beans>
