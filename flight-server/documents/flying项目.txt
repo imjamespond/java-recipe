@@ -1,0 +1,57 @@
+svn://211.147.239.111/code/qianxun/flying-server/trunk
+huangjian=029jal82akssuw
+
+svn://211.147.239.111/code/qianxun/flying-client
+luhw=0kiuwhauajk28
+
+====端口======
+游戏服
+121.201.8.108(10.60.20.65)game.mzvtg6.gd1.qingcloud.com
+:7002(外,flash)
+:7003(外,NAT843)
+:7004(Red5通信)
+:6379(redis)
+:5432(db)
+
+公网测试服务器：
+http://www1.qianxunyouxi.com/
+121.201.14.207:9726
+huangjian，密码:DZI08NDVLJUJG8KT
+root 515cddaydayUP
+数据库用户postgres，密码yuanyao403
+数据库叫qianxun
+在服务器上创建和修改表，要先 su postgres用户然后psql qianxun
+
+843端口开放了，映射到7003端口
+游戏的静态文件部署到web1用户下的site目录下
+web1的密码是yuanyao403abc
+
+
+千寻网站
+svn checkout svn://211.147.239.111/code/qianxun/portal/trunk --username zhangcj --password 23la0spseos
+svn checkout svn://qianxun-core.com/code/qianxun/core/trunk --username zhangcj --password 23la0spseos
+svn checkout svn://qianxun-core.com/code/qianxun/panel/trunk --username zhangcj --password 23la0spseos
+bandwagon
+QtsNwER3Fu
+
+qingcloud.com
+qianxunyouxi@163.com
+312daydayUP
+
+Aliyun服务器
+yniuchen@msn.com
+312daydayUP
+game:
+huangjian
+IMH2GRSGO3ZU13DH
+www:
+hunagjian
+DDI2EX7EKPZ12QY4
+
+http://panel.qianxunyouxi.com
+http://panel.qianxunyouxi.com/game/list
+账号密码：	1187543077@qq.com 123789
+
+svn://fly.qianxunyouxi.com/repo_qianxun
+qianxun
+yuanyao403abc

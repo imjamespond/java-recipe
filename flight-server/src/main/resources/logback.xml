@@ -1,0 +1,45 @@
+<configuration>
+	
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%date %level [%thread] [%logger{0}] Line:%L %m%n</pattern>
+		</encoder>
+	</appender>
+	
+	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<!--
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			LevelFilter
+			<level>DEBUG</level>
+			<OnMismatch>DENY</OnMismatch>
+			<OnMatch>NEUTRAL</OnMatch>
+		</filter>-->
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>./logs/logFile.%d{yyyy-MM-dd}.log</fileNamePattern>
+			<maxHistory>30</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%date{yyyy/MM/dd HH:mm:ss}-%msg%n</pattern>
+		</encoder>
+	</appender>
+	
+	<logger name="com.metasoft.flying" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="STDOUT" />
+		<appender-ref ref="FILE" />
+	</logger>
+	
+	<logger name="com.qianxun" additivity="false">
+		<level value="INFO" />
+		<appender-ref ref="STDOUT" />
+		<appender-ref ref="FILE" />
+	</logger>
+	
+	<!--<logger name="com.metasoft.flying.node" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="STDOUT" />
+	</logger>
+	 <logger name="org.jboss.netty.handler.codec.frame" additivity="false"> <level
+		value="DEBUG" /> <appender-ref ref="STDOUT" /> <appender-ref ref="FILE" /> </logger>
+		<root level="DEBUG"> <appender-ref ref="STDOUT" /> </root> -->
+</configuration>
