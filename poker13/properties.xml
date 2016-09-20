@@ -1,0 +1,23 @@
+<project xmlns:artifact="antlib:org.apache.maven.artifact.ant">
+	<property name="jdk.version" value="1.7" />
+	<property name="source.encoding" value="UTF-8" />
+
+	<artifact:pom id="pom.this" file="pom.xml" />
+	<artifact:dependencies filesetid="fileset.lib.runtime" pathid="path.lib.runtime" pomrefid="pom.this" usescope="runtime" type="jar"/>
+	<artifact:dependencies filesetid="fileset.lib.provided" pathid="path.lib.provided" pomrefid="pom.this" usescope="provided" type="jar"/>
+	<artifact:dependencies filesetid="fileset.lib.test" pathid="path.lib.test" pomrefid="pom.this" usescope="test" type="jar"/>
+
+
+
+	<path id="classpath.project">
+		<path refid="path.lib.runtime" />
+		<path refid="path.lib.provided" />
+		<pathelement location="target/classes" />
+	</path>
+	<path id="classpath.project-test">
+		<path refid="classpath.project" />
+		<path refid="path.lib.test" />
+		<pathelement location="target/classes-test" />
+	</path>
+</project>
+

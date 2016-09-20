@@ -1,0 +1,81 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>山海後台管理系統</title>
+<link href="css/login.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="js/jquery.js"></script>
+
+<script type="text/javascript" src="lang_cfg.js"></script>
+<script language="javascript" type="text/javascript">
+window.onload=function(){
+document.getElementById("username").innerHTML		=username;
+document.getElementById("password").innerHTML		=password;
+//document.getElementById("index1").innerHTML			=index1;
+document.getElementById("index2").innerHTML			=index2;
+document.getElementById("index3").innerHTML			=index3;
+}
+</script>
+</head>
+<body>
+<form name="form1" method="post" action="clklogin.php" onSubmit="return check()">
+<div class="wrap">
+  
+  <div class="main">
+   <div class="login">
+    <div class="left">
+	  <ul>
+        <li><span id="username">用　戶　名</span>：<input type="text" name="username" id="username" size="4" class="kuang" ></li>
+        <li><span id="password">密 　　碼</span>：<input type="password" name="password" id="password" size="4" class="kuang" ></li>
+        <!--<li><span id="index1">驗　證　碼</span>：<input name="access" type="text" size="4" class="kuang_2" ><input name="access1" type="hidden" value="<?echo $verfycode?>"><b><span style="background-color: #efefef;width:50px;height:22px;"><font color=#000000>&nbsp;&nbsp;</font></span></b></li>-->
+      
+      </ul>
+	 </div> 
+	 <div class="right"><input type="submit" name="Submit2" value=" " class="go" title="" /></div> 
+   </div>
+   <div class="text"><span id="index2">《上古戰神記》管理後台是由動感光波遊戲開發組製作</span></div>
+    <div class="copyRight"><span id="index3">Copyright 2010-2020 All rights reserved 赤兔數字動漫 版權所有</span></div>
+  </div>
+</div>
+</form>
+</body>
+</html>
+
+<script>
+function isblank(str)
+{
+    var i;
+    var len=str.length;
+    for(i=0;i<len;++i)
+    {
+		if(str.charAt(i)!=" ")
+			return false;
+    }
+    return true;
+}
+
+function check()
+{
+	if (document.form1.username.value=="" || isblank(document.form1.username.value))
+	{
+		alert(index4);
+		document.form1.username.focus();
+		return false;
+	}
+	if (document.form1.password.value=="" || isblank(document.form1.password.value))
+	{
+		alert(index5);
+		document.form1.password.focus();
+		return false;
+	}
+	if (document.form1.access.value!=document.form1.access1.value)
+	{
+		alert(index6);
+		document.form1.access.focus();
+		document.form1.access.select();
+		return false;
+	}
+	else return true;
+}
+</script>

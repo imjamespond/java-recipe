@@ -1,0 +1,19 @@
+body {font-family:Arial, Helvetica, sans-serif;
+      font-size:12px;
+	  margin:0px;
+	  padding:0px;}
+	  
+.subNav {float:left;width:196px;_height:535px;min-height:535px;border:1px solid #c8c8c8;background:#fff url(../images/subNav_bg.jpg) repeat-x top;}
+.subNav .title { border:1px solid #fff;text-align:center;}
+.subNav .title img {margin-top:20px;}
+.subNav .text {width:151px;margin:7px 0 0 23px;}
+
+.sdmenu {width: 150px;padding-bottom: 10px;height:40px;}
+.sdmenu span{background:url(../images/xian_1.jpg) repeat-x bottom;}
+.sdmenu div span a {text-decoration:none;background:url(../images/subNav_icon1.jpg) no-repeat 6px;font-weight:bold; color:#5b5959;padding: 5px 5px 10px 34px;display: block;}
+.sdmenu div span a:hover {text-decoration:none;background:url(../images/subNav_icon2.jpg) no-repeat center center; color:#fff;}
+.sdmenu div {overflow: hidden;}
+.sdmenu a:hover {  text-decoration:underline; display:block;color:#FC4700;}
+.sdmenu div.collapsed {height: 30px;}
+.sdmenu div span {display: block;color: white;cursor: default;}
+.child {text-decoration:none;background:url(../images/icon_5.jpg) no-repeat 13px;padding-left:35px;color:#5b5959;line-height:25px;}

@@ -1,0 +1,23 @@
+body {font-family:Arial, Helvetica, sans-serif;
+      font-size:12px;
+	  margin:0px;
+	  padding:0px;
+	  background:url(../images/bg.jpg) repeat-x;}
+ul,ol,li,h1,h2,h3,h4,h5,h6,form,fieldset,img,div,dl,dt,dd{margin:0;padding:0;border:none;}
+li{list-style-type:none;}
+body a {text-decoration:none; color:#000000;}
+body a:hover { text-decoration:underline;color:#FC4700;}
+
+.top {width:1003px;height:73px;margin:0 auto; background:url(../images/top_bg.jpg) no-repeat; overflow:hidden;}
+.top ul {float:right; height:19px;line-height:19px;margin:45px 10px 0 0; display:inline;}
+.top ul li {float:left;margin-left:15px;display:inline;}
+.top span {font-weight:bold;}
+.top .out {width:84px;height:19px;background:url(../images/out.jpg) no-repeat; text-align:center; color:#FFFFFF;display:block;}
+.nav {width:1003px;height:36px;line-height:36px;margin:0 auto;background:url(../images/nav_bg.jpg) repeat-x;}
+.nav img {float:right;}
+.nav ul {float:left;width:999px;background:url(../images/nav_left.jpg) no-repeat left bottom;display:block;}
+.nav li {float:left;background:url(../images/nav_xian.jpg) no-repeat right bottom;padding-right:1px;}
+.nav li a {color:#FFFFFF; display:block; padding:0px 15px;}
+.nav li a:hover,.nav li a.active { text-decoration:none;background:url(../images/nav_bg_2.jpg) repeat-x; display:block;}
+.nav .L01 a,.nav .L01 a:hover {width:55px;background:url(../images/nav_bg_3.jpg) no-repeat;display:block; text-align:center;}
+.nav .L02{background:url(../images/nav_bg_2.jpg) repeat-x;}
