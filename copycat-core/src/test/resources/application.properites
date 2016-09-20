@@ -1,0 +1,6 @@
+database.connection.driver=org.postgresql.Driver
+database.connection.url=jdbc:postgresql://localhost/consultant
+database.connection.username=postgres
+database.connection.password=daydayup
+database.connection.min.size=5
+database.connection.max.size=100
