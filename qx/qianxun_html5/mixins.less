@@ -1,0 +1,39 @@
+/* Mixin to generate random number;
+   int should be 0 or 1, 1 being to make it an integer 
+*/
+.makeRandom(@min: 0, @max: @min+1, @int: 0) { 
+  .checkInt() {
+    @getNum: `Math.random() * (@{max} - @{min} + @{int})`;
+    @base: unit(`@{int} == 1 ? Math.floor(@{getNum}) : @{getNum}`);
+  }
+  .checkInt();
+  @randNum: @base + @min;
+}
+
+/*
+LESS Use Mixin
+
+.rand1 {
+  .makeRandom(); //straight random decimal between 0 - 1
+  random-number: @randNum;
+}
+
+.rand2 {
+  .makeRandom(@max: 2); //random decimal 0 - 2
+  random-number: @randNum;
+}
+
+.rand3 {
+  .makeRandom(10, 20, 1); //random integer  10 - 20
+  random-number: @randNum;  
+}
+*/
+
+.starAnim(@anim-name, @left, @top, @width, @time){
+	left: @left;
+	top: @top;
+	width: @width;
+	//.animation(s0 1.5s alternate);
+	.animation(@anim-name 4s infinite @time alternate backwards);
+}
+

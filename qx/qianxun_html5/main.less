@@ -1,0 +1,513 @@
+@import "mixins.less";
+@import "lesshat.less";
+/*common*/
+body{font-family: "Helvetica Neue", Helvetica, Arial, "WenQuanYi Micro Hei", "Microsoft Yahei", SimSun, sans-serif!important;margin:0 auto;padding:0;background:#FFF;font-size:12px;color:#333;}
+body > div{margin-right:auto;margin-left:auto;} 
+div,form,ul,ol,li,span,p{margin:0;padding:0;border:0;}
+img,a img{border:0;margin:0;padding:0;}
+h1,h2,h3,h4,h5,h6{margin:0;padding:0;font-size:12px;font-weight:normal;}
+ul,ol,li{list-style:none}
+table,td,input{font-size:12px;padding:0}
+input,button,select{font-family: "Helvetica Neue", Helvetica, Arial, "WenQuanYi Micro Hei", "Microsoft Yahei", SimSun, sans-serif!important;}
+/*common*/
+
+.clear{
+	display: block;
+	clear: both;
+}
+
+html,body{
+	height: 100%;
+}
+body{
+	background: #135ef1 url(images/bg.jpg) repeat-x;
+}
+#wrapper{
+	position: relative;
+	height: 100%;
+}
+.star{
+	position: absolute;
+}
+/*
+背景星星动画
+*/
+#star0{
+	.starAnim(s0, -20px, 20%, 60px, -1.3s);
+}
+#star1{
+	.starAnim(s1, 15px, 60%, 105px, 2s);
+}
+#star2{
+	.starAnim(s2, 35%, 25%, 150px, -2s);
+}
+#star3{
+	.starAnim(s3, 50%, 5%, 70px, 3s);
+}
+#star4{
+	.starAnim(s4, 70%, 70%, 80px, 1.1s);
+}
+#star5{
+	.starAnim(s5, 85%, 20%, 100px, .2s);
+}
+//滑动区块
+.section{
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	min-height: 600px;
+	overflow: hidden;
+	z-index: 1;
+	.opacity(0);
+	.transition(all .7s);
+}
+//滑动区块激活
+.section.active{
+	z-index: 2;
+	.opacity(1);
+}
+#div0{
+	position: relative;
+	height: 100%;
+}
+#topBar0{
+	width: 875px;
+	padding-top: 50px;
+	padding-top: 35px\9;
+	margin: 0 auto;
+	overflow: hidden;
+}
+#logo, #gameBtn{
+	float: left;
+	display: block;
+	text-indent: -5000px;
+	.opacity(0);
+}
+.active #logo,
+.active #gameBtn{
+	.opacity(1);
+}
+#logo{
+	width: 189px;
+	height: 61px;
+	margin-left: 105px;
+	background: url(images/logo.png) no-repeat;
+	//filter:progid:DXImageTransform.Microsoft.AlphaImageLoader (src="images/logo.png", enabled=true, sizingMethod=scale);
+	.transition(all 2s);
+}
+#gameBtn{
+	width: 173px;
+	height: 66px;
+	margin-left: 100px;
+	background: url(images/toGame.png) no-repeat;
+	//filter:progid:DXImageTransform.Microsoft.AlphaImageLoader (src="images/toGame.png", enabled=true, sizingMethod=scale);
+	.transition(all 1s);
+}
+//区块1 image
+#imgDiv0{
+	position: absolute;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	width: 875px;
+	height: 351px;
+	margin: auto;
+	background: url(images/img0.png) no-repeat;
+	.transform-style(preserve-3d);
+}
+#img1{
+	position: absolute;
+	left: 235px;
+	top: 25px;
+}
+.active #imgDiv0{
+	.animation(slide1 2.5s backwards);
+}
+.active #img1{
+	.animation(slide1 2.2s backwards);
+}
+#imgDiv1{
+	width: 100%;
+	height: 100%;
+}
+#navDiv{
+	position: absolute;
+	top: 30%;
+	width: 100%;
+}
+.active #navDiv{
+	.animation(slide2navAnim 1.5s ease-out);
+}
+#nav{
+	width: 540px;
+	margin: 0 auto;
+	.transition(all 0.1s);
+}
+#nav.active{
+	width: 610px;
+}
+//滑动区块2,滑动图标
+.tab{
+	float: left;
+	width: 90px;
+	height: 90px;
+	text-align: center;
+	.transition(width 0.1s,height 0.1s,margin 0.1s,transform .7s 1.5s);
+}
+//滑动区块2,滑动图标激活状态
+.tab.active{
+	width: 160px;
+	height: 160px;
+	margin: -35px 0 0 0;
+}
+//滑动区块2,滑动导航图标,初始滑行动画
+#tab0{
+	.transform(translateX(225px));
+}
+#tab1{
+	.transform(translateX(135px));
+}
+#tab2{
+	.transform(translateX(45px));
+}
+#tab3{
+	.transform(translateX(-45px));
+}
+#tab4{
+	.transform(translateX(-135px));
+}
+#tab5{
+	.transform(translateX(-225px));
+}
+//滑动区块2,激活图标
+.active #tab0,
+.active #tab1,
+.active #tab2,
+.active #tab3,
+.active #tab4,
+.active #tab5{
+	.transform(translateX(0));
+}
+.tab img{
+	height: 100%;
+}
+//滑动区块2,说明图
+#con{
+	position: absolute;
+	top: 55%;
+	width: 100%;
+	.transform(translateY(700px));
+	.transition(all 1s);
+}
+.active #con{
+	.transform(translateY(0));
+	.transition(all 1s);
+}
+//滑动区块2,说明图隐藏
+.con{
+	position: absolute;
+	width: 100%;
+	z-index: 1;
+	text-align: center;
+	.opacity(0);
+	.transition(all 0.5s);
+}
+//激活后显示
+.con.active{
+	z-index: 2;
+	.opacity(1);
+}
+//滑动区块2,预设说明图
+#defCon{
+	position: absolute;
+	width: 100%;
+	text-align: center;
+	.opacity(0);
+	.transition(all 0.5s);
+}
+#defCon.active{
+	.opacity(1);
+}
+//滑动区块3,右侧图
+#imgDiv2{
+	position: relative;
+	width: 1000px;
+	height: 100%;
+	margin: 0 auto;
+}
+//滑动区块3,棋盘角色div
+#img2{
+	position: absolute;
+	left: 50px;
+	top: 100px;
+	width: 509px;
+	height: 373px;
+}
+//滑动区块3,四角角色
+#pic0{
+	left: 0;
+	top: 0;
+	background-position: 0 0;
+	.opacity(0);
+	.transform(translate3d(-500px, -500px, 0));
+}
+#pic1{
+	right: 0;
+	top: 0;
+	background-position: 0 -118px;
+	.opacity(0);
+	.transform(translate3d(500px, -500px, 0));
+}
+#pic2{
+	left: 0;
+	bottom: 0;
+	background-position: 0 -118px;
+	.opacity(0);
+	.transform(translate3d(-500px, 500px, 0));
+}
+#pic3{
+	right: 0;
+	bottom: 0;
+	background-position: 0 0;
+	.opacity(0);
+	.transform(translate3d(500px, 500px, 0));
+}
+//滑动区块3,四角角色激活
+.active #pic0{.slide3ActivateRole}
+.active #pic1{.slide3ActivateRole}
+.active #pic2{.slide3ActivateRole}
+.active #pic3{.slide3ActivateRole}
+.slide3ActivateRole(){
+	.opacity(1);
+	.transform(translate3d(0, 0, 0));
+}
+//滑动区块3,棋盘
+#pic4{
+	position: absolute;
+	width: 308px;
+	height: 309px;
+	left: 102px;
+	top: 25px;
+	background-image: url(images/img2_1.png);
+	.opacity(0);
+	.transition(all 1s);
+	.transform(perspective(1000px) translate3d(0, 0, -300px) rotateY(-90deg));//lesshat?
+}
+.active #pic4{
+	.opacity(1);
+	.transform(perspective(1000px) translate3d(0, 0, 0) rotateY(0deg));//lesshat?
+}
+#pic0,#pic1,#pic2,#pic3{
+	position: absolute;
+	width: 86px;
+	height: 118px;
+	background-image: url(images/img2.png);
+	.transition(all 2s);
+}
+#img3{
+	position: absolute;
+	right: 50px;
+	top: 200px;
+	.transition(all 1s);
+}
+//滑动区块4
+#imgDiv3{
+	position: relative;
+	width: 1000px;
+	height: 100%;
+	margin: 0 auto;
+	.perspective(1000px);
+}
+#img4{
+	left: 40%;
+	top: 0;
+	width: 278px;
+	height: 278px;
+	margin-left: -139px;
+	.transform(rotateY(-60deg) translateZ(1000px) rotateX(120deg));
+}
+#img5{
+	left: 66%;
+	top: 90px;
+	width: 264px;
+	height: 264px;
+	margin-left: -132px;
+	.transform(rotateY(-60deg) translateZ(1100px) rotateX(120deg));
+}
+#img6_0{
+	left: 410px;
+	top: 270px;
+	width: 85px;
+	height: 85px;
+	.transform(rotateY(-60deg) translateZ(800px) rotateX(120deg));
+}
+#img6_1{
+	left: 215px;
+	top: 130px;
+	width: 50px;
+	height: 50px;
+	.transform(rotateY(-60deg) translateZ(900px) rotateX(120deg));
+}
+#img6_2{
+	left: 270px;
+	top: 230px;
+	width: 30px;
+	height: 30px;
+	.transform(rotateY(-60deg) translateZ(900px) rotateX(120deg));
+}
+#img7{
+	left: 50%;
+	top: 450px;
+	width: 505px;
+	height: 113px;
+	margin-left: -252px;
+	.transform(rotateY(-60deg) translateZ(800px));
+}
+#img4,
+#img5,
+#img6_0,
+#img6_1,
+#img6_2,
+#img7{
+	position: absolute;
+	.transition(all 2s);
+}
+.active #img4,
+.active #img5,
+.active #img6_0,
+.active #img6_1,
+.active #img6_2,
+.active #img7{
+	.transition(all 2s);
+	.transform(rotateY(0deg) translateZ(0px) rotateX(0deg) scale(1));
+}
+#sidebar{
+	position: absolute;
+	right: 50px;
+	top: 50%;
+	width: 10px;
+	height: 160px;
+	margin-top: -80px;
+}
+#sidebar li{
+	height: 10px;
+	margin-bottom: 30px;
+	border-radius: 50%;
+	background: #bbb;
+}
+#sidebar li.active{
+	background: #fff;
+}
+#topBar{
+	position: absolute;
+	right: 0;
+	top: 0;
+	color: #fff;
+	line-height: 25px;
+	font-size: 15px;
+	z-index: 10;
+}
+#topBar a{
+	color: #fff;
+}
+#topBar .line{
+	margin: 0 10px;
+}
+#userArea,
+#login{
+	padding-top: 5px;
+}
+#userArea{
+	margin-right: 30px;
+}
+#login{
+	margin-right: 100px;
+}
+#userName{
+	float: left;
+	margin-right: 50px;
+}
+.userOp{
+	float: left;
+}
+.userOp a{
+	text-decoration: none;
+}
+#topBar_sm{
+	position: absolute;
+	left: 30px;
+	top: 20px;
+	height: 0;
+	overflow: hidden;
+	z-index: 10;
+	.transition(height 1.5s);
+}
+#topBar_sm.active{
+	height: 38px;
+}
+#logo_sm{
+	float: left;
+	display: block;
+	width: 108px;
+	height: 25px;
+	margin-top: 7px;
+	text-indent: -5000px;
+	background: url(images/logo_sm.png) no-repeat;
+}
+#gameBtn_sm{
+	float: left;
+	display: block;
+	width: 135px;
+	height: 38px;
+	margin-left: 20px;
+	text-indent: -5000px;
+	background: url(images/toGame_sm.png) no-repeat;
+}
+#footer{
+	position: absolute;
+	left: 30px;
+	bottom: 30px;
+	width: 250px;
+	z-index: 10;
+}
+#footer p{
+	color: #83c1e4;
+	line-height: 25px;
+}
+#footer a{
+	color: #83c1e4;
+	text-decoration: none;
+}
+
+.keyframes(~'slide1,	0%{transform: perspective(1000px) translateY(800px) translateZ(2000px);} 100%{transform: perspective(1000px) translateY(0px) translateZ(0px);}');
+
+.keyframes(~'slide2navAnim,0%{transform: translateY(-800px);} 60%{transform: translateY(0px);} 70%{transform: translateY(-70px);} 80%{transform: translateY(0px);} 90%{transform: translateY(-30px);} 100%{transform: translateY(0px);}');
+
+.keyframes(~'s0,	0%{opacity: 1;transform: rotateZ(30deg) scale3d(1, 1, 1);} 100%{opacity: 0;transform: rotateZ(30deg) scale3d(0, 0, 0);}');
+
+.keyframes(~'s1,	0%{opacity: 1;transform: rotateZ(30deg) scale3d(1, 1, 1);} 100%{opacity: 0;transform: rotateZ(30deg) scale3d(0, 0, 0);}');
+
+.keyframes(~'s2,	0%{opacity: 1;transform: rotateZ(0deg) scale3d(1, 1, 1);} 100%{opacity: 0;transform: rotateZ(30deg) scale3d(0, 0, 0);}');
+
+.keyframes(~'s3,	0%{opacity: 1;transform: rotateZ(0deg) scale3d(1, 1, 1);} 100%{opacity: 0;transform: rotateZ(-30deg) scale3d(0, 0, 0);}');
+
+.keyframes(~'s4,	0%{opacity: 1;transform: rotateZ(-10deg) scale3d(1, 1, 1);} 100%{opacity: 0;transform: rotateZ(-10deg) scale3d(0, 0, 0);}');
+
+.keyframes(~'s5,	0%{opacity: 1;transform: rotateZ(-15deg) scale3d(1, 1, 1);} 100%{opacity: 0;transform: rotateZ(-15deg) scale3d(0, 0, 0);}');
+
+
+.plane{position: absolute;display: block;}
+#plane_0{
+width: 173px;height: 133px;right: 140px;top: 510px;
+background: url(images/plane_0.png) no-repeat;
+.animation( plane0KeyFrame 1.2s infinite alternate);
+}
+#plane_1{width: 105px;height: 115px;left: 80px;top: 470px;
+background: url(images/plane_1.png) no-repeat;
+.animation( plane1KeyFrame 1.5s 0.5s infinite alternate);
+}
+.keyframes(~'plane0KeyFrame, 0%{transform: translate3d(0, 0, 0);} 100%{transform: translate3d(0, 20px, 0);}');
+.keyframes(~'plane1KeyFrame, 0%{transform: translate3d(0, 0, 0);} 100%{transform: translate3d(0, -20px, 0);}');

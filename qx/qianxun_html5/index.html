@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>千寻H5C3版</title>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<link rel="stylesheet" href="main.css">
+<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    <!-- Bootstrap core CSS -->
+    <link href="./css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div id="wrapper">
+	<img src="images/star.png" alt="" id="star0" class="star">
+	<img src="images/star.png" alt="" id="star1" class="star">
+	<img src="images/star.png" alt="" id="star2" class="star">
+	<img src="images/star.png" alt="" id="star3" class="star">
+	<img src="images/star.png" alt="" id="star4" class="star">
+	<img src="images/star.png" alt="" id="star5" class="star">
+	<div id="div0" class="section">
+		<div id="topBar0">
+			<a href="/" id="logo">千寻游戏</a>
+			<a href="http://user.qianxunyouxi.com/webgame/fly" id="gameBtn" target="_blank">进入飞行棋</a>
+		</div>
+		<div id="imgDiv0">
+			<img src="images/img1.png" alt="" id="img1">
+		</div>
+	</div>
+	<div id="div1" class="section">
+		<div id="imgDiv1">
+			<div id="navDiv">
+				<div id="nav">
+					<div class="tab" id="tab0">
+						<a href="javascript:;"><img src="images/tab0.png" /></a>
+					</div>
+					<div class="tab" id="tab1">
+						<a href="javascript:;"><img src="images/tab1.png" /></a>
+					</div>
+					<div class="tab" id="tab2">
+						<a href="javascript:;"><img src="images/tab2.png" /></a>
+					</div>
+					<div class="tab" id="tab3">
+						<a href="javascript:;"><img src="images/tab3.png" /></a>
+					</div>
+					<div class="tab" id="tab4">
+						<a href="javascript:;"><img src="images/tab4.png" /></a>
+					</div>
+					<div class="tab" id="tab5">
+						<a href="javascript:;"><img src="images/tab5.png" /></a>
+					</div>
+					<span class="clear"></span>
+				</div>
+			</div>
+			<div id="con">
+				<div class="con" id="con0">
+					<img src="images/con0.png" alt="">
+				</div>
+				<div class="con" id="con1">
+					<img src="images/con1.png" alt="">
+				</div>
+				<div class="con" id="con2">
+					<img src="images/con2.png" alt="">
+				</div>
+				<div class="con" id="con3">
+					<img src="images/con3.png" alt="">
+				</div>
+				<div class="con" id="con4">
+					<img src="images/con4.png" alt="">
+				</div>
+				<div class="con" id="con5">
+					<img src="images/con5.png" alt="">
+				</div>
+				<div id="defCon" class="active">
+					<img src="images/defCon.png" alt="">
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="div2" class="section">
+		<div id="imgDiv2">
+			<div id="img2">
+				<div id="pic0"></div>
+				<div id="pic1"></div>
+				<div id="pic2"></div>
+				<div id="pic3"></div>
+				<div id="pic4"></div>
+			</div>
+			<img src="images/img3.png" alt="" id="img3" />
+		</div>
+	</div>
+	<div id="div3" class="section">
+		<div id="imgDiv3">
+			<img src="images/img4.png" alt="" id="img4">
+			<img src="images/img5.png" alt="" id="img5">
+			<img src="images/img6.png" alt="" id="img6_0">
+			<img src="images/img6.png" alt="" id="img6_1">
+			<img src="images/img6.png" alt="" id="img6_2">
+			<img src="images/img7.png" alt="" id="img7">
+		</div>
+	</div>
+	<div id="topBar">
+		<div id="userArea" style="display: none;">
+			<div id="userName">欢迎您，昵称有六个字</div>
+			<div class="userOp">
+				<a href="">个人中心</a>
+				<span class="line">|</span>
+				<a href="">千寻论坛</a>
+				<span class="line">|</span>
+				<a href="">飞行俱乐部</a>
+			</div>
+		</div>
+		<div id="login">
+			<div class="userOp">
+				<a href="javascript:;">登录</a>
+				<span class="line">|</span>
+				<a href="">注册</a>
+			</div>
+		</div>
+	</div>
+	<div id="topBar_sm">
+		<a href="" id="logo_sm">千寻游戏</a>
+		<a href="" id="gameBtn_sm">进入飞行棋</a>
+	</div>
+	<ul id="sidebar">
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+	</ul>
+	<div id="footer">
+		<p>CopyRight 2016 千寻游戏网</p>
+		<p>
+			<a href="introduce.html" target="_blank">公司简介</a>
+			<span>沪ICP备14044493号</span>
+		</p>
+	</div>
+	<span id="plane_0" class="plane"></span>
+	<span id="plane_1" class="plane"></span>
+</div>
+<script type="text/javascript">
+var now = 0;
+var state = true;
+$(document).ready(function(){
+	$("#div0, #sidebar li:eq(0)").addClass("active");
+	//侦听滑鼠滚轮事件
+	$(document).on("mousewheel DOMMouseScroll", function(e){
+		if(!state){
+			return false;
+		}
+		state = false;
+		var ev = e.originalEvent;
+		var wd = ev.wheelDelta ? ev.wheelDelta : -ev.detail;
+		wd < 0 ? (now = now < 3 ? now + 1 : 0) : (now = now > 0 ? now - 1 : 0);
+		$(".section.active, #sidebar li.active").removeClass("active");
+		$("#div" + now + ", #sidebar li:eq(" + now + ")").addClass("active");
+		if(now == 0){
+			$("#topBar_sm").removeClass("active");
+		}else{
+			$("#topBar_sm").addClass("active");
+		}
+		if(window.attachEvent){
+			state = true;
+			return false;
+		}
+		setTimeout(function(){
+			state = true;
+		}, 2000);
+	});
+	//侦听滑鼠在上方
+	$("#nav .tab").mouseover(function(){
+		var n = $(this).index();
+		$(this).addClass("active");
+		$("#nav, #con" + n).addClass("active");
+		$("#defCon").removeClass("active");
+	}).mouseout(function(){
+		$("#nav, #nav .tab, .con").removeClass("active");
+		$("#defCon").addClass("active");
+	});
+});
+</script>
+</body>
+</html>
