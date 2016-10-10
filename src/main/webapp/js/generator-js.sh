@@ -1,0 +1,1 @@
+java -jar compiler-latest/closure-compiler-v20160911.jar --js='jquery-3.1.0.js' '../plugins/jstree/jstree.js' '../plugins/bootstrap/js/bootstrap.min.js' --js='meta-**.js' --js_output_file all.js
