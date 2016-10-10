@@ -37,7 +37,7 @@
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>jstl</artifactId>
-			<scope>provided</scope>
+			<!-- <scope>provided</scope> not provided by tomcat-->
 		</dependency>
 		<dependency>
 			<!-- To build an executable war use one of the profiles below -->
