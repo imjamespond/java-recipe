@@ -1,0 +1,12 @@
+
+apply plugin: 'java'
+
+def springBootVersion = "1.5.7.RELEASE"
+
+repositories{
+	maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+}
+
+dependencies {
+    compile("org.springframework.boot:spring-boot-starter-web:${springBootVersion}")
+}
