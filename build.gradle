@@ -1,12 +1,21 @@
+buildscript {
+	ext {
+		mavenURL = 'http://maven.aliyun.com/nexus/content/groups/public/'
+		springBootVersion = "1.5.7.RELEASE"
+	}
+}
 
-apply plugin: 'java'
+apply plugin: 'java' 
+apply plugin: 'application' 
 
-def springBootVersion = "1.5.7.RELEASE"
-
-repositories{
-	maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+repositories {
+	maven{ url "${mavenURL}"}
+	mavenCentral()
 }
 
 dependencies {
     compile("org.springframework.boot:spring-boot-starter-web:${springBootVersion}")
 }
+
+
+mainClassName = 'com.metasoft.Application'
