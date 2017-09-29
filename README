@@ -1,0 +1,13 @@
+--gradle command
+gradle build
+gradle task --all (全部可执行的task)
+gradle :web-app:listJars (查看依赖)
+
+--使用本地maven仓库
+~/.m2/配置
+
+--gradle user home指定本地仓库位置
+export GRADLE_USER_HOME=$GRADLE_HOME
+
+--avoid gradlew download 
+sed -E  -i '' "s#distributionUrl=.*#distributionUrl=file\://${GRADLE_HOME}-bin.zip#" gradle/wrapper/gradle-wrapper.properties

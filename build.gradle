@@ -1,0 +1,26 @@
+
+// In this section you declare where to find the dependencies of your project
+allprojects {
+    repositories {
+    	maven {url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+        mavenLocal()
+        mavenCentral()
+        jcenter()
+    }
+    
+    apply plugin: 'java'
+    //so that we can use 'compile', 'testCompile' for dependencies
+    dependencies {
+    	if (!project.name.equals('web-app')) {
+	      testCompile 'junit:junit:4.12'
+	    }
+    }
+    
+    
+    sourceCompatibility = 1.8
+	targetCompatibility = 1.8
+}
+
+subprojects {
+    version = '1.0'
+}

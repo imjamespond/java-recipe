@@ -1,0 +1,44 @@
+buildscript { 
+    repositories {
+        maven {url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+        mavenLocal()
+        mavenCentral()
+    }
+    ext{
+        springBootVersion = "1.5.7.RELEASE"
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+apply plugin: 'war'
+apply plugin: 'org.springframework.boot'
+
+dependencies {
+    compile project(':kafka-lib') 
+    compile(
+    	"org.springframework.boot:spring-boot-starter-web:${springBootVersion}",
+    	"org.springframework.boot:spring-boot-starter-data-jpa:${springBootVersion}",
+    	"org.sitemesh:sitemesh:3.0.1",
+    	'javax.servlet:jstl:1.2',//jstl
+    	'org.springframework.boot:spring-boot-starter-tomcat',
+    	'org.apache.tomcat.embed:tomcat-embed-jasper:8.5.20', //jsp
+    	'io.netty:netty-all:4.1.15.Final',
+    	'commons-beanutils:commons-beanutils:1.9.3',
+        'org.postgresql:postgresql:9.4.1212'
+    ) 
+    testCompile(
+    	"org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
+    )
+}
+
+bootRepackage {
+    mainClass = 'App'
+}
+
+task listJars {
+    doLast {
+        configurations.compile.each { File file -> println file.name }
+    }
+}

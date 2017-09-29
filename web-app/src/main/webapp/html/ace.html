@@ -1,0 +1,73 @@
+<html>
+	<head>
+		<style>
+		#editor {
+				position: absolute;
+				width: 500px;
+				height: 400px;
+		}
+		</style>
+	</head>
+	<body>
+		<div id="block" draggable=true>Drag me!</div>
+		<div id="editor"></div>
+	
+	<script src="/data-center/js/lib/ace/ace.js" type="text/javascript" charset="utf-8"></script>
+	<script src="/data-center/js/lib/ace/mode-sql.js" type="text/javascript" charset="utf-8"></script>
+  <script src="/data-center/js/lib/ace/ext-language_tools.js" type="text/javascript" charset="utf-8"></script>
+	<script>
+			var editor = ace.edit("editor");
+			var JavaScriptMode = ace.require("ace/mode/sql").Mode;
+			editor.session.setMode(new JavaScriptMode());
+			editor.$blockScrolling = Infinity;
+			var langTools = ace.require("ace/ext/language_tools");
+			editor.setOptions({
+					enableBasicAutocompletion: true,
+					enableSnippets: true,
+					enableLiveAutocompletion: false
+			});
+			var wordList = [ {"word":"hello"}, 
+				{"word":"good morning"},
+				{"word":"suggestions"},
+				{"word":"auto suggest"},
+				{"word":"try this"}]
+			var rhymeCompleter = {
+					getCompletions: function(editor, session, pos, prefix, callback) {
+						if (prefix.length === 0) { callback(null, []); return }
+						callback(null, wordList.map(function(ea)  {           
+							return {name: ea.word, value: ea.word, meta: "optional text"}
+						}));
+					}
+			}
+			langTools.addCompleter(rhymeCompleter);
+
+			editor.commands.on("afterExec", function(e){
+					if (e.command.name == "insertstring"&&/^[\w.]$/.test(e.args)) {
+							editor.execCommand("startAutocomplete")
+					}
+			})
+
+			var onInput = function(){
+				var shouldShow = !editor.session.getValue().length;
+				var node = editor.renderer.emptyMessageNode;
+				if (!shouldShow && node) {
+						editor.renderer.scroller.removeChild(editor.renderer.emptyMessageNode);
+						editor.renderer.emptyMessageNode = null;
+				} else if (shouldShow && !node) {
+						node = editor.renderer.emptyMessageNode = document.createElement("div");
+						node.textContent = "Example: SELECT * FROM tablename, or press CTRL + space"
+						node.className = "ace_invisible ace_emptyMessage"
+						node.style.padding = "0 9px"
+						editor.renderer.scroller.appendChild(node);
+				} 
+			}
+			editor.on("input", onInput);
+			onInput()
+
+			block.addEventListener("dragstart", function(ev) {
+					// set the data to move into the editor
+					ev.dataTransfer.setData("text", "text from drag block");
+			})
+	</script>
+	</body>
+</html>

@@ -1,0 +1,21 @@
+apply plugin: 'java-library'
+
+dependencies { 
+	compile project(':kafka-lib') 
+	runtime group: 'org.apache.spark', name: 'spark-sql_2.11', version: '2.1.1'
+}
+
+version = '0.1.0'
+
+jar {
+    manifest {
+        attributes('Implementation-Title': project.name,
+                   'Implementation-Version': project.version)
+    }
+}
+
+task listJars {
+    doLast {
+        configurations.compile.each { File file -> println file.name }
+    }
+}
