@@ -15,8 +15,6 @@ include 'api'
 include 'services:webservice'
 */
 
-rootProject.name = 'data-analysis'
-include 'spark-job1'
-include 'spark-lib'
-include 'kafka-lib'
+rootProject.name = 'data-analysis' 
+include 'spring-cloud-stream'
 include 'web-app'

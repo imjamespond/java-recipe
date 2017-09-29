@@ -9,13 +9,18 @@ allprojects {
     }
     
     apply plugin: 'java'
+    
     //so that we can use 'compile', 'testCompile' for dependencies
     dependencies {
+        compile group: 'com.google.code.gson', name: 'gson', version: '2.2.4'
     	if (!project.name.equals('web-app')) {
 	      testCompile 'junit:junit:4.12'
 	    }
     }
     
+	ext{
+	    springBootVersion = "1.5.7.RELEASE"
+	}
     
     sourceCompatibility = 1.8
 	targetCompatibility = 1.8

@@ -1,0 +1,39 @@
+kafkaBroker1: yy:9092
+kafkaBroker2: yy:9092
+zk1: yy:2181
+zk2: yy:2181
+
+server:
+  port: 8082
+spring:
+  cloud:
+    stream:
+      bindings:
+        input:
+          destination: dataIn
+          binder: kafka1
+          group: testGroup
+        output:
+          destination: dataOut
+          binder: kafka2
+      binders:
+        kafka1:
+         type: kafka
+         environment:
+           spring:
+             cloud:
+               stream:
+                kafka:
+                  binder:
+                    brokers: ${kafkaBroker1}
+                    zkNodes: ${zk1}
+        kafka2:
+         type: kafka
+         environment:
+           spring:
+             cloud:
+               stream:
+                 kafka:
+                   binder:
+                     brokers: ${kafkaBroker2}
+                     zkNodes: ${zk2}

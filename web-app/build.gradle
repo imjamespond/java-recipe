@@ -4,9 +4,7 @@ buildscript {
         mavenLocal()
         mavenCentral()
     }
-    ext{
-        springBootVersion = "1.5.7.RELEASE"
-    }
+    
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
     }
@@ -16,7 +14,7 @@ apply plugin: 'war'
 apply plugin: 'org.springframework.boot'
 
 dependencies {
-    compile project(':kafka-lib') 
+    compile project(':spring-cloud-stream') 
     compile(
     	"org.springframework.boot:spring-boot-starter-web:${springBootVersion}",
     	"org.springframework.boot:spring-boot-starter-data-jpa:${springBootVersion}",
