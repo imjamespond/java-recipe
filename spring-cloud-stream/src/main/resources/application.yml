@@ -16,6 +16,12 @@ spring:
         output:
           destination: dataOut
           binder: kafka2
+          group: autoCommitGroup
+      kafka:
+        bindings:
+          output:
+            consumer:
+              autoCommitOffset: true
       binders:
         kafka1:
          type: kafka
