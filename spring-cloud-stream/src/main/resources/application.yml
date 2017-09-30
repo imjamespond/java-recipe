@@ -1,3 +1,4 @@
+
 kafkaBroker1: yy:9092
 kafkaBroker2: yy:9092
 zk1: yy:2181
@@ -15,8 +16,14 @@ spring:
           group: testGroup
         output:
           destination: dataOut
+          binder: kafka1
+        inputProduct:
+          destination: dataProduct
+          binder: kafka1
+          group: testGroup
+        outputProduct:
+          destination: dataProduct
           binder: kafka2
-          group: autoCommitGroup
       kafka:
         bindings:
           output:

@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: testZookeeperApp
+    
+  cloud:
+    zookeeper:
+      connect-string: yy:2181

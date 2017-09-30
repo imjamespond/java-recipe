@@ -2,7 +2,10 @@
 // In this section you declare where to find the dependencies of your project
 allprojects {
     repositories {
-    	maven {url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+    	maven { url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+    	maven { url 'https://repo.spring.io/libs-snapshot'}
+    	maven { url 'https://repo.spring.io/libs-release' }
+		maven { url 'https://repo.spring.io/libs-milestone' }
         mavenLocal()
         mavenCentral()
         jcenter()
@@ -22,6 +25,18 @@ allprojects {
 	    springBootVersion = "1.5.7.RELEASE"
 	}
     
+    buildscript {
+    	if ( project.name.startsWith("spring-cloud") ) {
+            repositories {
+                maven { url "https://plugins.gradle.org/m2/" }
+            }
+
+            dependencies {
+                classpath "io.spring.gradle:dependency-management-plugin:1.0.3.RELEASE"
+            }
+	    }
+    }
+
     sourceCompatibility = 1.8
 	targetCompatibility = 1.8
 }

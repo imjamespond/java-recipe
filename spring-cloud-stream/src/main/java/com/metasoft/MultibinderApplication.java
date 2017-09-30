@@ -16,14 +16,53 @@
 
 package com.metasoft;
 
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Date;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.stream.messaging.Processor;
+import org.springframework.context.annotation.Bean;
+import org.springframework.integration.annotation.InboundChannelAdapter;
+import org.springframework.integration.annotation.Poller;
+import org.springframework.integration.core.MessageSource;
+import org.springframework.integration.support.MessageBuilder;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @SpringBootApplication
-public class MultibinderApplication {
+@RestController
+public class MultibinderApplication implements CommandLineRunner{
+	Logger log = LoggerFactory.getLogger(MultibinderApplication.class);
 
 	public static void main(String[] args) {
 		SpringApplication.run(MultibinderApplication.class, args);
 	}
 
+	@Override
+	public void run(String... args) throws Exception {
+		log.info(Arrays.toString(args));
+	}
+	
+	@Autowired
+	ProductProcessor processor;
+
+    @RequestMapping("/send")
+    String send() {
+    	processor.outputProductAdd().send(MessageBuilder.withPayload(
+    			new SimpleDateFormat("yyyy-MM-dd/HH:mm:ss").format(new Date())).build());
+		return "test send";
+	}
+
+    @Bean
+    @InboundChannelAdapter(value = Processor.OUTPUT, 
+    	poller = @Poller(fixedDelay = "3000", maxMessagesPerPoll = "1"))
+    public MessageSource<String> timerMessageSource() {
+        return () -> MessageBuilder.withPayload("短消息-" + new Date()).build();
+    }
 }
