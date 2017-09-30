@@ -16,13 +16,13 @@ spring:
           group: testGroup
         output:
           destination: dataOut
-          binder: kafka1
+          binder: kafka2
         inputProduct:
-          destination: dataProduct
+          destination: dataOut
           binder: kafka1
           group: testGroup
         outputProduct:
-          destination: dataProduct
+          destination: dataIn
           binder: kafka2
       kafka:
         bindings:

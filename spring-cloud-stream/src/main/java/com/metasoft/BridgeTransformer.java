@@ -22,6 +22,7 @@ import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.StreamListener;
 import org.springframework.cloud.stream.messaging.Processor;
 import org.springframework.messaging.Message;
+import org.springframework.messaging.handler.annotation.SendTo;
 
 /**
  * @author Marius Bogoevici
@@ -30,18 +31,18 @@ import org.springframework.messaging.Message;
 public class BridgeTransformer {
 	public static Logger logger = LoggerFactory.getLogger(BridgeTransformer.class);
 
-//	@StreamListener(Processor.OUTPUT)
-//	@SendTo(Processor.INPUT)
-//	public Message<String> sendTransform(Message<String> message) {
-//		logger.info(message.getPayload());
-//		return message;
-//	}
+	@StreamListener(Processor.INPUT)
+	@SendTo(Processor.OUTPUT)
+	public Message<String> sendTransform(Message<String> message) {
+		logger.info(message.getPayload());
+		return message;
+	}
 	
-    @StreamListener(Processor.OUTPUT)
-    public void input(Message<String> message) {
-        System.out.println("一般监听收到：" + message.getPayload());
-    }
-	
+//    @StreamListener(Processor.INPUT)
+//    public void input(Message<String> message) {
+//        System.out.println("一般监听收到：" + message.getPayload());
+//    }
+//	
     @StreamListener(ProductProcessor.INPUT_PRODUCT_ADD)
     public void inputProductAdd(Message<String> message) {
         System.out.println("新增产品监听收到：" + message.getPayload());
