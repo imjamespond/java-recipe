@@ -91,9 +91,5 @@ public class DB2SQLHelper {
 		return sb.toString();
 	}
 	
-	public static void main(String [] args) {
-		String sql = "select * from as_user";
-		System.out.println(genPaginationSQL(sql));
-	}
 	
 }

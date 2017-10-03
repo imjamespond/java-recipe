@@ -53,7 +53,7 @@ public class MultibinderApplication implements CommandLineRunner{
 	ProductProcessor processor;
 
     @RequestMapping("/send")
-    String send() {
+    public String send() {
     	processor.outputProductAdd().send(MessageBuilder.withPayload(
     			new SimpleDateFormat("yyyy-MM-dd/HH:mm:ss").format(new Date())).build());
 		return "test send";

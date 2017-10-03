@@ -17,5 +17,5 @@ include 'services:webservice'
 
 rootProject.name = 'data-analysis' 
 include 'spring-cloud-zookeeper'
-include 'spring-cloud-stream'
+include 'spring-cloud-stream-service'
 include 'web-app'

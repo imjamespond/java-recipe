@@ -12,6 +12,11 @@ allprojects {
     }
     
     apply plugin: 'java'
+
+    sourceCompatibility = 1.8
+	targetCompatibility = 1.8
+	
+	compileJava.options.encoding = 'UTF-8'
     
     //so that we can use 'compile', 'testCompile' for dependencies
     dependencies {
@@ -26,19 +31,35 @@ allprojects {
 	}
     
     buildscript {
-    	if ( project.name.startsWith("spring-cloud") ) {
+    	//if ( project.name.startsWith("spring-cloud") ) {
             repositories {
                 maven { url "https://plugins.gradle.org/m2/" }
             }
 
             dependencies {
                 classpath "io.spring.gradle:dependency-management-plugin:1.0.3.RELEASE"
+                classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
             }
-	    }
+	    //}
     }
-
-    sourceCompatibility = 1.8
-	targetCompatibility = 1.8
+	
+	//create a single Jar with all dependencies
+	task fatJar(type: Jar) {
+		manifest {
+	        attributes 'Implementation-Title': 'Gradle Jar File Example',
+	        	'Implementation-Version': '1.0',
+	        	'Main-Class': 'com.metasoft.MultibinderApplication'
+	    }
+	    baseName = project.name + '-all'
+	    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+	    with jar
+	}
+	
+	task listJars {
+	    doLast {
+	        configurations.compile.each { File file -> println file.name }
+	    }
+	}
 }
 
 subprojects {

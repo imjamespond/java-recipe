@@ -1,19 +1,15 @@
-buildscript { 
-    repositories {
-        maven {url 'http://maven.aliyun.com/nexus/content/groups/public/'}
-        mavenLocal()
-        mavenCentral()
-    }
-    
-    dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+apply plugin: 'war'
+apply plugin: "io.spring.dependency-management"
+apply plugin: 'org.springframework.boot'
+
+dependencyManagement {
+    imports {
+        mavenBom 'org.springframework.cloud:spring-cloud-stream-dependencies:Ditmars.BUILD-SNAPSHOT'
     }
 }
 
-apply plugin: 'war'
-apply plugin: 'org.springframework.boot'
-
 dependencies {
+	compile project(':spring-cloud-stream-service')
     compile(
     	"org.springframework.boot:spring-boot-starter-web:${springBootVersion}",
     	"org.springframework.boot:spring-boot-starter-data-jpa:${springBootVersion}",
@@ -23,7 +19,8 @@ dependencies {
     	'org.apache.tomcat.embed:tomcat-embed-jasper:8.5.20', //jsp
     	'io.netty:netty-all:4.1.15.Final',
     	'commons-beanutils:commons-beanutils:1.9.3',
-        'org.postgresql:postgresql:9.4.1212'
+        'org.postgresql:postgresql:9.4.1212',
+        
     ) 
     testCompile(
     	"org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
@@ -31,11 +28,5 @@ dependencies {
 }
 
 bootRepackage {
-    mainClass = 'App'
-}
-
-task listJars {
-    doLast {
-        configurations.compile.each { File file -> println file.name }
-    }
+    mainClass = 'com.metasoft.App'
 }
