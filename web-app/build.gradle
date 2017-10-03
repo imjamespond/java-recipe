@@ -1,6 +1,6 @@
-apply plugin: 'war'
 apply plugin: "io.spring.dependency-management"
 apply plugin: 'org.springframework.boot'
+apply plugin: 'war'
 
 dependencyManagement {
     imports {
@@ -19,8 +19,7 @@ dependencies {
     	'org.apache.tomcat.embed:tomcat-embed-jasper:8.5.20', //jsp
     	'io.netty:netty-all:4.1.15.Final',
     	'commons-beanutils:commons-beanutils:1.9.3',
-        'org.postgresql:postgresql:9.4.1212',
-        
+        'org.postgresql:postgresql:9.4.1212'
     ) 
     testCompile(
     	"org.springframework.boot:spring-boot-starter-test:${springBootVersion}"

@@ -20,7 +20,10 @@ allprojects {
     
     //so that we can use 'compile', 'testCompile' for dependencies
     dependencies {
-        compile group: 'com.google.code.gson', name: 'gson', version: '2.2.4'
+        compile(
+        	'com.google.code.gson:gson:2.2.4',
+        	'io.projectreactor:reactor-core:3.1.0.RELEASE' //Flux
+        )
     	if (!project.name.equals('web-app')) {
 	      testCompile 'junit:junit:4.12'
 	    }
