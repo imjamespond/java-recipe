@@ -1,10 +1,21 @@
 spring.mvc.view.prefix: /WEB-INF/jsp/
 spring.mvc.view.suffix: .jsp
 
-spring.datasource.url: jdbc:postgresql://yy/dadb
-spring.datasource.username: postgres
-spring.datasource.password:
-spring.datasource.driver-class-name: org.postgresql.Driver
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://yy/dadb
+    username: postgres
+    password:
+    max-idle: 10
+    max-wait: 10000
+    min-idle: 5
+    initial-size: 5
+    validation-query: SELECT 1
+    test-on-borrow: false
+    test-while-idle: true
+    time-between-eviction-runs-millis: 18800
+    jdbc-interceptors: ConnectionState;SlowQueryReport(threshold=0)
 
 application.message: Hello Phil
 init.db: true
@@ -12,3 +23,6 @@ init.db: true
 server:
   port: 8082
   contextPath: /data-analysis
+
+spring.profiles.include: 'kafka'
+

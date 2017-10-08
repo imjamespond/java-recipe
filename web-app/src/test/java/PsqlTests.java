@@ -20,6 +20,11 @@ public class PsqlTests {
     @Test
     public void exampleTest() {
     	assertNotNull(fs);
+    	try {
+			fs.testTransation();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
     }
 
 }

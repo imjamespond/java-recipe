@@ -2,6 +2,7 @@
 gradle build
 gradle task --all (全部可执行的task)
 gradle :web-app:listJars (查看依赖)
+gradle :web-app:test --info --rerun-tasks (单元测试)
 
 --start kafka docker
 docker run --name kfk -p2181:2181 -p9092:9092 -p2222:22 -v /tmp/:/jar -it kfk /entry -bash

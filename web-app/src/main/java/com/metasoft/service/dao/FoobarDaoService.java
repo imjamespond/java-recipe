@@ -39,7 +39,7 @@ public class FoobarDaoService extends PsqlDaoService<FoobarDao> {
 	}
 	
 	@Transactional(propagation=Propagation.REQUIRED, rollbackFor=Exception.class)
-	public void test() throws Exception{
+	public void testTransation() throws Exception{
 		this.insertByAutoId(new FoobarDao("foo","0"));
 		this.getJdbcTemplate().execute("create table sd_foobar ()");
 	}

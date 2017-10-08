@@ -15,3 +15,8 @@ logging.level:
 management:
   security:
     enabled: false
+
+#spring.cloud.zookeeper.dependencies:
+#  - testZookeeperApp: ~
+
+spring.application.name: testZookeeperApp
