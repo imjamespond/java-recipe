@@ -1,72 +1,199 @@
-define('com/home', ['require', 'exports', 'module', 'jquery', 'chart',
-	'utils/commons', 'utils/vue-common' ],
+define('com/home', ['require', 'exports', 'module'],
 	function (require, exports, module) {
-		var $ = require('jquery')
-		var Chart = require('chart')
-		var Commons = require('utils/vue-common')
-		var Utils = require('utils/commons')
-		var GetJSON = Utils.GetJSON
-		var Post = Utils.Post
-		var Assert = Utils.Assert
+
 
 		const VueHome = {
 			template: ` 
 <div> 
-	<div class="col-md-6 margin-bottom-md">
-		<div class="panel light-font ">
-			<div class="panel-heading light-border-bottom">
-				数据资源注册状况</div>
-			<div class="panel-body relative" style="height: 200px;">
-				<div class="absolute" 
-					v-if="catalogSummary==null"> <loading></loading></div>
-				<canvas id="chart-1" ></canvas>
-				
+<div class="demo-layout mdl-layout mdl-js-layout mdl-layout--fixed-drawer mdl-layout--fixed-header">
+<header class="demo-header mdl-layout__header mdl-color--grey-100 mdl-color-text--grey-600">
+	<div class="mdl-layout__header-row">
+		<span class="mdl-layout-title">Home</span>
+		<div class="mdl-layout-spacer"></div>
+		<div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable">
+			<label class="mdl-button mdl-js-button mdl-button--icon" for="search">
+				<i class="material-icons">search</i>
+			</label>
+			<div class="mdl-textfield__expandable-holder">
+				<input class="mdl-textfield__input" type="text" id="search">
+				<label class="mdl-textfield__label" for="search">Enter your query...</label>
 			</div>
 		</div>
+		<button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" id="hdrbtn">
+			<i class="material-icons">more_vert</i>
+		</button>
+		<ul class="mdl-menu mdl-js-menu mdl-js-ripple-effect mdl-menu--bottom-right" for="hdrbtn">
+			<li class="mdl-menu__item">About</li>
+			<li class="mdl-menu__item">Contact</li>
+			<li class="mdl-menu__item">Legal information</li>
+		</ul>
 	</div>
-	<div class="col-md-6 margin-bottom-md">
-		<div class="panel light-font ">
-			<div class="panel-heading light-border-bottom">
-				数据资源共享状况</div>
-			<div class="panel-body relative" style="height: 200px;">
-				<div class="absolute" 
-					v-if="dataSourceSummary==null"> <loading></loading></div>
-				<canvas id="chart-2" ></canvas>
-			</div>
+</header>
+<div class="demo-drawer mdl-layout__drawer mdl-color--blue-grey-900 mdl-color-text--blue-grey-50">
+	<header class="demo-drawer-header">
+		<img src="images/user.jpg" class="demo-avatar">
+		<div class="demo-avatar-dropdown">
+			<span>hello@example.com</span>
+			<div class="mdl-layout-spacer"></div>
+			<button id="accbtn" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+				<i class="material-icons" role="presentation">arrow_drop_down</i>
+				<span class="visuallyhidden">Accounts</span>
+			</button>
+			<ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="accbtn">
+				<li class="mdl-menu__item">hello@example.com</li>
+				<li class="mdl-menu__item">info@example.com</li>
+				<li class="mdl-menu__item"><i class="material-icons">add</i>Add another account...</li>
+			</ul>
 		</div>
-	</div>
+	</header>
+	<nav class="demo-navigation mdl-navigation mdl-color--blue-grey-800">
+		<a class="mdl-navigation__link" href=""><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">home</i>Home</a>
+		<a class="mdl-navigation__link" href=""><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">inbox</i>Inbox</a>
+		<a class="mdl-navigation__link" href=""><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">delete</i>Trash</a>
+		<a class="mdl-navigation__link" href=""><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">report</i>Spam</a>
+		<a class="mdl-navigation__link" href=""><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">forum</i>Forums</a>
+		<a class="mdl-navigation__link" href=""><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">flag</i>Updates</a>
+		<a class="mdl-navigation__link" href=""><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">local_offer</i>Promos</a>
+		<a class="mdl-navigation__link" href=""><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">shopping_cart</i>Purchases</a>
+		<a class="mdl-navigation__link" href=""><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">people</i>Social</a>
+		<div class="mdl-layout-spacer"></div>
+		<a class="mdl-navigation__link" href=""><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">help_outline</i><span class="visuallyhidden">Help</span></a>
+	</nav>
+</div>
+<main class="mdl-layout__content mdl-color--grey-100">
+	<div class="mdl-grid demo-content">
+		<div class="demo-charts mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--12-col mdl-grid">
+			<svg fill="currentColor" width="200px" height="200px" viewBox="0 0 1 1" class="demo-chart mdl-cell mdl-cell--4-col mdl-cell--3-col-desktop">
+				<use xlink:href="#piechart" mask="url(#piemask)" />
+				<text x="0.5" y="0.5" font-family="Roboto" font-size="0.3" fill="#888" text-anchor="middle" dy="0.1">82<tspan font-size="0.2" dy="-0.07">%</tspan></text>
+			</svg>
+			<svg fill="currentColor" width="200px" height="200px" viewBox="0 0 1 1" class="demo-chart mdl-cell mdl-cell--4-col mdl-cell--3-col-desktop">
+				<use xlink:href="#piechart" mask="url(#piemask)" />
+				<text x="0.5" y="0.5" font-family="Roboto" font-size="0.3" fill="#888" text-anchor="middle" dy="0.1">82<tspan dy="-0.07" font-size="0.2">%</tspan></text>
+			</svg>
+			<svg fill="currentColor" width="200px" height="200px" viewBox="0 0 1 1" class="demo-chart mdl-cell mdl-cell--4-col mdl-cell--3-col-desktop">
+				<use xlink:href="#piechart" mask="url(#piemask)" />
+				<text x="0.5" y="0.5" font-family="Roboto" font-size="0.3" fill="#888" text-anchor="middle" dy="0.1">82<tspan dy="-0.07" font-size="0.2">%</tspan></text>
+			</svg>
+			<svg fill="currentColor" width="200px" height="200px" viewBox="0 0 1 1" class="demo-chart mdl-cell mdl-cell--4-col mdl-cell--3-col-desktop">
+				<use xlink:href="#piechart" mask="url(#piemask)" />
+				<text x="0.5" y="0.5" font-family="Roboto" font-size="0.3" fill="#888" text-anchor="middle" dy="0.1">82<tspan dy="-0.07" font-size="0.2">%</tspan></text>
+			</svg>
+		</div>
+		<div class="demo-graphs mdl-shadow--2dp mdl-color--white mdl-cell mdl-cell--8-col">
+			<svg fill="currentColor" viewBox="0 0 500 250" class="demo-graph">
+				<use xlink:href="#chart" />
+			</svg>
+			<svg fill="currentColor" viewBox="0 0 500 250" class="demo-graph">
+				<use xlink:href="#chart" />
+			</svg>
+		</div>
+		<div class="demo-cards mdl-cell mdl-cell--4-col mdl-cell--8-col-tablet mdl-grid mdl-grid--no-spacing">
+			<div class="demo-updates mdl-card mdl-shadow--2dp mdl-cell mdl-cell--4-col mdl-cell--4-col-tablet mdl-cell--12-col-desktop">
+				<div class="mdl-card__title mdl-card--expand mdl-color--teal-300">
+					<h2 class="mdl-card__title-text">Updates</h2>
+				</div>
+				<div class="mdl-card__supporting-text mdl-color-text--grey-600">
+					Non dolore elit adipisicing ea reprehenderit consectetur culpa.
+				</div>
+				<div class="mdl-card__actions mdl-card--border">
+					<a href="#" class="mdl-button mdl-js-button mdl-js-ripple-effect">Read More</a>
+				</div>
+			</div>
+			<div class="demo-separator mdl-cell--1-col"></div>
+			<div class="demo-options mdl-card mdl-color--deep-purple-500 mdl-shadow--2dp mdl-cell mdl-cell--4-col mdl-cell--3-col-tablet mdl-cell--12-col-desktop">
+				<div class="mdl-card__supporting-text mdl-color-text--blue-grey-50">
+					<h3>View options</h3>
+					<ul>
 
-	<div class="col-md-3 ">
-		<div class="panel light-font ">
-			<div class="panel-heading light-border-bottom">
-				共享数据资源分类</div>
-			<div class="panel-body">
-				<res-share :catalog-stats="catalogStats"></res-share>
+					<li>
+					<label for="chkbox1" class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect">
+						<input type="checkbox" id="chkbox1" class="mdl-checkbox__input">
+						<span class="mdl-checkbox__label">Click per object</span>
+					</label>
+				</li>
+				<li>
+					<label for="chkbox2" class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect">
+						<input type="checkbox" id="chkbox2" class="mdl-checkbox__input">
+						<span class="mdl-checkbox__label">Views per object</span>
+					</label>
+				</li>
+				<li>
+					<label for="chkbox3" class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect">
+						<input type="checkbox" id="chkbox3" class="mdl-checkbox__input">
+						<span class="mdl-checkbox__label">Objects selected</span>
+					</label>
+				</li>
+				<li>
+					<label for="chkbox4" class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect">
+						<input type="checkbox" id="chkbox4" class="mdl-checkbox__input">
+						<span class="mdl-checkbox__label">Objects viewed</span>
+					</label>
+				</li>
+						
+					</ul>
+				</div>
+				<div class="mdl-card__actions mdl-card--border">
+					<a href="#" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-color-text--blue-grey-50">Change location</a>
+					<div class="mdl-layout-spacer"></div>
+					<i class="material-icons">location_on</i>
+				</div>
 			</div>
 		</div>
 	</div>
-
-	<div class="col-md-3 ">
-		<div class="panel light-font ">
-			<div class="panel-heading light-border-bottom">
-				最近访问资源</div>
-			<div class="panel-body">
-				<resent-res :resent-res="resentRes"></resent-res>
-			</div>
-		</div>
-	</div>
-
-	<div class="col-md-6 ">
-	<div class="row">
-		<hot-tables ref='hot1' title="热门数据表" ></hot-tables> 
-	</div>
-	</div>
-	
+</main>
+</div>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" style="position: fixed; left: -1000px; height: -1000px;">
+	<defs>
+		<mask id="piemask" maskContentUnits="objectBoundingBox">
+			<circle cx=0.5 cy=0.5 r=0.49 fill="white" />
+			<circle cx=0.5 cy=0.5 r=0.40 fill="black" />
+		</mask>
+		<g id="piechart">
+			<circle cx=0.5 cy=0.5 r=0.5 />
+			<path d="M 0.5 0.5 0.5 0 A 0.5 0.5 0 0 1 0.95 0.28 z" stroke="none" fill="rgba(255, 255, 255, 0.75)" />
+		</g>
+	</defs>
+</svg>
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 500 250" style="position: fixed; left: -1000px; height: -1000px;">
+	<defs>
+		<g id="chart">
+			<g id="Gridlines">
+				<line fill="#888888" stroke="#888888" stroke-miterlimit="10" x1="0" y1="27.3" x2="468.3" y2="27.3" />
+				<line fill="#888888" stroke="#888888" stroke-miterlimit="10" x1="0" y1="66.7" x2="468.3" y2="66.7" />
+				<line fill="#888888" stroke="#888888" stroke-miterlimit="10" x1="0" y1="105.3" x2="468.3" y2="105.3" />
+				<line fill="#888888" stroke="#888888" stroke-miterlimit="10" x1="0" y1="144.7" x2="468.3" y2="144.7" />
+				<line fill="#888888" stroke="#888888" stroke-miterlimit="10" x1="0" y1="184.3" x2="468.3" y2="184.3" />
+			</g>
+			<g id="Numbers">
+				<text transform="matrix(1 0 0 1 485 29.3333)" fill="#888888" font-family="'Roboto'" font-size="9">500</text>
+				<text transform="matrix(1 0 0 1 485 69)" fill="#888888" font-family="'Roboto'" font-size="9">400</text>
+				<text transform="matrix(1 0 0 1 485 109.3333)" fill="#888888" font-family="'Roboto'" font-size="9">300</text>
+				<text transform="matrix(1 0 0 1 485 149)" fill="#888888" font-family="'Roboto'" font-size="9">200</text>
+				<text transform="matrix(1 0 0 1 485 188.3333)" fill="#888888" font-family="'Roboto'" font-size="9">100</text>
+				<text transform="matrix(1 0 0 1 0 249.0003)" fill="#888888" font-family="'Roboto'" font-size="9">1</text>
+				<text transform="matrix(1 0 0 1 78 249.0003)" fill="#888888" font-family="'Roboto'" font-size="9">2</text>
+				<text transform="matrix(1 0 0 1 154.6667 249.0003)" fill="#888888" font-family="'Roboto'" font-size="9">3</text>
+				<text transform="matrix(1 0 0 1 232.1667 249.0003)" fill="#888888" font-family="'Roboto'" font-size="9">4</text>
+				<text transform="matrix(1 0 0 1 309 249.0003)" fill="#888888" font-family="'Roboto'" font-size="9">5</text>
+				<text transform="matrix(1 0 0 1 386.6667 249.0003)" fill="#888888" font-family="'Roboto'" font-size="9">6</text>
+				<text transform="matrix(1 0 0 1 464.3333 249.0003)" fill="#888888" font-family="'Roboto'" font-size="9">7</text>
+			</g>
+			<g id="Layer_5">
+				<polygon opacity="0.36" stroke-miterlimit="10" points="0,223.3 48,138.5 154.7,169 211,88.5
+				294.5,80.5 380,165.2 437,75.5 469.5,223.3 	"/>
+			</g>
+			<g id="Layer_4">
+				<polygon stroke-miterlimit="10" points="469.3,222.7 1,222.7 48.7,166.7 155.7,188.3 212,132.7
+				296.7,128 380.7,184.3 436.7,125 	"/>
+			</g>
+		</g>
+	</defs>
+</svg>
 </div>`,
-			mixins: [Commons.mixins],
+			mixins: [],
 			created: function () {
-				this.$root.helper = 0
-				this.VueDirective()
+				this.$root.helper = 0 
 			},
 			mounted: function () {
 				this.load()
@@ -78,281 +205,44 @@ define('com/home', ['require', 'exports', 'module', 'jquery', 'chart',
 			},
 			methods: {
 				load: function () {
-					var hot1Chart = this.$refs.hot1.getCanvas()
-					hot1Chart.height = 150
-
-					var chart_1 = document.getElementById("chart-1")
-					chart_1.height = 200
-
-					var chart_2 = document.getElementById("chart-2")
-					chart_2.height = 200
-
-					var _this = this;
-					GetJSON('/management/modelCatalogStats.load', null, function (data) {
-						_this.catalogStats = data
-					});
-					GetJSON('/management/modelCatalogSummary.load', null, function (data) {
-						_this.catalogSummary = data
-						_this.createChart(chart_2.getContext('2d'), data, 'rgba(54, 162, 235, 0.5)')
-					});
-					GetJSON('/management/dataSourceSummary.load', null, function (data) {
-						_this.dataSourceSummary = data
-						_this.createChart(chart_1.getContext('2d'), data, 'rgba(75, 192, 192, 0.5)')
-					});
-
-					GetJSON('/management/usageStats.load', null, function (data) {
-						_this.createChart(hot1Chart.getContext('2d'), data, 'rgba(54, 162, 235, 0.5)', 'horizontalBar')
-					});
-
-					GetJSON('/management/recentlyVisited.load', null, function (data) {
-						_this.resentRes = data
-					});
-				},
-				createChart: function (ctx, objs, color, type) {
-					var labels = [], data = []
-					for (var key in objs) {
-						labels.push(key)
-						data.push(objs[key])
-					}
-					type = type ? type : 'bar'
-					return new Chart(ctx, {
-						type: type,
-						data: {
-							labels: labels,
-							datasets: [{
-								//label: '# of Votes',
-								data: data,
-								backgroundColor: color ? color : 'rgba(255, 99, 132, 0.8)'
-							}]
-						},
-						options: {
-							maintainAspectRatio: false,
-							onResize: function (chart, size) {
-								chart.canvas.parentNode.style.height = '200px';
-							},
-							scales: {
-								yAxes: [{
-									ticks: {
-										beginAtZero: true
-									}
-								}],
-								xAxes: [{
-									ticks: {
-										fixedStepSize: 1
-									}
-								}]
-							},
-							legend: {
-								display: false
-							}
-						},
-					});
+					
 				}
 			},//methods
 			components: {
-				'res-share': {
-					template: `
-<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-  <div class="panel panel-info"
-		v-for="(db,key,i) in catalogStats">
-    <div class="panel-heading" role="tab" :id="'heading_'+i">
-      <h5 class="panel-title ">
-        <a role="button" data-toggle="collapse" data-parent="#accordion" 
-					:href="'#collapse_'+i" aria-expanded="true" :aria-controls="'collapse_'+i">
-          {{key}}
-        </a>
-				<span class="ft7">{{count(db)}}个分类</span> 
-      </h5>
-    </div>
-    <div :id="'collapse_'+i" class="panel-collapse collapse" role="tabpanel" 
-			:aria-labelledby="'heading_'+i"
-			:class="{in:i==0}">
-      <div class="panel-body padding-none"> 
-				<ul class="list-group margin-none home_">
-					<li class="list-group-item"
-						v-for="(num,key_catalog) in db">
-						<span class="badge bg-info">{{num}}</span>
-						{{key_catalog}}
-					</li>
-				</ul>
-			</div>
-    </div>
-  </div>
-</div>
-				`,
-					props: { catalogStats: Object },
-					methods: {
-						count: function (obj) {
-							var count = 0
-							for (var k in obj) {
-								count++
-							}
-							return count
-						},
-					}
-				},
-				'resent-res': {
-					template: `
-				<ul class="list-group margin-none ">
-					<li class="list-group-item"
-						v-for="(num,key) in resentRes">
-						<span class="badge bg-info">{{num}}</span>
-						{{key}}
-					</li>
-				</ul>
-				`,
-					props: { resentRes: Object },
-				},
-				'hot-tables': {
-					template: `
-				<div class="col-md-12">
-					<div class="panel light-font ">
-					<div class="panel-heading light-border-bottom">
-						{{title}}</div>
-					<div class="panel-body">
-					<canvas ></canvas>
-					</div>
-					</div>
-				</div>
-				`,
-					props: { title: String },
-					data: function () { return {} },
-					methods: {
-						getCanvas: function () {
-							return this.$el.getElementsByTagName('canvas')[0]
-						}
-					}
-				}
-
 			}//components
 		};
 		return VueHome
 	})
 
-define('app/home/main', ['require', 'exports', 'module',
-	'jquery', 'vue', 'vue_router',
-	'utils/commons', 'utils/vue-alert', 'utils/vue-common',
-	'com/home', 'com/res-catalog.addon'],
+define('app/home/main', ['require', 'exports', 'module', 'vue', 'vue_router', 'mdl',
+	'com/home'],
 	function (require, exports, module) {
-		var $ = require('jquery')
+
 		var Vue = require('vue')
-		var VueRouter = require('vue_router')
-		var Utils = require('utils/commons')
-		var GetJSON = Utils.GetJSON
-		var Post = Utils.Post
-		var Assert = Utils.Assert
-		var Commons = require('utils/vue-common')
 		var Home = require('com/home')
-		var VueAlert = require('utils/vue-alert')
-		var Addon = require('com/res-catalog.addon')
+		var Vuetify = require('mdl')
 
 		new Vue({ 
-			mixins: [Commons.mixins],  
+			mixins: [],  
 			data:function(){return {query:"", results:null, 
 				navs:[  {url:"/manage/tenant",title:"租户与用户",clazz:"icon_zuhu"},
-				{url:"/manage/resource",title:"数据资源目录",clazz:"icon_nav"},
-				{url:"/manage/application-manage",title:"申请单管理",clazz:"icon_update"},
-				{url:"/manage/query",title:"数据查询",clazz:"icon_update"}
 			]}},
 			methods: {
 				onLogin: function () { this.$refs.login.show() },
 				logout: function () {
-					Utils.Get("/login.logout", null, function () {
-						alert("退出成功,确定后将重新登录!")
-						Utils.Reload("/manage")
-					})
+				
 				},
-				getUrl:function(url){
-					return Utils.GetAbsUrl(url)
-				},
-				search:function(){
-					this.$refs.search.show()
-					this.results=null
-					var _this = this;
-					GetJSON('/management/SearchTableModels.load', {query:this.query}, function (data) {
-						_this.results = data
-						console.log(data)
-					});
-				},
-				addToList:function(){
-					var form = $(this.$refs.search.$el).find("form")
-					var data = form.serialize() 
-					Assert(data.length, "请选择要申请的逻辑模型")
-					var _this = this
-					Post("/logic-request/add-tables.post", data,
-					  function(data){
-		    			Assert(data=="ok", data)
-							VueAlert.Success('添加成功')
-		    	})
-				},
+				
 			}, 
 			components: {
-				home: Home, 'rs-models': Addon.ResModelTable
+				home: Home,
 			},
 			template: `
-  <div style="margin:0 auto; max-width: 1500px;">
-<nav class="navbar margin-bottom-md text-center border-none">
-		<div class="collapse navbar-collapse " >
-			<ul class="nav navbar-nav  nav-head">
-				<li class="dropdown nav-dropdown">
-					<a href="#" class="dropdown-toggle relative" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-						<div class="icon_nav icon absolute"></div>
-						<span class="light-font">首页</span>
-						<span class="caret"></span>
-					</a>
-					<ul class="dropdown-menu overflow-hidden">
-						<li active-class="_active" v-for="nav in navs"> 
-							<a class="pointer relative" :href="getUrl(nav.url)">
-									<div class=" absolute" style="top: 20px;"
-										:class="[nav.clazz]"></div>
-									<span class="light-font" style="margin-left: 30px;"></span> {{nav.title}}	</a> 
-							</li> 
-					</ul>
-				</li>
-			</ul>
-			
-			<a href="/data-center" class="pointer"> <img class="padding-top-sm" alt="Brand" src="/data-center/image/logo.png" > </a>
-			
-			<ul class="nav navbar-nav nav-head pull-right"> 
-				<li class=""> 
-					<a class="relative pointer" @click="onLogin">
-					<span class="inline-block"  >
-					<div class="icon icon_profile absolute" ></div>
-					</span><!---->
-					</a>
-				</li>
-			</ul>
-
-			<div class="navbar-form navbar-right margin-none padding-top-sm">
-        <div class="form-group">
-          <input type="text" class="form-control input-sm" placeholder="Search"
-						v-model="query">
-        </div>
-        <button type="button" class="btn btn-default btn-sm light-font"
-					@click="search">检索</button>
-      </div>
-
-		</div><!-- /.navbar-collapse -->
-</nav>
-
-			<home></home>
-			<modal ref="login" :footer="true" :on-confirm="logout" :sm="true">
-				<h4 slot="title">登录管理</h4>
-				<h5 slot="body" class="text-center">尊敬的 {{GetUserName()}} 确定退出吗?</h5>
-			</modal>
-
-			<modal ref="search" :footer="true" :on-confirm="addToList"  >
-				<h4 slot="title">检索结果</h4>
-				<div slot="body">
-					<form class="">
-					<h5 class="text-center">确定将选中的逻辑模型加入待申请列表</h5>
-					<rs-models :tables="results" :detail="function(){}"
-						valueName="tableModelId" inputName="objectIds" :type="4"></rs-models>
-					</form>
-				</div>
-			</modal>
-		</div>
+	<home></home>
 				`,
+			mounted:function(){
+				componentHandler.upgradeDom();
+			}
 		}).$mount('#vue-router')
 	})
 

@@ -20,7 +20,7 @@ public class AppServletInitializer extends SpringBootServletInitializer {
 	public FilterRegistrationBean siteMeshFilter() {
 		FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
 		filterRegistrationBean.setFilter(new SiteMeshFilter());
-		filterRegistrationBean.addUrlPatterns("/","/login","/error");
+		filterRegistrationBean.addUrlPatterns("/home","/login","/error");
 		return filterRegistrationBean;
 	}
 	

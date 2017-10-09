@@ -1,4 +1,4 @@
-define('utils/vue-alert', ['require', 'exports', 'module', 'jquery','vue', 'utils/commons'],
+define('utils/vue-alert', ['require', 'exports', 'module', 'vue', 'utils/commons'],
 	function (require, exports, module) {
 
 		console.log("vue-alert init");

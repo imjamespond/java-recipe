@@ -1,4 +1,4 @@
-define(['require', 'exports', 'module', 'sha1', 'jquery', 'nprogress',
+define(['require', 'exports', 'module', 'sha1', 'nprogress',
   'utils/vue-alert'],
   function (require, exports, module) {
     //var $ = require('jquery') 

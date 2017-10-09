@@ -1,9 +1,10 @@
 
 requirejs.config({
-    baseUrl: '/data-center/js',
+    baseUrl: '/data-analysis/js',
     paths: {
         jquery: './lib/jquery-1.12.4',
         bootstrap: './lib/bootstrap/js/bootstrap.min',
+        mdl: './lib/mdl/material',
         chart:'./lib/Chart',
         sha1: './lib/sha1',
         vue: './lib/vue',
@@ -28,5 +29,6 @@ require(['vue'], function(Vue){
         console.log('require ie9 or higher')
         document.body.innerHTML="请使用ie9或更高版本的浏览器"
     }
+
 })
 

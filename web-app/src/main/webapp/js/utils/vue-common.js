@@ -1,6 +1,6 @@
 
 define('utils/vue-common', ['require', 'exports', 'module',
-	'jquery', 'bootstrap', 'vue', 'lodash', 'utils/commons'],
+	'vue', 'lodash', 'utils/commons'],
 	function (require, exports, module) {
 		console.log('vue-common init..')
 

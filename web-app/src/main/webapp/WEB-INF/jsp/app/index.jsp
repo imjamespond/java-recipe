@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <script charset="UTF-8" data-main="<%=Constant.DOMAIN_NAME%>/js/management" src="<%=Constant.DOMAIN_NAME%>/js/lib/require.js"></script>
+  <script charset="UTF-8" data-main="<%=Constant.ContextPath%>/js/home" src="<%=Constant.ContextPath%>/js/lib/require.js"></script>
   <title>${root}</title>
 </head>
 <body>

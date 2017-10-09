@@ -9,6 +9,7 @@
   <title>${root}</title>
 </head>
 <body>
-	<div id="vue-router"></div>
+	<div id="vue-router">
+	</div>
 </body>
 </html>

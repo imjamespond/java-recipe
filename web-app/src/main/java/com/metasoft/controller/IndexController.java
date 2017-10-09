@@ -18,4 +18,9 @@ public class IndexController implements ErrorController{
     public String getErrorPath() {
         return PATH;
     }
+    
+    @RequestMapping(value = "/home")
+    public String home() {
+        return "index";
+    }
 }

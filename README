@@ -7,6 +7,9 @@ gradle :web-app:test --info --rerun-tasks (单元测试)
 --start kafka docker
 docker run --name kfk -p2181:2181 -p9092:9092 -p2222:22 -v /tmp/:/jar -it kfk /entry -bash
 
+--spring-boot-devtools SilentExitException
+you can toggle the "suspend execution on uncaught exceptions" checkbox in Java -> Debug preferences to prevent it from happening.
+
 --使用本地maven仓库
 ~/.m2/配置
 
