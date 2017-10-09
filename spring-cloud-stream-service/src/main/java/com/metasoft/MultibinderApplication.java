@@ -32,16 +32,16 @@ import org.springframework.integration.annotation.InboundChannelAdapter;
 import org.springframework.integration.annotation.Poller;
 import org.springframework.integration.core.MessageSource;
 import org.springframework.integration.support.MessageBuilder;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.messaging.support.GenericMessage;
 
 @SpringBootApplication
-@RestController
 public class MultibinderApplication implements CommandLineRunner{
 	Logger log = LoggerFactory.getLogger(MultibinderApplication.class);
 
 	public static void main(String[] args) {
-		SpringApplication.run(MultibinderApplication.class, args);
+		SpringApplication app = new SpringApplication(MultibinderApplication.class);
+        app.setWebEnvironment(false); 
+        app.run(args);//ConfigurableApplicationContext ctx = app.run(args);
 	}
 
 	@Override
@@ -52,7 +52,7 @@ public class MultibinderApplication implements CommandLineRunner{
 	@Autowired
 	ProductProcessor processor;
 
-    @RequestMapping("/send")
+    //@RequestMapping("/send")
     public String send() {
     	processor.outputProductAdd().send(MessageBuilder.withPayload(
     			new SimpleDateFormat("yyyy-MM-dd/HH:mm:ss").format(new Date())).build());
@@ -64,5 +64,11 @@ public class MultibinderApplication implements CommandLineRunner{
     	poller = @Poller(fixedDelay = "3000", maxMessagesPerPoll = "1"))
     public MessageSource<String> timerMessageSource() {
         return () -> MessageBuilder.withPayload("短消息-" + new Date()).build();
+    }
+    
+    //@Bean
+    //@InboundChannelAdapter(value = Source.OUTPUT)
+    public MessageSource<String> testTimerMessageSource() {
+        return () -> new GenericMessage<>(new SimpleDateFormat().format(new Date()));
     }
 }

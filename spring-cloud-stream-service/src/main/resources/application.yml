@@ -4,8 +4,6 @@ kafkaBroker2: yy:9092
 zk1: yy:2181
 zk2: yy:2181
 
-server:
-  port: 8082
 spring:
   cloud:
     stream:

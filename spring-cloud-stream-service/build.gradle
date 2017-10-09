@@ -22,7 +22,7 @@ dependencies {
 	}
     testCompile(
     	'org.springframework.cloud:spring-cloud-stream-binder-kafka-test-support:1.2.1.RELEASE',
-    	"org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
+    	//"org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
     )
 }
 
