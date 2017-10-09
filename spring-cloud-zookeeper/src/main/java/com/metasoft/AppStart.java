@@ -1,5 +1,7 @@
 package com.metasoft;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
@@ -11,6 +13,9 @@ import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
 import org.springframework.cloud.netflix.feign.EnableFeignClients;
 import org.springframework.cloud.netflix.feign.FeignClient;
+import org.springframework.cloud.zookeeper.serviceregistry.ServiceInstanceRegistration;
+import org.springframework.cloud.zookeeper.serviceregistry.ZookeeperRegistration;
+import org.springframework.cloud.zookeeper.serviceregistry.ZookeeperServiceRegistry;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -83,5 +88,40 @@ public class AppStart {
 	@LoadBalanced
 	RestTemplate loadBalancedRestTemplate() {
 		return new RestTemplate();
+	}
+	
+	
+	@Autowired
+	private ZookeeperServiceRegistry serviceRegistry;
+	ZookeeperRegistration registration = ServiceInstanceRegistration.builder()
+            .defaultUriSpec()
+            .address("yy")
+            .port(2180)
+            .name("/a/b/c/d/anotherservice")
+            .build();
+
+	public void registerThings() {    
+	    this.serviceRegistry.register(registration);
+	}
+	
+	@RequestMapping("/register")
+	public void register() {
+		this.registerThings();
+	}
+	
+	
+	@RequestMapping("/serviceUrl")
+	public String serviceUrl() {
+	    List<ServiceInstance> list = discovery.getInstances(appName);
+	    if (list != null && list.size() > 0 ) {
+	        return list.get(0).getUri().toString();
+	    }
+	    return null;
+	}
+	
+	@FeignClient("newsletter")
+	public interface NewsletterService {
+	        @RequestMapping(method = RequestMethod.GET, value = "/newsletter")
+	        String getNewsletters();
 	}
 }
