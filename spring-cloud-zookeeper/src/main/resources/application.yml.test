@@ -1,0 +1,31 @@
+server:
+  port: 8080
+
+endpoints:
+  restart:
+    enabled: true
+  shutdown:
+    enabled: true
+  health:
+    sensitive: false
+
+logging.level:
+  org.apache.zookeeper.ClientCnxn: ERROR
+  #org.springframework.web: DEBUG
+
+management:
+  security:
+    enabled: false
+
+spring.application.name: testZkApp
+
+---
+# you can use application-${profile}.properties to specify profile-specific values
+
+spring:
+  profiles: client
+  cloud:
+    zookeeper:
+      discovery:
+        # not regist to zk service say it's just a broker
+        register: false  

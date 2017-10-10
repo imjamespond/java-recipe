@@ -1,0 +1,10 @@
+server.port: 0
+spring.application.name: client
+spring.cloud.zookeeper:
+  connect-string: yy:2181
+  dependencies:
+    testInstance:
+      path: /server
+logging:
+  level:
+    org.apache.zookeeper.ClientCnxn: ERROR

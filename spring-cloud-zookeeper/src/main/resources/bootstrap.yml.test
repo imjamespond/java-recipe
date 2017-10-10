@@ -1,0 +1,9 @@
+spring.cloud.zookeeper:
+  # ip:port[,ip2:port2,.....]
+  connect-string: yy:2181
+  config:
+    # TODO: refactor spring-cloud-config to use refresh, etc.. with out config client
+    enabled: true 
+    root: configuration
+    defaultContext: apps
+    profileSeparator: '::'

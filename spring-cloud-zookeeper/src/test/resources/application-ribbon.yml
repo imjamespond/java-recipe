@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: ribbonApp
+  cloud:
+    zookeeper:
+      discovery:
+        metadata:
+          testMetadataKey: testMetadataValue
+        uriSpec: "{scheme}://{address}:{port}/contextPath"
+management:
+  security:
+    enabled: false
+logging:
+  level:
+    org.apache.zookeeper.ClientCnxn: ERROR

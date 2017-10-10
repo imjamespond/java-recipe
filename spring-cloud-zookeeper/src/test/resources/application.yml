@@ -1,0 +1,5 @@
+testInstance.ribbon.ServerListRefreshInterval: 100
+logging:
+  level:
+    org.springframework: TRACE
+    org.apache.zookeeper.ClientCnxn: ERROR

@@ -11,6 +11,7 @@ import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
+import org.springframework.cloud.client.serviceregistry.Registration;
 import org.springframework.cloud.netflix.feign.EnableFeignClients;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.cloud.zookeeper.serviceregistry.ServiceInstanceRegistration;
@@ -24,6 +25,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
+
+import com.google.gson.Gson;
 
 @Configuration
 @EnableAutoConfiguration
@@ -44,6 +47,9 @@ public class AppStart {
 
 	@Autowired
 	private DiscoveryClient discovery;
+	
+	@Autowired
+	Registration registry;
 
 	@Autowired
 	private Environment env;
@@ -58,7 +64,8 @@ public class AppStart {
 
 	@RequestMapping("/hi")
 	public String hi() {
-		return "Hello World! from " + this.discovery.getLocalServiceInstance();
+		//System.out.println(loadBalancer.choose(appName)); //打印当前调用的服务端地址
+		return "Hello World! from " + this.registry.getServiceId();
 	}
 
 	@RequestMapping("/self")
@@ -71,7 +78,7 @@ public class AppStart {
 		return this.env.getProperty(prop, "Not Found");
 	}
 
-	@FeignClient("testZookeeperApp")
+	@FeignClient("testZkApp")
 	interface AppClient {
 		@RequestMapping(path = "/hi", method = RequestMethod.GET)
 		String hi();
@@ -96,7 +103,7 @@ public class AppStart {
 	ZookeeperRegistration registration = ServiceInstanceRegistration.builder()
             .defaultUriSpec()
             .address("yy")
-            .port(2180)
+            .port(2181)
             .name("/a/b/c/d/anotherservice")
             .build();
 
@@ -112,16 +119,31 @@ public class AppStart {
 	
 	@RequestMapping("/serviceUrl")
 	public String serviceUrl() {
-	    List<ServiceInstance> list = discovery.getInstances(appName);
+	    List<ServiceInstance> list = discovery.getInstances(this.registry.getServiceId());//(appName);
 	    if (list != null && list.size() > 0 ) {
-	        return list.get(0).getUri().toString();
+	        return new Gson().toJson(list);
 	    }
 	    return null;
 	}
+
 	
-	@FeignClient("newsletter")
-	public interface NewsletterService {
-	        @RequestMapping(method = RequestMethod.GET, value = "/newsletter")
-	        String getNewsletters();
+	@Autowired IdUsingFeignClient idUsingFeignClient;
+	@RequestMapping("/testHi")
+	public String testServiceUrl() {
+		return idUsingFeignClient.hi();
 	}
+}
+@FeignClient("someAlias")
+interface AliasUsingFeignClient {
+	@RequestMapping(method = RequestMethod.GET, value = "/beans")
+	String getBeans();
+
+	@RequestMapping(method = RequestMethod.GET, value = "/hi")
+	String hi();
+}
+
+@FeignClient("testZkApp")
+interface IdUsingFeignClient {
+	@RequestMapping(method = RequestMethod.GET, value = "/hi")
+	String hi();
 }

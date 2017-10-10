@@ -32,7 +32,9 @@ dependencies {
     )  
     
     testCompile (
-    	'org.springframework.boot:spring-boot-starter-test'
+    	'org.springframework.boot:spring-boot-starter-test',
+    	'com.jayway.awaitility:awaitility:1.7.0',
+    	'org.apache.curator:curator-test'
     )
 }
 repositories {
