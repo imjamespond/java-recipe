@@ -2,17 +2,11 @@ apply plugin: "io.spring.dependency-management"
 apply plugin: 'org.springframework.boot'
 apply plugin: 'war'
 
-dependencyManagement {
-    imports {
-        mavenBom 'org.springframework.cloud:spring-cloud-stream-dependencies:Ditmars.BUILD-SNAPSHOT'
-    }
-}
-
 dependencies {
-	compile project(':spring-cloud-stream-service')
+	//compile project(':spring-cloud-stream-service')
     compile(
-    	"org.springframework.boot:spring-boot-starter-web:${springBootVersion}",
-    	"org.springframework.boot:spring-boot-starter-jdbc:${springBootVersion}",
+    	"org.springframework.boot:spring-boot-starter-web",
+    	"org.springframework.boot:spring-boot-starter-jdbc",
     	"org.sitemesh:sitemesh:3.0.1",
     	'javax.servlet:jstl:1.2',//jstl
     	'org.springframework.boot:spring-boot-starter-tomcat',
@@ -27,6 +21,6 @@ dependencies {
     )
 }
 
-bootRepackage {
+bootJar {
     mainClass = 'com.metasoft.App'
 }

@@ -22,7 +22,6 @@ allprojects {
     dependencies {
         compile(
         	'com.google.code.gson:gson:2.2.4',
-        	//'io.projectreactor:reactor-core:3.1.0.RELEASE' //Flux
         )
     	if (!project.name.equals('web-app')) {
 	      testCompile 'junit:junit:4.12'
@@ -30,13 +29,14 @@ allprojects {
     }
     
 	ext{
-	    springBootVersion = "1.5.7.RELEASE"
+	    springBootVersion = "2.0.0.M4"
 	}
     
     buildscript {
     	//if ( project.name.startsWith("spring-cloud") ) {
             repositories {
                 maven { url "https://plugins.gradle.org/m2/" }
+                maven { url 'https://repo.spring.io/libs-milestone' }
             }
 
             dependencies {

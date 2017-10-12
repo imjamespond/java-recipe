@@ -18,35 +18,9 @@ package com.metasoft.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.cloud.stream.annotation.EnableBinding;
-import org.springframework.cloud.stream.annotation.StreamListener;
-import org.springframework.cloud.stream.messaging.Processor;
-import org.springframework.messaging.Message;
-import org.springframework.messaging.handler.annotation.SendTo;
 
-import com.metasoft.ProductProcessor;
-
-/**
- * @author Marius Bogoevici
- */
-@EnableBinding({Processor.class, ProductProcessor.class})
 public class KafkaService {
 	public static Logger logger = LoggerFactory.getLogger(KafkaService.class);
 
-	@StreamListener(Processor.INPUT)
-	@SendTo(Processor.OUTPUT)
-	public Message<String> sendTransform(Message<String> message) {
-		logger.info(message.getPayload());
-		return message;
-	}
-	
-//    @StreamListener(Processor.INPUT)
-//    public void input(Message<String> message) {
-//        System.out.println("一般监听收到：" + message.getPayload());
-//    }
-//	
-    @StreamListener(ProductProcessor.INPUT_PRODUCT_ADD)
-    public void inputProductAdd(Message<String> message) {
-        System.out.println("新增产品监听收到：" + message.getPayload());
-    }
+
 }

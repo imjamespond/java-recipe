@@ -1,6 +1,6 @@
 package com.metasoft.boot;
 
-import org.springframework.boot.web.support.SpringBootServletInitializer;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration

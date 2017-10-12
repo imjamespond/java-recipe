@@ -15,8 +15,6 @@ include 'api'
 include 'services:webservice'
 */
 
-rootProject.name = 'data-analysis' 
-include 'spring-cloud-zookeeper'
-include 'spring-cloud-stream-service'
+rootProject.name = 'data-analysis'
 include 'spring-kafka-service'
 include 'web-app'

@@ -2,7 +2,6 @@ package com.metasoft.dependencies;
 
 import java.util.Collection;
 
-import org.springframework.boot.actuate.autoconfigure.EndpointMBeanExportAutoConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.cloud.netflix.feign.EnableFeignClients;
