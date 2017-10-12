@@ -16,7 +16,7 @@ dependencies {
         'org.postgresql:postgresql:9.4.1212'
     ) 
     testCompile(
-    	"org.springframework.boot:spring-boot-starter-test:${springBootVersion}",
+    	"org.springframework.boot:spring-boot-starter-test",
     	'org.springframework.boot:spring-boot-devtools'//detect classpath changing
     )
 }

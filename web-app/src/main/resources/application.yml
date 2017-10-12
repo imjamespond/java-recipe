@@ -17,12 +17,15 @@ spring:
     time-between-eviction-runs-millis: 18800
     jdbc-interceptors: ConnectionState;SlowQueryReport(threshold=0)
 
-application.message: Hello Phil
-init.db: true
-
 server:
   port: 8082
-  contextPath: /data-analysis
-
+  address: 0.0.0.0
+  servlet.context-path: /data-analysis
+  
 spring.profiles.include: 'kafka'
+
+
+application.message: Hello Phil
+init.db: true
+freeList: ^/login.*$, ^/test.*$
 
