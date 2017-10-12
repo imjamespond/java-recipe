@@ -7,3 +7,5 @@ spring.cloud.zookeeper:
     root: configuration
     defaultContext: apps
     profileSeparator: '::'
+    
+# the above values will need to be placed in bootstrap.yml instead of application.yml.

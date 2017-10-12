@@ -22,7 +22,7 @@ allprojects {
     dependencies {
         compile(
         	'com.google.code.gson:gson:2.2.4',
-        	'io.projectreactor:reactor-core:3.1.0.RELEASE' //Flux
+        	//'io.projectreactor:reactor-core:3.1.0.RELEASE' //Flux
         )
     	if (!project.name.equals('web-app')) {
 	      testCompile 'junit:junit:4.12'

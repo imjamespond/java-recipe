@@ -2,6 +2,9 @@ package com.metasoft;
 
 import java.util.List;
 
+import org.apache.curator.framework.CuratorFramework;
+import org.apache.curator.framework.CuratorFrameworkFactory;
+import org.apache.curator.retry.RetryOneTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
@@ -12,21 +15,22 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
 import org.springframework.cloud.client.serviceregistry.Registration;
+import org.springframework.cloud.context.environment.EnvironmentChangeEvent;
 import org.springframework.cloud.netflix.feign.EnableFeignClients;
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.cloud.zookeeper.serviceregistry.ServiceInstanceRegistration;
 import org.springframework.cloud.zookeeper.serviceregistry.ZookeeperRegistration;
 import org.springframework.cloud.zookeeper.serviceregistry.ZookeeperServiceRegistry;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.event.EventListener;
 import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
-
-import com.google.gson.Gson;
 
 @Configuration
 @EnableAutoConfiguration
@@ -35,7 +39,34 @@ import com.google.gson.Gson;
 @RestController
 public class AppStart {
     public static void main(String[] args) {
-        SpringApplication.run(AppStart.class, args);
+    	String CONTEXT = "/configuration/apps/";
+    	String KEY = "test.foo";
+    	String PATH = CONTEXT+KEY.replace('.', '/');
+    	String connectString = "yy:2181";
+    	CuratorFramework curator = CuratorFrameworkFactory.builder()
+				.retryPolicy(new RetryOneTime(500)).connectString(connectString).build();
+		curator.start();
+		
+		StringBuilder create = new StringBuilder(1024);
+		try {
+			curator.delete().deletingChildrenIfNeeded().forPath(PATH);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		try {
+			create.append(curator.create().creatingParentsIfNeeded()
+					.forPath(PATH, "hello".getBytes())).append('\n');
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		curator.close();
+		System.out.println(create);
+    	
+		ConfigurableApplicationContext  context = 
+				SpringApplication.run(AppStart.class, args);
+		Environment env = context.getEnvironment();
+		System.out.println(KEY+": "+env.getProperty(KEY));
     }
     
 
@@ -121,29 +152,15 @@ public class AppStart {
 	public String serviceUrl() {
 	    List<ServiceInstance> list = discovery.getInstances(this.registry.getServiceId());//(appName);
 	    if (list != null && list.size() > 0 ) {
-	        return new Gson().toJson(list);
+	        return "";//new Gson().toJson(list);
 	    }
 	    return null;
 	}
-
 	
-	@Autowired IdUsingFeignClient idUsingFeignClient;
-	@RequestMapping("/testHi")
-	public String testServiceUrl() {
-		return idUsingFeignClient.hi();
+	@EventListener
+	public void handle(EnvironmentChangeEvent event) {
+		for (String key : event.getKeys()) {
+			System.out.println("EnvironmentChangeEvent: "+key);
+		}
 	}
-}
-@FeignClient("someAlias")
-interface AliasUsingFeignClient {
-	@RequestMapping(method = RequestMethod.GET, value = "/beans")
-	String getBeans();
-
-	@RequestMapping(method = RequestMethod.GET, value = "/hi")
-	String hi();
-}
-
-@FeignClient("testZkApp")
-interface IdUsingFeignClient {
-	@RequestMapping(method = RequestMethod.GET, value = "/hi")
-	String hi();
 }

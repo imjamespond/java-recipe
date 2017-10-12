@@ -18,6 +18,7 @@ management:
     enabled: false
 
 spring.application.name: testZkApp
+test.foo: bar
 
 ---
 # you can use application-${profile}.properties to specify profile-specific values
