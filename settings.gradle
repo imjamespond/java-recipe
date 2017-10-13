@@ -17,4 +17,5 @@ include 'services:webservice'
 
 rootProject.name = 'data-analysis'
 include 'spring-kafka-service'
+include 'commons'
 include 'web-app'

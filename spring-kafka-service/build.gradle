@@ -8,6 +8,5 @@ dependencies {
    	
    	testCompile(
    		"org.springframework.kafka:spring-kafka-test:${springKafkaVersion}",
-   		'org.assertj:assertj-core:3.8.0'
    	)
 }

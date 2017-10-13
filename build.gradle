@@ -23,6 +23,9 @@ allprojects {
         compile(
         	'com.google.code.gson:gson:2.2.4',
         )
+        testCompile(
+	        'org.assertj:assertj-core:3.8.0'
+        )
     	if (!project.name.equals('web-app')) {
 	      testCompile 'junit:junit:4.12'
 	    }

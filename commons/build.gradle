@@ -1,0 +1,14 @@
+def curatorVersion = '2.12.0'
+
+dependencies {
+    compile (
+    	"org.apache.curator:curator-framework:${curatorVersion}",
+    	"org.apache.curator:curator-recipes:${curatorVersion}",
+    	"org.apache.curator:curator-x-discovery:${curatorVersion}",
+    	"org.apache.curator:curator-x-discovery-server:${curatorVersion}",
+    )  
+    
+    testCompile (
+    	"org.apache.curator:curator-test:${curatorVersion}"
+    )
+}
