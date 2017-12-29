@@ -1,26 +1,23 @@
-apply plugin: "io.spring.dependency-management"
-apply plugin: 'org.springframework.boot'
+plugins {
+	id 'org.springframework.boot' version '1.5.9.RELEASE'
+}
+
 apply plugin: 'war'
 
 dependencies {
 	//compile project(':spring-cloud-stream-service')
+	
     compile(
     	"org.springframework.boot:spring-boot-starter-web",
     	"org.springframework.boot:spring-boot-starter-jdbc",
     	"org.sitemesh:sitemesh:3.0.1",
     	'javax.servlet:jstl:1.2',//jstl
     	'org.springframework.boot:spring-boot-starter-tomcat',
-    	'org.apache.tomcat.embed:tomcat-embed-jasper:8.5.20', //jsp
-    	'io.netty:netty-all:4.1.15.Final',
-    	'commons-beanutils:commons-beanutils:1.9.3',
-        'org.postgresql:postgresql:9.4.1212'
+    	'org.apache.tomcat.embed:tomcat-embed-jasper:8.5.20', //jsp 
+    	'commons-beanutils:commons-beanutils:1.9.3'
     ) 
     testCompile(
     	"org.springframework.boot:spring-boot-starter-test",
     	'org.springframework.boot:spring-boot-devtools'//detect classpath changing
     )
-}
-
-bootJar {
-    mainClass = 'com.metasoft.App'
 }

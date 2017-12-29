@@ -1,16 +1,12 @@
 
 // In this section you declare where to find the dependencies of your project
 allprojects {
-    repositories {
-    	maven { url 'http://maven.aliyun.com/nexus/content/groups/public/'}
-    	maven { url 'https://repo.spring.io/libs-snapshot'}
-    	maven { url 'https://repo.spring.io/libs-release' }
-		maven { url 'https://repo.spring.io/libs-milestone' }
+    repositories { 
         mavenLocal()
-        mavenCentral()
+        mavenCentral() 
         jcenter()
     }
-    
+
     apply plugin: 'java'
 
     sourceCompatibility = 1.8
@@ -30,42 +26,6 @@ allprojects {
 	      testCompile 'junit:junit:4.12'
 	    }
     }
-    
-	ext{
-	    springBootVersion = "2.0.0.M4"
-	}
-    
-    buildscript {
-    	//if ( project.name.startsWith("spring-cloud") ) {
-            repositories {
-                maven { url "https://plugins.gradle.org/m2/" }
-                maven { url 'https://repo.spring.io/libs-milestone' }
-            }
-
-            dependencies {
-                classpath "io.spring.gradle:dependency-management-plugin:1.0.3.RELEASE"
-                classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
-            }
-	    //}
-    }
-	
-	//create a single Jar with all dependencies
-	task fatJar(type: Jar) {
-		manifest {
-	        attributes 'Implementation-Title': 'Gradle Jar File Example',
-	        	'Implementation-Version': '1.0'
-	        	//,'Main-Class': 'com.metasoft.MultibinderApplication'
-	    }
-	    baseName = project.name + '-all'
-	    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-	    with jar
-	}
-	//list all dependencies
-	task listJars {
-	    doLast {
-	        configurations.compile.each { File file -> println file.name }
-	    }
-	}
 }
 
 subprojects {
