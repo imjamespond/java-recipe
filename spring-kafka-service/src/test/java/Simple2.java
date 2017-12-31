@@ -1,133 +1,72 @@
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.MatcherAssert.assertThat; 
+import static org.springframework.kafka.test.hamcrest.KafkaMatchers.*;
 
 import java.util.Map;
-import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.junit.ClassRule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.kafka.annotation.EnableKafka;
-import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
-import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
-import org.springframework.kafka.test.context.EmbeddedKafka;
+import org.springframework.kafka.listener.KafkaMessageListenerContainer;
+import org.springframework.kafka.listener.MessageListener;
+import org.springframework.kafka.listener.config.ContainerProperties;
 import org.springframework.kafka.test.rule.KafkaEmbedded;
+import org.springframework.kafka.test.utils.ContainerTestUtils;
 import org.springframework.kafka.test.utils.KafkaTestUtils;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.junit4.SpringRunner;
 
-@RunWith(SpringRunner.class)
-@DirtiesContext
-@EmbeddedKafka(partitions = 1,
-	controlledShutdown=true,
-	topics = {
-	         Simple1.topic1, Simple1.topic2})
 public class Simple2 {
 
-	//@Autowired
-	//private Config config;
-	
-	@Autowired
-	private Listener listener;
+    private static final String TEMPLATE_TOPIC = "templateTopic";
 
-	@Autowired
-	private KafkaTemplate<Integer, String> template;
+    @ClassRule
+    public static KafkaEmbedded embeddedKafka = new KafkaEmbedded(1, true, TEMPLATE_TOPIC);
 
-	@Test
-	public void testPort() throws InterruptedException {
-	    template.send(Simple1.topic1, 0, "foo");
-	    template.flush();
-	    assertTrue(this.listener.latch1.await(10, TimeUnit.SECONDS));
-		//assertThat(config.broker.getBrokersAsString()).isEqualTo("127.0.0.1:" + this.config.port);
-	}
+    @Test
+    public void testTemplate() throws Exception {
+        Map<String, Object> consumerProps = KafkaTestUtils.consumerProps("testT", "false",
+            embeddedKafka);
+        DefaultKafkaConsumerFactory<Integer, String> cf =
+                            new DefaultKafkaConsumerFactory<Integer, String>(consumerProps);
+        ContainerProperties containerProperties = new ContainerProperties(TEMPLATE_TOPIC);
+        KafkaMessageListenerContainer<Integer, String> container =
+                            new KafkaMessageListenerContainer<>(cf, containerProperties);
+        final BlockingQueue<ConsumerRecord<Integer, String>> records = new LinkedBlockingQueue<>();
+        container.setupMessageListener(new MessageListener<Integer, String>() {
 
-	@Configuration
-	@EnableKafka
-	public static class Config {
+        	@Override
+        	public void onMessage(ConsumerRecord<Integer, String> record) {
+                System.out.println(record);
+                records.add(record);
+            }
 
-		//private int port;
+        });
+        container.setBeanName("templateTests");
+        container.start();
+        ContainerTestUtils.waitForAssignment(container, embeddedKafka.getPartitionsPerTopic());
+        Map<String, Object> senderProps =
+                            KafkaTestUtils.senderProps(embeddedKafka.getBrokersAsString());
+        ProducerFactory<Integer, String> pf =
+                            new DefaultKafkaProducerFactory<Integer, String>(senderProps);
+        KafkaTemplate<Integer, String> template = new KafkaTemplate<>(pf);
+        template.setDefaultTopic(TEMPLATE_TOPIC);
+        template.sendDefault("foo");
+        assertThat(records.poll(10, TimeUnit.SECONDS), hasValue("foo"));
+        template.sendDefault(0, 2, "bar");
+        ConsumerRecord<Integer, String> received = records.poll(10, TimeUnit.SECONDS);
+        assertThat(received, hasKey(2));
+        assertThat(received, hasPartition(0));
+        assertThat(received, hasValue("bar"));
+        template.send(TEMPLATE_TOPIC, 0, 2, "baz");
+        received = records.poll(10, TimeUnit.SECONDS);
+        assertThat(received, hasKey(2));
+        assertThat(received, hasPartition(0));
+        assertThat(received, hasValue("baz"));
+    }
 
-		@Autowired
-		public KafkaEmbedded broker;
-		
-		@Value("${" + KafkaEmbedded.SPRING_EMBEDDED_KAFKA_BROKERS + "}")
-        private String brokerAddresses;
-
-//		@Bean
-//		public KafkaEmbedded broker() throws IOException {
-//			KafkaEmbedded broker = new KafkaEmbedded(1);
-//			ServerSocket ss = ServerSocketFactory.getDefault().createServerSocket(0);
-//			this.port = ss.getLocalPort();
-//			ss.close();
-//			broker.setKafkaPorts(this.port);
-//			return broker;
-//		}
-		
-		@Bean
-	    ConcurrentKafkaListenerContainerFactory<Integer, String>
-	                        kafkaListenerContainerFactory() {
-	        ConcurrentKafkaListenerContainerFactory<Integer, String> factory =
-	                                new ConcurrentKafkaListenerContainerFactory<>();
-	        factory.setConsumerFactory(consumerFactory());
-	        return factory;
-	    }
-
-	    @Bean
-	    public ConsumerFactory<Integer, String> consumerFactory() {
-	        return new DefaultKafkaConsumerFactory<>(consumerConfigs());
-	    }
-
-	    @Bean
-	    public Map<String, Object> consumerConfigs() {
-	        //Map<String, Object> props = Simple1.consumerProps();
-	    	Map<String, Object> consumerProps = 
-	    			KafkaTestUtils.consumerProps(Simple1.group, "false", broker);
-			consumerProps.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
-			return consumerProps;
-	    }
-
-	    @Bean
-	    public Listener listener() {
-	        return new Listener();
-	    }
-
-	    @Bean
-	    public ProducerFactory<Integer, String> producerFactory() {
-	        return new DefaultKafkaProducerFactory<>(producerConfigs());
-	    }
-
-	    @Bean
-	    public Map<String, Object> producerConfigs() {
-	        //Map<String, Object> props = Simple1.senderProps();
-	        return KafkaTestUtils.producerProps(broker);
-	    }
-
-	    @Bean
-	    public KafkaTemplate<Integer, String> kafkaTemplate() {
-	        return new KafkaTemplate<Integer, String>(producerFactory());
-	    }
-
-	}
-
-	public static class Listener {
-
-	    private final CountDownLatch latch1 = new CountDownLatch(1);
-
-	    @KafkaListener(id = "foo", topics = Simple1.topic1 
-	    		/*,containerFactory="kafkaListenerContainerFactory"*/)
-	    public void listen1(String foo) {
-	    	System.out.println("===========listen1:"+foo);
-	        this.latch1.countDown();
-	    }
-
-	}
 }
