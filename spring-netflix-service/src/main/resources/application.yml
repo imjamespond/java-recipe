@@ -1,0 +1,27 @@
+global.server:
+  port: 18761
+
+---
+spring:
+  profiles: server
+  
+server:
+  port: ${global.server.port}
+
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    registerWithEureka: false
+    fetchRegistry: false
+    serviceUrl:
+      defaultZone: http://${eureka.instance.hostname}:${global.server.port}/eureka/
+
+---
+spring:
+  profiles: client
+  
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:${global.server.port}/eureka/
