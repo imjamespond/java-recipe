@@ -1,9 +1,14 @@
+.idea
+
 **/.gradle
 **/bin
 **/build
+**/out
 **/.project
 **/.settings
 **/.classpath
 
 **/js/lib
 **/js/lib.zip
+
+*.iml

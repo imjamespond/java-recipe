@@ -1,4 +1,4 @@
-package com.metasoft;
+package com.eureka.server;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -12,11 +12,11 @@ import org.springframework.core.env.AbstractEnvironment;
  */
 @SpringBootApplication
 @EnableEurekaServer
-public class EurekaApplication {
+public class EurekaServerApp {
 
 	public static void main(String[] args) throws Exception {
 		System.setProperty(AbstractEnvironment.ACTIVE_PROFILES_PROPERTY_NAME, "server"); 
-		SpringApplication.run(EurekaApplication.class, args);
+		SpringApplication.run(EurekaServerApp.class, args);
 	}
 
 }

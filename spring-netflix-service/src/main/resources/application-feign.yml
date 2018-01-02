@@ -1,0 +1,16 @@
+
+server:
+  port: 8081
+
+spring:
+  application.name: dummy-feign
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:${eureka.server.port}/eureka/
+      registryFetchIntervalSeconds: 5
+  instance:
+    leaseRenewalIntervalInSeconds: 10
+    metadataMap:
+      instanceId: ${vcap.application.instance_id:${spring.application.name}:${spring.application.instance_id:${server.port}}}

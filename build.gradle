@@ -1,7 +1,11 @@
 
 // In this section you declare where to find the dependencies of your project
 allprojects {
-    repositories { 
+    repositories {
+        maven {
+            name "aliyunmaven"
+            url "http://maven.aliyun.com/nexus/content/groups/public/"
+        }
         mavenLocal()
         mavenCentral() 
         jcenter()

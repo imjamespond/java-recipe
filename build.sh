@@ -7,6 +7,10 @@ export GRADLE_USER_HOME=/Users/zyy/Documents/workspace/gradle-home
 if [ "$1" = "gradle" ]; then
   PARAMS=${2:-'build'}
   gradle $PARAMS
+
+elif [ "$1" = "deps" ]; then
+  gradle $2:dependencies
+
 elif [ "$1" = "install" ]; then
   exit
 fi

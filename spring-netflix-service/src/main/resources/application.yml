@@ -1,27 +1,44 @@
-global.server:
-  port: 18761
+eureka:
+  server:
+    port: 18761
+  dashboard.path: eureka-status
+
+hystrix.command.default.circuitBreaker:
+  requestVolumeThreshold: 2 # When calls to a particular service is greater than 
+  errorThresholdPercentage: 0 # failue percentage is greater than 
+  sleepWindowInMilliseconds: 5000 # in a rolling window
 
 ---
 spring:
   profiles: server
   
 server:
-  port: ${global.server.port}
+  port: ${eureka.server.port}
 
 eureka:
   instance:
     hostname: localhost
+    
   client:
     registerWithEureka: false
     fetchRegistry: false
     serviceUrl:
-      defaultZone: http://${eureka.instance.hostname}:${global.server.port}/eureka/
+      defaultZone: http://${eureka.instance.hostname}:${eureka.server.port}/eureka/,http://eureka-server-backup:${eureka.server.port}/eureka/
 
+    healthcheck:
+      enabled: true
 ---
 spring:
   profiles: client
   
+  application.name: dummy-client
+
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://localhost:${global.server.port}/eureka/
+      defaultZone: http://localhost:${eureka.server.port}/eureka/
+
+  instance:
+    leaseRenewalIntervalInSeconds: 10
+    metadataMap:
+      instanceId: ${vcap.application.instance_id:${spring.application.name}:${spring.application.instance_id:${server.port}}}
