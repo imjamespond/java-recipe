@@ -17,6 +17,12 @@ public class TestFeignClient {
 
     @Test
     public void test(){
-        System.out.println(store.getStores());
+        try {
+            System.out.println(store.getStores());
+        }catch (Exception e){
+            System.out.println("something wrong just happened");
+            System.out.println(e.getMessage());
+        }
+
     }
 }
