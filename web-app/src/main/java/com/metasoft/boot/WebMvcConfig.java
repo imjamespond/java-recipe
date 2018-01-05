@@ -6,7 +6,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-public class WebMvcConfig implements WebMvcConfigurer {
+public abstract class WebMvcConfig implements WebMvcConfigurer {
 
 	@Autowired
 	SecurityInterceptor securityInterceptor;

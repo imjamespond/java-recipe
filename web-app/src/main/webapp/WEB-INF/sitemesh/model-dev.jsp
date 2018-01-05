@@ -1,5 +1,4 @@
 <%@ page contentType="text/html;charset=UTF-8"%>
-<%@ page import="com.metasoft.model.Constant" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
@@ -35,18 +34,8 @@
     <!--
     <link rel="canonical" href="http://www.example.com/">
     -->
-	
-	<link rel='stylesheet' href="<%=Constant.ContextPath%>/js/lib/mdl/material.css"/>
-	<link rel="stylesheet" href="<%=Constant.ContextPath%>/js/lib/jstree/themes/default/style.min.css" />
-	<link rel='stylesheet' href="<%=Constant.ContextPath%>/js/lib/nprogress.css"/>
+
 	<link rel="stylesheet" href="<%=Constant.ContextPath%>/css/common.css">
-	<link rel="icon"  />
-	
-	    
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.cyan-light_blue.min.css">
-	
     <style>
     #view-source {
       position: fixed;

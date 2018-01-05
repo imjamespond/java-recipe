@@ -1,12 +1,16 @@
+package com.metasoft.controller;
+
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.api.java.function.Function;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import com.metasoft.kafka.ProducerHelper;
-
+@RestController
 public class TextCount {
-	public static void Run(ProducerHelper helper){
+	@RequestMapping("/text-count")
+	public void run(){
 		String logFile = "/workshop/spark-2.2.0-bin-hadoop2.7/README.md"; // Should be some file on your system
 	    SparkConf conf = new SparkConf().setAppName("Simple Application");
 	    JavaSparkContext sc = new JavaSparkContext(conf);
@@ -26,8 +30,8 @@ public class TextCount {
 
 	    String rs = "Lines with a: " + numAs + ", lines with b: " + numBs;
 	    System.out.println(rs); 
-	    helper.setArg(rs); 
-	    SimpleApp.producer.produce(helper);
+	    //helper.setArg(rs);
+	    //SimpleApp.producer.produce(helper);
 	    
 	    sc.stop();
 	    sc.close();

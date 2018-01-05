@@ -1,5 +1,12 @@
-apply plugin : 'java' 
+
+apply plugin: 'org.springframework.boot'
 
 dependencies {
-    compile project(':spark-lib') 
+    compile project(':spark-service')
 }
+
+bootRepackage {
+    mainClass = 'App'
+}
+
+pkg_.dependsOn bootRepackage

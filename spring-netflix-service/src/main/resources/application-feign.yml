@@ -1,14 +1,15 @@
+---
+spring:
+  profiles: feign
+  application.name: dummy-feign
 
 server:
   port: 8081
 
-spring:
-  application.name: dummy-feign
-
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://localhost:${eureka.server.port}/eureka/
+      defaultZone: http://192.168.0.254:${eureka.server.port}/eureka/
       registryFetchIntervalSeconds: 5
   instance:
     leaseRenewalIntervalInSeconds: 10

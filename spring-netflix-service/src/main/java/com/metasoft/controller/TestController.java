@@ -20,8 +20,8 @@ public class TestController {
 
     @RequestMapping("/stores")
     List<String> getStores() throws Exception {
-        throw new Exception("oops");
-        //return Arrays.asList("foo","bar");
+        //throw new Exception("oops");
+        return Arrays.asList("foo","bar");
     }
 
     @Autowired

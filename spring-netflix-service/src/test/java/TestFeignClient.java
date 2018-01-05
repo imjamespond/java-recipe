@@ -1,4 +1,5 @@
 import com.feign.FeignApp;
+import com.feign.SparkClient;
 import com.feign.StoreClient;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,11 +15,12 @@ public class TestFeignClient {
 
     @Autowired
     StoreClient store;
-
+    @Autowired
+    SparkClient spark;
     @Test
     public void test(){
         try {
-            System.out.println(store.getStores());
+            spark.dbTest();
         }catch (Exception e){
             System.out.println("something wrong just happened");
             System.out.println(e.getMessage());

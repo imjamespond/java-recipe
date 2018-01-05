@@ -7,8 +7,10 @@
 **/.project
 **/.settings
 **/.classpath
+**/.DS_Store
 
 **/js/lib
 **/js/lib.zip
 
 *.iml
+*.jar
