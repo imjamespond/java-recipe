@@ -1,0 +1,21 @@
+---
+spring:
+  profiles: zuul
+  application.name: dummy-zuul
+
+server:
+  port: 8888
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:${eureka.server.port}/eureka/
+      registryFetchIntervalSeconds: 5
+      
+    healthcheck:
+      enabled: true
+zuul:
+  routes:
+    users:
+      path: /stores/**
+      serviceId: dummy-client
