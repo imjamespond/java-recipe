@@ -1,14 +1,4 @@
 # data-center
-sysadmin
-k1e2y3@pwd
-
-git@121.201.24.170
-yuanyao403
-dp00dp00
-
-121.201.7.141
-demo/keymobile
-027F027f
 
 一,eclipse依赖设置
 1,data-center在eclipse的build path中引入AuthService,underware项目.
