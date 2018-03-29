@@ -1,0 +1,253 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.metasoft</groupId>
+    <artifactId>data-center</artifactId>
+    <version>1.0</version>
+    <name>data center</name>
+    <url>http://maven.apache.org</url>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <org.springframework.version>4.3.2.RELEASE</org.springframework.version>
+        <commons-lang3.version>3.3.2</commons-lang3.version>
+        <jetty.version>9.2.0.v20140526</jetty.version>
+        <sitemesh.version>2.4.2</sitemesh.version>
+        <!-- 
+        <data.sharing.lib>/opt/lib</data.sharing.lib>
+         -->
+    </properties>
+    <dependencies>
+        <!--spring web-->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <version>${org.springframework.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${org.springframework.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+            <version>${org.springframework.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-webapp</artifactId>
+            <version>${jetty.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-jsp</artifactId>
+            <version>${jetty.version}</version>
+            <scope>provided</scope><!--provided by servlet container-->
+        </dependency>
+        <!--jsp support-->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jstl</artifactId>
+            <version>1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish</groupId>
+            <artifactId>javax.el</artifactId>
+            <version>3.0.1-b08</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!--sitemesh support-->
+        <dependency>
+            <groupId>opensymphony</groupId>
+            <artifactId>sitemesh</artifactId>
+            <version>${sitemesh.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <!-- File Upload -->
+        <dependency>
+            <groupId>commons-fileupload</groupId>
+            <artifactId>commons-fileupload</artifactId>
+            <version>1.2.2</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.0.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+            <version>1.8.3</version>
+        </dependency> 
+        <!-- using log4j-1.2 -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.7.21</version>
+        </dependency> 
+         
+<!-- mvn package start--><!--
+
+<dependency>
+    <groupId>com.bgy.yuanbao</groupId>
+    <artifactId>KKToken</artifactId>
+    <version>0.1</version>
+    <scope>system</scope>
+    <systemPath>${data.sharing.lib}/KKToken.jar</systemPath>
+</dependency>
+
+<dependency>
+    <groupId>com.keymobile.portal</groupId>
+    <artifactId>sso-client</artifactId>
+    <version>0.1</version>
+    <scope>system</scope>
+    <systemPath>${data.sharing.lib}/sso-portal.jar</systemPath>
+</dependency>
+
+ <dependency>
+    <groupId>com.keymobile</groupId>
+    <artifactId>MDServices-interface</artifactId>
+    <version>0.1</version>
+    <scope>system</scope>
+    <systemPath>${data.sharing.lib}/MDServices-interfaces-0.1.jar</systemPath>
+</dependency>
+<dependency>
+    <groupId>com.keymobile</groupId>
+    <artifactId>dataSharingMgr-interface</artifactId>
+    <version>0.1</version>
+    <scope>system</scope>
+    <systemPath>${data.sharing.lib}/dataSharingMgr-interfaces-0.1.jar</systemPath>
+</dependency>
+<dependency>
+    <groupId>com.keymobile</groupId>
+    <artifactId>dbServices-interfaces</artifactId>
+    <version>0.1</version>
+    <scope>system</scope>
+    <systemPath>${data.sharing.lib}/dbServices-interfaces-0.1.jar</systemPath>
+</dependency>
+<dependency>
+    <groupId>com.keymobile</groupId>
+    <artifactId>applFlow-interfaces</artifactId>
+    <version>0.1</version>
+    <scope>system</scope>
+    <systemPath>${data.sharing.lib}/applFlow-interfaces-0.1.jar</systemPath>
+</dependency>
+<dependency>
+    <groupId>com.keymobile</groupId>
+    <artifactId>underware-transport</artifactId>
+    <version>0.1</version>
+    <scope>system</scope>
+    <systemPath>${data.sharing.lib}/underware-transport-0.1.jar</systemPath>
+</dependency>
+<dependency>
+    <groupId>com.keymobile</groupId>
+    <artifactId>underware-persistence</artifactId>
+    <version>0.1</version>
+    <scope>system</scope>
+    <systemPath>${data.sharing.lib}/underware-persistence-0.1.jar</systemPath>
+</dependency> 
+--><!-- mvn package end-->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.7</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.10</version>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.httpcomponents</groupId>
+          <artifactId>httpclient</artifactId>
+          <version>4.4.1</version>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.httpcomponents</groupId>
+          <artifactId>httpcore</artifactId>
+          <version>4.4.1</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.6</version>
+        </dependency>
+        
+        <dependency>
+          <groupId>com.mchange</groupId>
+          <artifactId>c3p0</artifactId>
+          <version>0.9.5.2</version>
+        </dependency>
+         
+        <dependency>
+            <groupId>org.elasticsearch.client</groupId>
+            <artifactId>transport</artifactId>
+            <version>6.0.0</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-core</artifactId>
+            <version>1.1.0</version>
+        </dependency>
+        
+    </dependencies>
+    
+    <build>
+        <finalName>data-center</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.3</version>
+                <configuration>
+                    <archiveClasses>true</archiveClasses>
+                    <webXml>src/main/webapp/WEB-INF/web.xml</webXml>
+                    <webResources>
+                        <resource>
+                            <directory>src/test/resources</directory>
+                            <targetPath>WEB-INF/classes</targetPath>
+                            <filtering>true</filtering>
+                            <includes>
+                                <inclue>com/metasoft/sso/server.properties</inclue>
+                                <inclue>sql/db2.sql</inclue>
+                                <inclue>sql/mysql.sql</inclue>
+                                <include>logback.xml</include>
+                                <include>log4j.properties</include>
+                                <include>application.properties</include>
+                            </includes>
+                        </resource>
+                        <!--<resource> 
+                            <directory>${basedir}/documents/libs</directory> 
+                            <targetPath>WEB-INF/lib</targetPath> 
+                        </resource>-->
+                        <resource> 
+                            <directory>${data.sharing.lib}</directory> 
+                            <targetPath>WEB-INF/lib</targetPath> 
+                        </resource>
+                    </webResources>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

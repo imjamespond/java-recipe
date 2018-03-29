@@ -1,0 +1,17 @@
+**/target
+**/output
+**/node_modules
+**/es6/script
+**/es6/js
+**/compiler-latest
+**/dist
+**/easyui
+*.zip
+
+*.DS_Store
+**/.classpath
+**/.project
+**/.settings
+/data-center.eml
+/data-center.iml
+**/closure-compiler.jar
