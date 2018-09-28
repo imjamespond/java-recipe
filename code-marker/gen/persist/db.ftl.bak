@@ -1,0 +1,80 @@
+	
+    <#list vo.items as e>
+        <#if e.type="java.lang.String">java.sql.Types.VARCHAR
+        <#elseif e.type="long">${e.name}:Number;
+        <#elseif e.type="java.lang.Long">public var ${e.name}:Number;
+        <#elseif e.type="java.lang.Integer">${e.name}:int;
+        <#elseif e.type="float">${e.name}:Number;
+        <#elseif e.type="java.lang.Float">${e.name}:Number;
+        <#elseif e.type="double">${e.name}:Number;
+        <#elseif e.type="java.lang.Double">${e.name}:Number;
+        <#elseif e.type="boolean">${e.name}:Boolean;
+        <#elseif e.type="java.lang.Boolean">${e.name}:Boolean;
+        <#elseif e.type="java.util.List">${e.name}:Array;
+        <#elseif e.type="java.util.ArrayList">${e.name}:Array;
+        <#elseif e.type="Array">${e.name}:Array;
+        <#else>${e.name}:${e.type};
+        </#if>
+    </#list>
+
+	private static final int[] TYPE_UPDATE = new int[] {java.sql.Types.BIGINT, java.sql.Types.VARCHAR, java.sql.Types.INTEGER, java.sql.Types.BIGINT};
+	private static final String SQL_UPDATE = "update " + TABLE +" set <#assign i = 0><#list vo.items as e>${e.name}=?<#if i=0>, </#if><#assign i=i+1></#list> where id = ?";
+	
+	private static final int[] TYPE_INSERT = new int[] {java.sql.Types.BIGINT, java.sql.Types.VARCHAR, java.sql.Types.INTEGER};
+	private static final String SQL_INSERT = "insert into " + TABLE +"(<#assign i = 0><#list vo.items as e>${e.name}<#if i=0>,</#if><#assign i=i+1></#list>) values (<#assign i = 0><#list vo.items as e>?<#if i=0>,</#if><#assign i=i+1></#list>)";
+	private static final String SQL_DELETE = "delete from " + TABLE +" where id = ?";
+
+	@Override
+	public void delete() {
+		JdbcTemplate jt = DaoFactory.getJdbcTemplate();
+		if (null == jt) {
+			return ;
+		}
+		
+		Object[] params = new Object[]{id()};
+		
+		try {
+			jt.update(SQL_DELETE, params, TYPE_ID);
+		}  catch (DataAccessException e) {
+			logger.warn(e.getMessage());
+		}
+	}
+
+	@Override
+	public void update() {
+
+		JdbcTemplate jt = DaoFactory.getJdbcTemplate();
+		if (null == jt) {
+			return ;
+		}
+		
+		Object[] params = new Object[]{id(), name, gender, id()};
+		
+		try {
+			jt.update(SQL_UPDATE, params, TYPE_UPDATE);
+		} catch (DataAccessException e) {
+			logger.warn(e.getMessage());
+		}
+	}
+
+	@Override
+	public void save() {
+		JdbcTemplate jt = DaoFactory.getJdbcTemplate();
+		if (null == jt) {
+			return ;
+		}
+		
+		Object[] params = new Object[]{id(), name, gender, score, rose, dimond, attention, black, };
+		
+		try {
+			jt.update(SQL_INSERT, params, TYPE_INSERT);
+		} catch (DataAccessException e) {
+			logger.warn(e.getMessage());
+		}
+	}
+
+	//values
+
+	//method
+
+	//override method
