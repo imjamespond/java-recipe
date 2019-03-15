@@ -8,14 +8,13 @@ import org.teiid.adminapi.impl.ModelMetaData;
 import org.teiid.jdbc.TeiidDriver;
 import org.teiid.language.Command;
 import org.teiid.language.QueryExpression;
-import org.teiid.metadata.Column;
-import org.teiid.metadata.MetadataFactory;
-import org.teiid.metadata.RuntimeMetadata;
-import org.teiid.metadata.Table;
+import org.teiid.metadata.*;
 import org.teiid.runtime.EmbeddedConfiguration;
 import org.teiid.runtime.EmbeddedServer;
 import org.teiid.translator.*;
 
+import java.io.ByteArrayInputStream;
+import java.nio.charset.Charset;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -39,6 +38,31 @@ public class ServerTest {
         if (es != null) {
             es.stop();
         }
+    }
+
+    @Test public void testDDLNameFormat() throws Exception {
+        es.start(new EmbeddedConfiguration());
+        es.addMetadataRepository("x", new MetadataRepository() {
+            @Override
+            public void loadMetadata(MetadataFactory factory,
+                                     ExecutionFactory executionFactory,
+                                     Object connectionFactory, String text)
+                    throws TranslatorException {
+                Table t = factory.addTable("helloworld");
+                t.setVirtual(true);
+                factory.addColumn("col", "string", t);
+                t.setSelectTransformation("select 'HELLO WORLD'");
+            }
+        });
+        String externalDDL = "CREATE DATABASE test VERSION '1';"
+                + "USE DATABASE test VERSION '1';"
+                + "CREATE VIRTUAL SCHEMA test2 options ( importer.nameFormat 'prod_%s');"
+                + "IMPORT FOREIGN SCHEMA public FROM REPOSITORY x INTO test2;";
+
+        es.deployVDB(new ByteArrayInputStream(externalDDL.getBytes(Charset.forName("UTF-8"))), true);
+        ResultSet rs = es.getDriver().connect("jdbc:teiid:test", null).createStatement().executeQuery("select * from prod_helloworld");
+        rs.next();
+        assertEquals("HELLO WORLD", rs.getString(1));
     }
 
     @Test

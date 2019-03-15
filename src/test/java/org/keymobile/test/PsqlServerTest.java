@@ -94,7 +94,7 @@ public class PsqlServerTest {
 
         ModelMetaData model = new ModelMetaData();
         model.setModelType("PHYSICAL");
-        model.setName("test-psql");
+        model.setName("psql-schema");
         model.addSourceMapping("psql-1", "translator-postgresql", "teiid1");
 
 
