@@ -5,3 +5,6 @@ target
 
 
 mydatabase.*
+*.jar
+*.pdf
+**.DS_Store

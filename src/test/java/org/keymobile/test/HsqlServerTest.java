@@ -13,16 +13,33 @@ import org.teiid.transport.SocketConfiguration;
 import org.teiid.transport.WireProtocol;
 
 import javax.sql.DataSource;
+import java.io.File;
 import java.io.PrintWriter;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ServiceLoader;
 import java.util.logging.Logger;
 
 public class HsqlServerTest {
 
     EmbeddedServer es;
 
+
     @Before
     public void setup() {
+        ServiceLoader<Driver> loadedDrivers = ServiceLoader.load(Driver.class);
+        Iterator<Driver> driversIterator = loadedDrivers.iterator();
+        while(driversIterator.hasNext()) {
+            Driver d = driversIterator.next();
+            System.out.println(d.getClass());
+        }
+
+
         es = new EmbeddedServer();
     }
 
@@ -31,6 +48,63 @@ public class HsqlServerTest {
         if (es != null) {
             es.stop();
         }
+    }
+
+    public URLClassLoader loadLibs(String path) throws MalformedURLException {
+        URL fileUrl = getClass().getResource(path);
+        File dir = new File(fileUrl.getFile());
+        List<URL> urlList = new ArrayList<>();
+        if (dir.isDirectory()){
+            for (final File fileEntry : dir.listFiles()) {
+                if (!fileEntry.isDirectory()) {
+                    System.out.println(fileEntry.getName());
+                    urlList.add(fileEntry.toURI().toURL());
+                }
+            }
+        }
+        URL[] urls = urlList.toArray(new URL[0]);
+        URLClassLoader loader = new URLClassLoader(
+                urls,
+                this.getClass().getClassLoader()
+        );
+
+        return loader;
+    }
+
+    @Test
+    public void testClassLoader() throws Throwable {
+        URLClassLoader loader1 = this.loadLibs("/lib1");
+        Class CCC1 = Class.forName("test.c.CCC", true, loader1);
+        CCC1.newInstance();
+
+        URLClassLoader loader2 = this.loadLibs("/lib2");
+        Class CCC2 = Class.forName("test.c.CCC", true, loader2);
+        CCC2.newInstance();
+
+        CCC1.newInstance();
+        CCC2.newInstance();
+
+
+//        URLClassLoader child = new URLClassLoader(
+//                new URL[] {this.getClass().getClassLoader().getResource("postgresql-42.2.5.jar")},
+//                this.getClass().getClassLoader()
+//        );
+//        Class classToLoad = Class.forName("org.postgresql.Driver", true, child);
+//        Driver dr = (Driver) classToLoad.newInstance();
+//        System.out.println(dr.getClass().getName());
+//
+//        java.util.Properties info = new java.util.Properties();
+//        info.put("user", "postgres");
+//        info.put("password", "mysecretpassword");
+//
+//        Connection conn = dr.connect("jdbc:postgresql://dell:5432/blockchain_test", info);
+//        Statement s = conn.createStatement();
+//        ResultSet rs = s.executeQuery("select * from \"bc_user\"");
+//
+//        while (rs.next()) {
+//            String username = rs.getString("username");
+//            System.out.println(username);
+//        }
     }
 
     @Test
@@ -146,6 +220,5 @@ public class HsqlServerTest {
         }
 
     }
-
 
 }
