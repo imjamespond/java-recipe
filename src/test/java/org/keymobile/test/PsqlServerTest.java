@@ -1,5 +1,6 @@
 package org.keymobile.test;
 
+import com.atomikos.jdbc.AtomikosDataSourceBean;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import org.junit.After;
 import org.junit.Before;
@@ -13,6 +14,7 @@ import org.teiid.transport.WireProtocol;
 
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.Properties;
 
 public class PsqlServerTest {
 
@@ -78,18 +80,29 @@ public class PsqlServerTest {
 
 
 
-        ComboPooledDataSource cpds = new ComboPooledDataSource();
-        cpds.setDriverClass( "org.postgresql.Driver" ); //loads the jdbc driver
-        cpds.setJdbcUrl( "jdbc:postgresql://dell:5432/blockchain_test" );
-        cpds.setUser("postgres");
-        cpds.setPassword("mysecretpassword");
+//        ComboPooledDataSource cpds = new ComboPooledDataSource();
+//        cpds.setDriverClass( "org.postgresql.Driver" ); //loads the jdbc driver
+//        cpds.setJdbcUrl( "jdbc:postgresql://localhost:5432/blockchain_test" );
+//        cpds.setUser("postgres");
+//        cpds.setPassword("mysecretpassword");
+        AtomikosDataSourceBean ds = new AtomikosDataSourceBean();
+        ds.setUniqueResourceName("postgresql");
+        ds.setXaDataSourceClassName("org.postgresql.xa.PGXADataSource");
+        Properties p = new Properties();
+        p.setProperty ( "user" , "postgres" );
+        p.setProperty ( "password" , "mysecretpassword" );
+        p.setProperty ( "URL" , "jdbc:postgresql://localhost:5432/blockchain_test" );
+//        ds.setXaDataSourceProperties ( p );
+        ds.setXaProperties(p);
+        ds.setPoolSize ( 5 );
+
 
         //change db and reset connection pool
 //        cpds.setJdbcUrl();
         //for multiple users
 //        cpds.getConnection(user,password);
 
-        es.addConnectionFactory("teiid1", cpds);
+        es.addConnectionFactory("teiid1", ds);
 
 
         ModelMetaData model = new ModelMetaData();
@@ -108,7 +121,7 @@ public class PsqlServerTest {
         ComboPooledDataSource c = new ComboPooledDataSource();
         c.setDriverClass( "org.teiid.jdbc.TeiidDriver" ); //loads the jdbc driver
         c.setJdbcUrl( "jdbc:teiid:psql-1@mm://localhost:54321" );
-        Statement s = cpds.getConnection().createStatement();
+        Statement s = c.getConnection().createStatement();
 
         ResultSet rs = s.executeQuery("select * from \"bc_user\"");
         while (rs.next()) {

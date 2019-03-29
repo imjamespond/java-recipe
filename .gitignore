@@ -8,3 +8,4 @@ mydatabase.*
 *.jar
 *.pdf
 **.DS_Store
+*.log

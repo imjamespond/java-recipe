@@ -1,10 +1,12 @@
 package org.keymobile.test;
 
 
+import com.atomikos.icatch.jta.UserTransactionManager;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.teiid.adminapi.impl.ModelMetaData;
+import org.teiid.jdbc.ConnectionImpl;
 import org.teiid.jdbc.TeiidDriver;
 import org.teiid.runtime.EmbeddedConfiguration;
 import org.teiid.runtime.EmbeddedServer;
@@ -13,6 +15,7 @@ import org.teiid.transport.SocketConfiguration;
 import org.teiid.transport.WireProtocol;
 
 import javax.sql.DataSource;
+import javax.transaction.TransactionManager;
 import java.io.File;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
@@ -139,6 +142,9 @@ public class HsqlServerTest {
         ec.setMaxAsyncThreads(1<<4);
         ec.setMaxRowsFetchSize(1<<12);
 
+        TransactionManager tm = new UserTransactionManager();
+        ec.setTransactionManager(tm);
+
         es.start(ec);
 
         HsqlExecutionFactory ef = new HsqlExecutionFactory();
@@ -213,6 +219,13 @@ public class HsqlServerTest {
 //        pst.setString(2, "hehe");
 //        pst.setString(3, "123321");
 //        pst.executeUpdate();
+        c.setAutoCommit(false);
+        PreparedStatement pst=c.prepareStatement("update contacts set phone=?");
+        pst.clearParameters();
+        pst.setString(1, "999");
+        pst.executeUpdate();
+        c.commit();
+
         ResultSet rs = c.createStatement().executeQuery("select * from \"contacts\"");
         while (rs.next()) {
             String username = rs.getString("name");
