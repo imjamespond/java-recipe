@@ -8,19 +8,26 @@ import org.junit.Test;
 import org.teiid.adminapi.impl.ModelMetaData;
 import org.teiid.jdbc.ConnectionImpl;
 import org.teiid.jdbc.TeiidDriver;
+import org.teiid.metadata.MetadataFactory;
+import org.teiid.metadata.MetadataRepository;
+import org.teiid.metadata.Table;
 import org.teiid.runtime.EmbeddedConfiguration;
 import org.teiid.runtime.EmbeddedServer;
+import org.teiid.translator.ExecutionFactory;
+import org.teiid.translator.TranslatorException;
 import org.teiid.translator.jdbc.hsql.HsqlExecutionFactory;
 import org.teiid.transport.SocketConfiguration;
 import org.teiid.transport.WireProtocol;
 
 import javax.sql.DataSource;
 import javax.transaction.TransactionManager;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.charset.Charset;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -154,61 +161,16 @@ public class HsqlServerTest {
 
         Class.forName("org.hsqldb.jdbc.JDBCDriver");
 
-        es.addConnectionFactory("teiid1", new DataSource() {
-            @Override
-            public Connection getConnection() throws SQLException {
-                return DriverManager.getConnection("jdbc:hsqldb:mydatabase","SA","");
-            }
-
-            @Override
-            public Connection getConnection(String username, String password) throws SQLException {
-                return getConnection();
-            }
-
-            @Override
-            public <T> T unwrap(Class<T> iface) throws SQLException {
-                return null;
-            }
-
-            @Override
-            public boolean isWrapperFor(Class<?> iface) throws SQLException {
-                return false;
-            }
-
-            @Override
-            public PrintWriter getLogWriter() throws SQLException {
-                return null;
-            }
-
-            @Override
-            public void setLogWriter(PrintWriter out) throws SQLException {
-
-            }
-
-            @Override
-            public void setLoginTimeout(int seconds) throws SQLException {
-
-            }
-
-            @Override
-            public int getLoginTimeout() throws SQLException {
-                return 0;
-            }
-
-            @Override
-            public Logger getParentLogger() throws SQLFeatureNotSupportedException {
-                return null;
-            }
-        });
+        es.addConnectionFactory("teiid1", new MyDataSource());
 
 
         ModelMetaData model = new ModelMetaData();
         model.setModelType("PHYSICAL");
         model.setName("test-hsql");
-        model.addSourceMapping("hsql-1", "translator-hsql", "teiid1");
+        model.addSourceMapping("hsql-1-1", "translator-hsql", "teiid1");
 
 
-        es.deployVDB("hsql-1", model);
+        es.deployVDB("hsql-1", model);// dbname
 
 
         TeiidDriver td = es.getDriver();
@@ -232,6 +194,54 @@ public class HsqlServerTest {
             System.out.println(username);
         }
 
+    }
+
+
+    class MyDataSource implements DataSource{
+        @Override
+        public Connection getConnection() throws SQLException {
+            return DriverManager.getConnection("jdbc:hsqldb:mydatabase","SA","");
+        }
+
+        @Override
+        public Connection getConnection(String username, String password) throws SQLException {
+            return getConnection();
+        }
+
+        @Override
+        public <T> T unwrap(Class<T> iface) throws SQLException {
+            return null;
+        }
+
+        @Override
+        public boolean isWrapperFor(Class<?> iface) throws SQLException {
+            return false;
+        }
+
+        @Override
+        public PrintWriter getLogWriter() throws SQLException {
+            return null;
+        }
+
+        @Override
+        public void setLogWriter(PrintWriter out) throws SQLException {
+
+        }
+
+        @Override
+        public void setLoginTimeout(int seconds) throws SQLException {
+
+        }
+
+        @Override
+        public int getLoginTimeout() throws SQLException {
+            return 0;
+        }
+
+        @Override
+        public Logger getParentLogger() throws SQLFeatureNotSupportedException {
+            return null;
+        }
     }
 
 }
