@@ -181,12 +181,13 @@ public class HsqlServerTest {
 //        pst.setString(2, "hehe");
 //        pst.setString(3, "123321");
 //        pst.executeUpdate();
-        c.setAutoCommit(false);
-        PreparedStatement pst=c.prepareStatement("update contacts set phone=?");
-        pst.clearParameters();
-        pst.setString(1, "999");
-        pst.executeUpdate();
-        c.commit();
+
+//        c.setAutoCommit(false);
+//        PreparedStatement pst=c.prepareStatement("update contacts set phone=?");
+//        pst.clearParameters();
+//        pst.setString(1, "999");
+//        pst.executeUpdate();
+//        c.commit();
 
         ResultSet rs = c.createStatement().executeQuery("select * from \"contacts\"");
         while (rs.next()) {

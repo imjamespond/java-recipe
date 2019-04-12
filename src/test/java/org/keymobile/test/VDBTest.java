@@ -4,20 +4,23 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.teiid.adminapi.impl.ModelMetaData;
-import org.teiid.deployers.VirtualDatabaseException;
-import org.teiid.dqp.internal.datamgr.ConnectorManagerRepository;
+import org.teiid.core.util.StringUtil;
 import org.teiid.jdbc.TeiidDriver;
-import org.teiid.metadata.MetadataRepository;
+import org.teiid.metadata.*;
 import org.teiid.query.metadata.ChainingMetadataRepository;
 import org.teiid.runtime.EmbeddedConfiguration;
 import org.teiid.runtime.EmbeddedServer;
 import org.teiid.security.Credentials;
 import org.teiid.security.GSSResult;
 import org.teiid.security.SecurityHelper;
+import org.teiid.translator.ExecutionFactory;
 import org.teiid.translator.TranslatorException;
+import org.teiid.translator.jdbc.JDBCMetadataProcessor;
 import org.teiid.translator.jdbc.hsql.HsqlExecutionFactory;
+import org.teiid.translator.jdbc.postgresql.PostgreSQLExecutionFactory;
 import org.teiid.transport.SocketConfiguration;
 import org.teiid.transport.WireProtocol;
+import org.teiid.util.FullyQualifiedName;
 
 import javax.security.auth.Subject;
 import javax.security.auth.login.LoginException;
@@ -26,6 +29,7 @@ import java.io.PrintWriter;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -36,14 +40,22 @@ public class VDBTest {
     public void setup() throws TranslatorException {
         es = new EmbeddedServer();
 
-        HsqlExecutionFactory ef = new HsqlExecutionFactory();
-        ef.setSupportsDirectQueryProcedure(true);
-        ef.start();
-        es.addTranslator("translator-hsql", ef);
+        HsqlExecutionFactory hsqlEF = new HsqlExecutionFactory();
+        hsqlEF.setSupportsDirectQueryProcedure(true);
+        hsqlEF.start();
+        es.addTranslator("translator-hsql", hsqlEF);
 
-//        addMetadataRepository("chain" , new ChainingMetadataRepository(Arrays.asList(new MetadataRepository[] {
-//                this.getMetadataRepository("native"), this.getMetadataRepository("resource-metadata")
-//        })));
+
+        PostgreSQLExecutionFactory psqlEF = new PostgreSQLExecutionFactory();
+        psqlEF.setSupportsDirectQueryProcedure(true);
+        psqlEF.start();
+        es.addTranslator("translator-postgresql", psqlEF);
+
+        es.addMetadataRepository("chain" , new ChainingMetadataRepository(Arrays.asList(new MetadataRepository[] {
+                new MyMetadataRepo()
+        })));
+
+
     }
 
     @After
@@ -93,8 +105,7 @@ public class VDBTest {
         Connection c = td.connect("jdbc:teiid:test-vdb@mm://localhost:54321", null);
         ResultSet rs = c.createStatement().executeQuery("select * from \"contacts\"");
         while (rs.next()) {
-            String username = rs.getString("name");
-            System.out.println(username);
+            System.out.printf("%s, %s\n", rs.getString("name"), rs.getString("email"));
         }
 
     }
@@ -103,9 +114,15 @@ public class VDBTest {
 
         List<ModelMetaData> models = new ArrayList<ModelMetaData>();
 
-        MyDataSource ds = new MyDataSource("jdbc:hsqldb:mydatabase", "SA","");
-        ModelMetaData model = createVDBModel( "test-hsql", "hsql-1-1", "translator-hsql", ds.getJndiName(), ds);
+        MyDataSource ds;
+        ds = new MyDataSource("jdbc:hsqldb:mydatabase", "SA","");
+        ModelMetaData model;
+        model = createVDBModel( "test-hsql", "hsql-1-1", "translator-hsql", ds.getJndiName(), ds);
         models.add(model);
+
+        ds = new MyDataSource("jdbc:postgresql://localhost:5432/blockchain_test", "postgres","mysecretpassword");
+        model = createVDBModel( "test-psql", "psql-1-1", "translator-postgresql", ds.getJndiName(), ds);
+//        models.add(model);
 
         es.deployVDB("test-vdb", models.toArray(new ModelMetaData[0]));
     }
@@ -117,7 +134,7 @@ public class VDBTest {
         ModelMetaData model = new ModelMetaData();
         model.setModelType("PHYSICAL");
         model.setName(dbName);
-//        model.addSourceMetadata("chain", "chain"); // refer to addMetadataRepository("chain"...)
+        model.addSourceMetadata("chain", "chain"); // replace default NativeRepo
         model.addSourceMapping(dbId, dbTrans, connJndiName);
 
         return model;
@@ -222,5 +239,22 @@ public class VDBTest {
         public Logger getParentLogger() throws SQLFeatureNotSupportedException {
             return null;
         }
+    }
+
+    class MyMetadataRepo implements MetadataRepository {
+        public void loadMetadata(MetadataFactory metadataFactory, ExecutionFactory executionFactory, Object connectionFactory) {
+
+
+            JDBCMetadataProcessor processor = new JDBCMetadataProcessor();
+
+            String tableCatalog = "public", tableSchema = "public", tableName = "contacts";
+            String fullName = processor.getFullyQualifiedName(tableCatalog, tableSchema, tableName, false);
+            Table table = processor.addTable(metadataFactory, tableCatalog, tableSchema, tableName, null, fullName);
+
+            Column column;
+            column = metadataFactory.addColumn("NAME", "string", table);
+            column = metadataFactory.addColumn("EMAIL", "string", table);
+        }
+
     }
 }
