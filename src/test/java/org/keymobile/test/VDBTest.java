@@ -103,9 +103,16 @@ public class VDBTest {
 
         TeiidDriver td = es.getDriver();
         Connection c = td.connect("jdbc:teiid:test-vdb@mm://localhost:54321", null);
-        ResultSet rs = c.createStatement().executeQuery("select * from \"contacts\"");
+        ResultSet rs;
+//        rs = c.createStatement().executeQuery("select * from \"contacts\"");
+//        while (rs.next()) {
+//            System.out.printf("%s, %s\n", rs.getString("username"), rs.getString("email"));
+//        }
+
+        rs = c.createStatement().executeQuery("select username from \"bc_user\" UNION select username from \"contacts\" order by username asc");
         while (rs.next()) {
-            System.out.printf("%s, %s\n", rs.getString("name"), rs.getString("email"));
+            String username = rs.getString("username");
+            System.out.println(username);
         }
 
     }
@@ -122,7 +129,7 @@ public class VDBTest {
 
         ds = new MyDataSource("jdbc:postgresql://localhost:5432/blockchain_test", "postgres","mysecretpassword");
         model = createVDBModel( "test-psql", "psql-1-1", "translator-postgresql", ds.getJndiName(), ds);
-//        models.add(model);
+        models.add(model);
 
         es.deployVDB("test-vdb", models.toArray(new ModelMetaData[0]));
     }
@@ -243,17 +250,30 @@ public class VDBTest {
 
     class MyMetadataRepo implements MetadataRepository {
         public void loadMetadata(MetadataFactory metadataFactory, ExecutionFactory executionFactory, Object connectionFactory) {
+            List<String> sourceNames = metadataFactory.getModel().getSourceNames();
 
 
             JDBCMetadataProcessor processor = new JDBCMetadataProcessor();
+            MyDataSource ds = (MyDataSource)connectionFactory;
 
-            String tableCatalog = "public", tableSchema = "public", tableName = "contacts";
-            String fullName = processor.getFullyQualifiedName(tableCatalog, tableSchema, tableName, false);
-            Table table = processor.addTable(metadataFactory, tableCatalog, tableSchema, tableName, null, fullName);
+            if (ds.url.startsWith("jdbc:hsqldb:mydatabase")) {
+                String tableCatalog = "public", tableSchema = "public", tableName = "contacts";
+                String fullName = processor.getFullyQualifiedName(tableCatalog, tableSchema, tableName, false);
+                Table table = processor.addTable(metadataFactory, tableCatalog, tableSchema, tableName, null, fullName);
 
-            Column column;
-            column = metadataFactory.addColumn("NAME", "string", table);
-            column = metadataFactory.addColumn("EMAIL", "string", table);
+                Column column;
+                column = metadataFactory.addColumn("USERNAME", "string", table);
+                column = metadataFactory.addColumn("EMAIL", "string", table);
+            }
+
+            if (ds.url.startsWith("jdbc:postgresql://localhost")) {
+                String tableCatalog = "", tableSchema = "public", tableName = "bc_user";
+                String fullName = processor.getFullyQualifiedName(tableCatalog, tableSchema, tableName, false);
+                Table table = processor.addTable(metadataFactory, tableCatalog, tableSchema, tableName, null, fullName);
+
+                Column column;
+                column = metadataFactory.addColumn("USERNAME", "string", table);
+            }
         }
 
     }

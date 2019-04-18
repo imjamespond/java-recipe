@@ -121,7 +121,7 @@ public class HsqlServerTest {
     public void testDeploy() throws Throwable {
         Connection conn = DriverManager.getConnection("jdbc:hsqldb:mydatabase","SA","");
         try {
-            conn.createStatement().executeUpdate("create table contacts (name varchar(45),email varchar(45),phone varchar(45))");
+            conn.createStatement().executeUpdate("create table contacts (username varchar(45),email varchar(45),phone varchar(45))");
         } catch (SQLException e) {
             e.printStackTrace(System.out);
         }
@@ -175,23 +175,25 @@ public class HsqlServerTest {
 
         TeiidDriver td = es.getDriver();
         Connection c = td.connect("jdbc:teiid:hsql-1@mm://localhost:54321", null);
+//        c.setAutoCommit(false);
+
 //        PreparedStatement pst=c.prepareStatement("insert into contacts values(?,?,?)");
 //        pst.clearParameters();
 //        pst.setString(1, "foobar");
-//        pst.setString(2, "hehe");
-//        pst.setString(3, "123321");
+//        pst.setString(2, "foo@bar.com");
+//        pst.setString(3, "1234567");
 //        pst.executeUpdate();
 
-//        c.setAutoCommit(false);
 //        PreparedStatement pst=c.prepareStatement("update contacts set phone=?");
 //        pst.clearParameters();
 //        pst.setString(1, "999");
 //        pst.executeUpdate();
+
 //        c.commit();
 
         ResultSet rs = c.createStatement().executeQuery("select * from \"contacts\"");
         while (rs.next()) {
-            String username = rs.getString("name");
+            String username = rs.getString("username");
             System.out.println(username);
         }
 

@@ -28,6 +28,7 @@ import java.util.TreeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.teiid.connector.DataPlugin;
+import org.teiid.core.types.DataTypeManager;
 
 public class Schema extends AbstractMetadataRecord {
 
@@ -53,6 +54,12 @@ public class Schema extends AbstractMetadataRecord {
 			throw new DuplicateRecordException(DataPlugin.Event.TEIID60013, DataPlugin.Util.gs(DataPlugin.Event.TEIID60013, table.getName())); 
 		}
 		resolvingOrder.add(table);
+	}
+
+	@Override
+	public void setName(String name) {
+		log.trace("________________set schema name: {}", name);
+		super.setName(name);
 	}
 	
 	public Table removeTable(String tableName) {
@@ -117,6 +124,10 @@ public class Schema extends AbstractMetadataRecord {
 	 * @return
 	 */
 	public NavigableMap<String, Table> getTables() {
+		tables.forEach((k,t) -> {
+//			log.trace("__________ {}, {}", k, t.toString());
+		});
+
 		return tables;
 	}
 	
