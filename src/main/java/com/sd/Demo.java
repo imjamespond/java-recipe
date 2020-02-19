@@ -2,6 +2,7 @@ package com.sd;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.annotations.*;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -29,6 +30,10 @@ public class Demo {
 
 	@GetMapping(path="/user/list")
 	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+	@ApiOperation(value = "示例")
+	@ApiResponses(
+			@ApiResponse(code = 200, message = "字段1 column1,字段2 column2,字段3 column3,字段1 column1,字段2 column2,字段3 column3,字段1 column1,字段2 column2,字段3 column3,字段1 column1,字段2 column2,字段3 column3,")
+	)
 	public List<Foobar> list(@RequestParam(value="name", defaultValue="no name") String name ) throws JsonProcessingException {
 		return null;
 	}
