@@ -18,7 +18,7 @@ import java.util.List;
 @RestController
 @EnableSwagger2
 public class Demo {
-	
+
 	@GetMapping(path="/user/getName")
 	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 	public String getDemo(@RequestParam(value="name", defaultValue="no name") String name,
@@ -36,6 +36,11 @@ public class Demo {
 	)
 	public List<Foobar> list(@RequestParam(value="name", defaultValue="no name") String name ) throws JsonProcessingException {
 		return null;
+	}
+
+	@GetMapping(path="/logout/successfully")
+	public String logout() throws JsonProcessingException {
+		return "logout/successfully";
 	}
 
 	//param: remember-me true

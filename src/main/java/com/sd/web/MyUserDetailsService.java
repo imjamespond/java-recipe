@@ -18,8 +18,18 @@ import java.util.Collection;
 @Component
 public class MyUserDetailsService implements UserDetailsService {
 
-    public PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    public PasswordEncoder passwordEncoder = new PasswordEncoder() {
+        // remember me要用密码encode token， BCryptPasswordEncoder每次encode的结果不同导致token不一致
+        @Override
+        public String encode(CharSequence charSequence) {
+            return charSequence.toString();
+        }
 
+        @Override
+        public boolean matches(CharSequence charSequence, String s) {
+            return charSequence.toString().equals(s);
+        }
+    };
 
 //    @Autowired
 //    private UserDao userDao;
