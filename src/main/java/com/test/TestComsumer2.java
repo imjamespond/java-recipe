@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
+//Manual Offset Control
 //If we allowed offsets to auto commit as in the previous example, records would be considered consumed after they were returned to the user in poll.
 // 如果像之前那样允许自动提交, 记录会在poll返回后当作已消费. 为避免这样,我们可以在插入db后再提交offset
 public class TestComsumer2 {

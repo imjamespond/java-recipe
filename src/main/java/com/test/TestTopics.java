@@ -30,7 +30,8 @@ public class TestTopics {
             System.out.println("key:"+entry.getKey());
             List<PartitionInfo> list = entry.getValue();
             for(PartitionInfo info: list){
-                System.out.println(info.topic());
+
+                System.out.printf("partition: %s, topic: %s\n",info.partition(), info.topic());
             }
         }
     }

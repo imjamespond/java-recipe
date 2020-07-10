@@ -10,3 +10,14 @@
 ## 文档  
 https://kafka.apache.org/25/javadoc/index.html?org/apache/kafka/clients/producer/KafkaProducer.html  
 https://kafka.apache.org/25/javadoc/index.html?org/apache/kafka/clients/consumer/KafkaConsumer.html
+
+
+## Topic  
+./kafka-topics.sh --alter --topic shuaige --partitions 4  
+./kafka-run-class.sh kafka.admin.ConsumerGroupCommand \
+    --bootstrap-server 192.168.0.254:9092 \
+    --describe --group test
+
+## 参数  
+--bootstrap-server <String: server to connect to> ```string in the form HOST1:PORT1,HOST2:PORT2. ```    
+                                           
