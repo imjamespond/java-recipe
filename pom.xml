@@ -35,7 +35,10 @@
                     <outputDirectory>target</outputDirectory>
                     <resources>
                         <resource>
-                            <file>k8s/Dockerfile</file>
+                            <directory>k8s</directory>
+                            <includes>
+                                <include>Dockerfile</include>
+                            </includes>
                             <filtering>true</filtering>
                         </resource>
                     </resources>
