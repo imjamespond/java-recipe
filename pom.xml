@@ -8,6 +8,8 @@
     <artifactId>test-docker</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <name>My Resources Plugin Practice Project</name>
+
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -28,18 +30,15 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
             <plugin>
-                <groupId>com.spotify</groupId>
-                <artifactId>dockerfile-maven-plugin</artifactId>
-                <version>1.4.13</version>
-
+                <artifactId>maven-resources-plugin</artifactId>
                 <configuration>
-                    <googleContainerRegistryEnabled>false</googleContainerRegistryEnabled>
-                    <dockerfile>k8s/Dockerfile</dockerfile>
-                    <repository>192.168.0.193:59999/mavendemo</repository>
-                    <buildArgs>
-                        <JAR_FILE>${project.build.finalName}.jar</JAR_FILE>
-                        <BUILD_DIR>${project.build.directory}</BUILD_DIR>
-                    </buildArgs>
+                    <outputDirectory>target</outputDirectory>
+                    <resources>
+                        <resource>
+                            <file>k8s/Dockerfile</file>
+                            <filtering>true</filtering>
+                        </resource>
+                    </resources>
                 </configuration>
             </plugin>
         </plugins>
