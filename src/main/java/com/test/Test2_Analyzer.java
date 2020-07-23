@@ -100,6 +100,15 @@ public class Test2_Analyzer {
         }
     }
     '
+
+    更新分词
+    find ${ES_HOME} -name IKAnalyzer.cfg.xml
+    ${ES_HOME}/config/analysis-ik/IKAnalyzer.cfg.xml
+    加入<entry key="ext_dict">mydict.dic;someext.dic</entry>
+    restart es
+    热更新
+    docker run --rm -v /opt/es-dict:/usr/share/nginx/html:ro -p80:80 -it nginx:1.18-alpine
+    再次请求analyzer时,...start to reload ik dict...try load config from...http://127.0.0.1/ext.dic
 */
 
 
