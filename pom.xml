@@ -23,6 +23,12 @@
             <artifactId>translator-jdbc</artifactId>
             <version>${version.teiid}</version>
         </dependency>
+        <dependency>
+            <groupId>org.teiid</groupId>
+            <artifactId>teiid-data-quality</artifactId>
+            <version>${version.teiid}</version>
+        </dependency>
+
 
         <dependency>
             <groupId>com.zaxxer</groupId>
@@ -35,11 +41,11 @@
             <version>8.0.21</version>
         </dependency>
 
-        <dependency>
+        <!--<dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>1.2.3</version>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

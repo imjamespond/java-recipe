@@ -7,10 +7,11 @@ import org.teiid.adminapi.impl.ModelMetaData;
 import org.teiid.deployers.VirtualDatabaseException;
 import org.teiid.dqp.internal.datamgr.ConnectorManagerRepository;
 import org.teiid.jdbc.TeiidDriver;
-import org.teiid.metadata.MetadataRepository;
-import org.teiid.query.metadata.ChainingMetadataRepository;
+import org.teiid.metadata.MetadataFactory;
+import org.teiid.query.metadata.NativeMetadataRepository;
 import org.teiid.runtime.EmbeddedConfiguration;
 import org.teiid.runtime.EmbeddedServer;
+import org.teiid.translator.ExecutionFactory;
 import org.teiid.translator.MetadataProcessor;
 import org.teiid.translator.TranslatorException;
 import org.teiid.translator.jdbc.JDBCMetadataProcessor;
@@ -22,7 +23,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Arrays;
 
 public class TestMysql {
 
@@ -88,13 +88,21 @@ public class TestMysql {
         ModelMetaData mmd = new ModelMetaData();
         mmd.setModelType(Model.Type.PHYSICAL);
         mmd.setName("my-schema");
+        /*
+        Properties mmdProps = new Properties();
+        mmdProps.setProperty("multisource.addColumn", "true");
+        mmdProps.setProperty("multisource.columnName", "columnName");
+        mmd.setProperties(mmdProps);
+        mmd.setSupportsMultiSourceBindings(true);
+        */
         mmd.addSourceMapping("my-schema", "translator-mysql", "cf-1");
 
         //virtual model
         ModelMetaData mmd1 = new ModelMetaData();
         mmd1.setName("virt");
         mmd1.setModelType(Model.Type.VIRTUAL);
-        mmd1.addSourceMetadata("ddl", "create view \"my-view\" OPTIONS (UPDATABLE 'true') as select * from \"my-schema\".\"testdb\".\"foobar\" ");
+        mmd1.addSourceMetadata("ddl", "create view \"my-view\" OPTIONS (UPDATABLE 'true') as " +
+                "select fb.id, fb.name, random(fb.name) from \"my-schema\".\"testdb\".\"foobar\" fb");//data-quality::OSDQFunctions::random
 
         es.deployVDB("my-vdb", mmd,mmd1);
 
@@ -124,7 +132,8 @@ public class TestMysql {
             while (rs.next()) {
                 long id = rs.getLong(1);
                 String name = rs.getString(2);
-                System.out.printf("id: %d, name: %s\n", id, name);
+                String random = rs.getString(3);
+                System.out.printf("id: %d, name: %s, random: %s \n", id, name, random);
             }
         }
     }
@@ -135,6 +144,14 @@ public class TestMysql {
             JDBCMetadataProcessor processor = (JDBCMetadataProcessor) super.getMetadataProcessor();
             processor.setUseFullSchemaName(true);//避免多个系统表存在相同的表
             return processor;
+        }
+    }
+
+    class MyNativeMetadataRepository extends NativeMetadataRepository {
+        @Override
+        public void loadMetadata(MetadataFactory factory, ExecutionFactory executionFactory, Object connectionFactory) throws TranslatorException {
+            System.out.println("MyNativeMetadataRepository::loadMetadata");
+            super.loadMetadata(factory, executionFactory, connectionFactory);
         }
     }
 }
