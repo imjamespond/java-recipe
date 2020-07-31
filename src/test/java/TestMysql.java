@@ -41,8 +41,8 @@ public class TestMysql {
     }
 
     @Test
-    public void test() throws TranslatorException, SQLException, ConnectorManagerRepository.ConnectorManagerException, VirtualDatabaseException {
-        EmbeddedServer es = new EmbeddedServer();
+    public void test() throws TranslatorException, SQLException, ConnectorManagerRepository.ConnectorManagerException, VirtualDatabaseException, InterruptedException {
+
         EmbeddedConfiguration ec = new EmbeddedConfiguration();
         //set any configuration properties
         ec.setUseDisk(false);
@@ -109,7 +109,7 @@ public class TestMysql {
 
         /*
         * 测试
-        * */
+        *
         {
             TeiidDriver td = es.getDriver();
             Connection c = td.connect("jdbc:teiid:my-vdb@mm://localhost:33060", null);
@@ -135,7 +135,9 @@ public class TestMysql {
                 String random = rs.getString(3);
                 System.out.printf("id: %d, name: %s, random: %s \n", id, name, random);
             }
-        }
+        }*/
+
+        Thread.sleep(60000L);
     }
 
     class MyMySQLExecutionFactory extends MySQLExecutionFactory{
