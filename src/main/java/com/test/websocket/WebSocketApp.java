@@ -2,9 +2,11 @@ package com.test.websocket;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.HandlerMapping;
 import org.springframework.web.reactive.handler.SimpleUrlHandlerMapping;
 import org.springframework.web.reactive.socket.WebSocketHandler;
@@ -14,23 +16,32 @@ import org.springframework.web.reactive.socket.server.WebSocketService;
 import org.springframework.web.reactive.socket.server.support.HandshakeWebSocketService;
 import org.springframework.web.reactive.socket.server.support.WebSocketHandlerAdapter;
 import org.springframework.web.reactive.socket.server.upgrade.ReactorNettyRequestUpgradeStrategy;
+import reactor.core.Disposable;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.FluxSink;
 import reactor.core.publisher.Mono;
+import reactor.core.publisher.UnicastProcessor;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.LinkedBlockingDeque;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.Optional;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.function.Consumer;
 
 @SpringBootApplication
 public class WebSocketApp {
     static Logger log = LoggerFactory.getLogger(WebSocketApp.class);
+    
+    @Autowired
+    MsgConsumer publisher;
 
     @Bean
     public HandlerMapping handlerMapping() {
         Map<String, WebSocketHandler> map = new HashMap<>();
-        map.put("/path", new MyWebSocketHandler());
+        map.put("/ws", new MyWebSocketHandler(publisher));
         int order = -1; // before annotated controllers
 
         return new SimpleUrlHandlerMapping(map, order);
@@ -51,67 +62,30 @@ public class WebSocketApp {
         SpringApplication.run(WebSocketApp.class, args);
     }
 
-    class MyWebSocketHandler implements WebSocketHandler {
+    public class MyWebSocketHandler implements WebSocketHandler {
 
-        ThreadPoolExecutor worker = new ThreadPoolExecutor(2, 2, 0, TimeUnit.MILLISECONDS, new LinkedBlockingDeque<>());
+        private final MsgConsumer consumer;
+        private final Flux<String> publisher;
+        private final Disposable disposable;
 
-        @Override
-        public Mono<Void> handle(WebSocketSession session) {
-            log.info("----------------");
-
-            Flux<WebSocketMessage> output =
-                    session.receive()//	Access the stream of inbound messages.
-                            .doOnNext(message -> {
-                                // Do something with each message.
-                                log.info("doOnNext: " + message.getPayloadAsText());
-                            })
-                            .concatMap(message -> {
-                                // Perform nested asynchronous operations that use the message content
-                                log.info("concatMap: " + message.getPayloadAsText());
-
-                                return Mono.just(message.getPayloadAsText());
-                            })
-                            .map(session::textMessage);// Return a Mono<Void> that completes when receiving completes.
-
-            return session.send(output);
+        public MyWebSocketHandler(MsgConsumer consumer) {
+            this.consumer = consumer;
+            this.publisher = Flux.create(consumer).share();
+            this.disposable = this.publisher.subscribe();//设置subscribers防止为零被dispose
         }
 
-        /*@Override
+        // http://kojotdev.com/2019/08/spring-webflux-websocket-with-vue-js/
+        @Override
         public Mono<Void> handle(WebSocketSession session) {
-            return session.receive()
-                    .doOnNext(message -> {
-                        // ...
-                    })
-                    .concatMap(message -> {
-                        return Mono.just(message);
-                    })
+            return session
+                    .receive()
+                    .map(webSocketMessage -> webSocketMessage.getPayloadAsText())
+                    .doOnNext(msg -> consumer.push(msg))
+                    .doOnComplete(()->consumer.push("someone left"))
+                    .zipWith(session.send(publisher
+                            .map(msg -> session.textMessage(msg))))
                     .then();
-        } // not sending*/
-
-        /*@Override
-        public Mono<Void> handle(WebSocketSession session) {
-
-            Mono<Void> input = session.receive()
-                    .doOnNext(message -> {
-                        // ...
-                    })
-                    .concatMap(message -> {
-                        return Mono.just(message);
-                    })
-                    .then();
-
-            Flux<String> source = Flux
-                    .just("foobar")
-                    //.interval(Duration.ofMillis(1000l))
-                    .flatMap(msg -> Mono.fromCallable(() -> {
-                        sleep(3000l);
-                        return msg.toString();
-                    })).subscribeOn(Schedulers.parallel());
-
-            Mono<Void> output = session.send(source.map(session::textMessage));
-
-            return Mono.zip(input, output).then();
-        }*/
+        }
     }
 
     void sleep(long millis) {
@@ -121,5 +95,32 @@ public class WebSocketApp {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+
+}
+
+
+@Component
+class MsgConsumer implements Consumer<FluxSink<String>> {
+    private static final Logger log = LoggerFactory.getLogger(MsgConsumer.class);
+    private final BlockingQueue<String> queue = new LinkedBlockingQueue<>();
+    private final Executor executor = Executors.newSingleThreadExecutor();
+    public boolean push(String msg) {
+        return queue.offer(msg);
+    }
+    @Override
+    public void accept(FluxSink<String> sink) {
+        this.executor.execute(() -> {
+            while (true) {
+                final String msg;
+                try {
+                    msg = queue.take();
+                    sink.next(msg);
+                } catch (InterruptedException e) {
+                    log.error("Could not take msg from queue", e);
+                }
+            }
+        });
     }
 }
