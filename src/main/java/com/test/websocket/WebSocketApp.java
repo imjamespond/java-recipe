@@ -160,6 +160,8 @@ public class WebSocketApp {
                     final Msg msg;
                     try {
                         msg = queue.take();
+                        //https://stackoverflow.com/questions/52558911/is-it-safe-to-use-the-same-fluxsink-from-multiple-threads-concurrently
+                        //TODO switch to ThreadPoolExecutor
                         sink.next(msg);
                         log.info(msg.msg);
                     } catch (InterruptedException e) {
