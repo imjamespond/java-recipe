@@ -11,6 +11,7 @@ import org.springframework.web.reactive.HandlerMapping;
 import org.springframework.web.reactive.handler.SimpleUrlHandlerMapping;
 import org.springframework.web.reactive.socket.HandshakeInfo;
 import org.springframework.web.reactive.socket.WebSocketHandler;
+import org.springframework.web.reactive.socket.WebSocketMessage;
 import org.springframework.web.reactive.socket.WebSocketSession;
 import org.springframework.web.reactive.socket.server.WebSocketService;
 import org.springframework.web.reactive.socket.server.support.HandshakeWebSocketService;
@@ -35,9 +36,11 @@ public class WebSocketApp {
     static Logger log = LoggerFactory.getLogger(WebSocketApp.class);
 
     @Bean
-    MsgConsumer getPublisher(){
+    MsgConsumer getPublisher() {
         return new MsgConsumer();
-    };
+    }
+
+    ;
 
     @Bean
     public HandlerMapping handlerMapping() {
@@ -67,12 +70,11 @@ public class WebSocketApp {
 
         private final MsgConsumer consumer;
         private final Flux<Msg> publisher;
-        private final Disposable disposable;
 
         public MyWebSocketHandler(MsgConsumer consumer) {
             this.consumer = consumer;
             this.publisher = Flux.create(consumer).share();
-            this.disposable = this.publisher.subscribe();//设置subscribers防止为零被dispose
+            this.publisher.subscribe();//设置subscribers防止为零被dispose
         }
 
         // http://kojotdev.com/2019/08/spring-webflux-websocket-with-vue-js/
@@ -87,18 +89,18 @@ public class WebSocketApp {
                 log.info(user.key);
             }
 
-            return session
-                    .receive()
-                    .map(webSocketMessage -> webSocketMessage.getPayloadAsText())
-                    .doOnNext(msg -> {
-                        user.setName(msg);
-                        consumer.push(new Msg(user.key, msg));
-                    })
-                    .doOnComplete(() -> consumer.push(new Msg(user.key, user.name+" left")))
-                    .zipWith(session.send(publisher
-                            .filter(msg -> filter(user.key, msg))
-                            .map(msg -> session.textMessage(msg.msg))))
-                    .then();
+            Flux<Msg> echo =
+                    session.receive()
+                            .map(webSocketMessage -> webSocketMessage.getPayloadAsText())
+                            .doOnNext(msg -> {
+                                user.setName(msg);
+                                consumer.push(new Msg(user.key, msg));
+                            })
+                            .doOnComplete(() -> consumer.push(new Msg(user.key, user.name + " left")))
+                            .map(msg -> new Msg(null, "echo " + msg));//TODO handle echo msg in thread pool
+            return session.send(
+                    Flux.merge(publisher.filter(msg -> filter(user.key, msg)), echo)
+                            .map(msg -> session.textMessage(msg.msg)));
         }
     }
 
