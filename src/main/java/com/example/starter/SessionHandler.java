@@ -78,6 +78,10 @@ class DummyAuthProvider implements AuthProvider {
       handler.handle(Future.failedFuture("Credentials not set in configuration."));
       return;
     }
+    if (authInfo == null ) {
+      handler.handle(Future.failedFuture(new HttpStatusException(401) ));
+      return;
+    }
 
     String username = authInfo.getString("username");
     String password = authInfo.getString("password");
@@ -85,7 +89,7 @@ class DummyAuthProvider implements AuthProvider {
     if (storedUsername.equals(username) && storedPassword.equals(password)) {
       handler.handle(Future.succeededFuture(new UserImpl(authInfo)));
     } else {
-      handler.handle(Future.failedFuture("No such user, or password incorrect."));
+      handler.handle(Future.failedFuture(new HttpStatusException(403, "No such user, or password incorrect.")));
     }
   }
 }
@@ -100,13 +104,15 @@ class DummyAuthHandler extends AuthHandlerImpl {
     Session session = ctx.session();
     JsonObject authInfo = session.get("authInfo");
     if (session != null) {
-      if (authInfo == null) {
-        String userName = ctx.request().getParam("username");
-        String password = ctx.request().getParam("password");
-        System.out.printf("username: %s, password: %s\n", userName, password);
-        authInfo = new JsonObject()
-          .put("username", userName)
-          .put("password", password);
+      if (authInfo == null ) {
+        if (ctx.request().uri().startsWith("/session/set?") ) {
+          String userName = ctx.request().getParam("username");
+          String password = ctx.request().getParam("password");
+          System.out.printf("username: %s, password: %s\n", userName, password);
+          authInfo = new JsonObject()
+            .put("username", userName)
+            .put("password", password);
+        }
       } else {
         ctx.setUser(new UserImpl(authInfo) ); // avoid auth provider authenticate
       }

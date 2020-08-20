@@ -9,6 +9,7 @@ import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.handler.SessionHandler;
 import io.vertx.ext.web.handler.StaticHandler;
+import io.vertx.ext.web.handler.impl.HttpStatusException;
 import io.vertx.ext.web.sstore.LocalSessionStore;
 import io.vertx.ext.web.sstore.SessionStore;
 
@@ -46,8 +47,17 @@ public class MainVerticle extends AbstractVerticle {
     router.route().failureHandler(frc -> {
       int statusCode = frc.statusCode();
       Throwable failure = frc.failure();
+      String error = "Sorry! Not today";
+      if (failure != null) {
+        if (failure instanceof HttpStatusException) {
+          error = ((HttpStatusException) failure).getPayload();
+        }
+        if (error == null){
+          error = failure.getMessage();
+        }
+      }
       // Status code will be 500 for the RuntimeException, or 403 for the other failure
-      frc.response().setStatusCode(statusCode).end(failure == null ? "Sorry! Not today": failure.getMessage());
+      frc.response().setStatusCode(statusCode).end(error);
     });
 
     router.get("/hello/:productID").handler(ctx -> {
