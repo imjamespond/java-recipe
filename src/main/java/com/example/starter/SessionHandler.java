@@ -29,29 +29,25 @@ class SessionHandlerImpl implements SessionHandler{
     this.router = router;
     this.authProvider = new DummyAuthProvider();
 
-    router.route("/get").handler(new DummyAuthHandler(authProvider).addAuthority("role:admin"));
+    router.route().handler(new DummyAuthHandler(authProvider).addAuthority("role:admin"));
     router.get("/get").handler(this::getSession);
     router.get("/set").handler(this::setSession);
   }
 
   private void setSession(RoutingContext ctx) {
-    String userName = ctx.request().getParam("username");
-    String password = ctx.request().getParam("password");
-    System.out.printf("username: %s, password: %s\n", userName, password);
-    JsonObject authInfo = new JsonObject()
-      .put("username", userName)
-      .put("password", password);
     Session session = ctx.session();
+    session.put("authInfo", ctx.user().principal());
 
-    authProvider.authenticate(authInfo,res->{
-      if (res.succeeded()) {
-        session.put("authInfo",authInfo);
-        ctx.response().end("OK");
-      } else {
-        ctx.fail(403, res.cause());
-      }
-    });
+//    authProvider.authenticate(authInfo,res->{
+//      if (res.succeeded()) {
+//        session.put("authInfo",authInfo);
+//        ctx.response().end("OK");
+//      } else {
+//        ctx.fail(403, res.cause());
+//      }
+//    });
 
+    ctx.response().end("OK");
   }
 
   private void getSession(RoutingContext ctx) {
@@ -87,7 +83,7 @@ class DummyAuthProvider implements AuthProvider {
     String password = authInfo.getString("password");
 
     if (storedUsername.equals(username) && storedPassword.equals(password)) {
-      handler.handle(Future.succeededFuture(new UserImpl()));
+      handler.handle(Future.succeededFuture(new UserImpl(authInfo)));
     } else {
       handler.handle(Future.failedFuture("No such user, or password incorrect."));
     }
@@ -103,8 +99,18 @@ class DummyAuthHandler extends AuthHandlerImpl {
   public void parseCredentials(RoutingContext ctx, Handler<AsyncResult<JsonObject>> handler) {
     Session session = ctx.session();
     JsonObject authInfo = session.get("authInfo");
-    if (session != null && authInfo != null) {
-      ctx.setUser(new UserImpl() ); // avoid auth provider authenticate
+    if (session != null) {
+      if (authInfo == null) {
+        String userName = ctx.request().getParam("username");
+        String password = ctx.request().getParam("password");
+        System.out.printf("username: %s, password: %s\n", userName, password);
+        authInfo = new JsonObject()
+          .put("username", userName)
+          .put("password", password);
+      } else {
+        ctx.setUser(new UserImpl(authInfo) ); // avoid auth provider authenticate
+      }
+
       handler.handle(Future.succeededFuture(authInfo));
     } else {
       handler.handle(Future.failedFuture(new HttpStatusException(401) ));
@@ -116,7 +122,11 @@ class DummyAuthHandler extends AuthHandlerImpl {
 
 class UserImpl extends AbstractUser {
 
-//  private JsonObject authInfo;
+  private JsonObject authInfo;
+
+  public UserImpl(JsonObject authInfo) {
+    this.authInfo = authInfo;
+  }
 
   @Override
   protected void doIsPermitted(String permission, Handler<AsyncResult<Boolean>> resultHandler) {
@@ -127,7 +137,7 @@ class UserImpl extends AbstractUser {
   @Override
   public JsonObject principal() {
     System.out.println("principal");
-    return null;
+    return authInfo;
   }
 
   @Override
