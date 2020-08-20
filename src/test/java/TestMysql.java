@@ -137,7 +137,7 @@ public class TestMysql {
             }
         }*/
 
-        Thread.sleep(60000L);
+        Thread.currentThread().join();
     }
 
     class MyMySQLExecutionFactory extends MySQLExecutionFactory{

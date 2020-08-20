@@ -119,13 +119,13 @@ public class Schema extends AbstractMetadataRecord {
      * @return
      */
     public NavigableMap<String, Table> getTables() {
-        System.out.printf("Schema::getTables\n");
+//        System.out.printf("Schema::getTables\n");
 
         return tables;
     }
 
     public Table getTable(String tableName) {
-        System.out.printf("Schema::getTable: %s\n", tableName);
+//        System.out.printf("Schema::getTable: %s\n", tableName);
 
         return tables.get(tableName);
     }
