@@ -14,4 +14,9 @@
     <appender-ref ref="STDOUT"/>
   </logger>
 
+  <logger name="io.vertx.core.impl.BlockedThreadChecker" additivity="false" level="ERROR">
+    <appender-ref ref="STDOUT"/>
+  </logger>
+
+
 </configuration>

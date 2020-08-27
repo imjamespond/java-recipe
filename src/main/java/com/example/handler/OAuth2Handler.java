@@ -2,6 +2,7 @@ package com.example.handler;
 
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
+import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.core.json.JsonObject;
@@ -13,6 +14,7 @@ import io.vertx.ext.auth.oauth2.OAuth2Options;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.Session;
+import io.vertx.ext.web.client.HttpResponse;
 import io.vertx.ext.web.client.WebClient;
 import io.vertx.ext.web.client.WebClientOptions;
 import org.slf4j.Logger;
@@ -29,6 +31,7 @@ public interface OAuth2Handler extends Handler<RoutingContext> {
 class OAuth2HandlerImpl implements OAuth2Handler {
   final Logger log = LoggerFactory.getLogger(OAuth2HandlerImpl.class);
   final String OAUTH2_TOKEN = "OAUTH2_TOKEN";
+  final String REQUEST_URI = "REQUEST_URI";
 
   private final Router router;
 
@@ -42,6 +45,7 @@ class OAuth2HandlerImpl implements OAuth2Handler {
     router.route("/*").handler(this::test);
     router.get("/userInfo").handler(this::userInfo);
     router.get("/refresh").handler(this::refresh);
+    router.get("/date").handler(this::date);
 
     router.mountSubRouter("/oauth2", superRouter);
 
@@ -59,6 +63,26 @@ class OAuth2HandlerImpl implements OAuth2Handler {
         .put("User-Agent", "vertx-auth-oauth2")));
     client = WebClient.create(vertx,
       new WebClientOptions().setUserAgent("My-App/1.2.3").setKeepAlive(false));
+  }
+
+  private void date(RoutingContext ctx) {
+    Session session = ctx.session();
+    OAuth2Token token = session.get(OAUTH2_TOKEN);
+
+    // Send a GET request
+    client
+      .getAbs("http://localhost:8085/test")
+      .putHeader("Authorization", String.format("Bearer %s", token.accessToken))
+      .send(ar -> {
+        if (ar.succeeded()) {
+          HttpResponse<Buffer> response = ar.result();
+          ctx.response()
+            .setStatusCode(response.statusCode())
+            .end(response.bodyAsString());
+        } else {
+          ctx.fail(new Throwable(ar.cause().getMessage()));
+        }
+      });
   }
 
   private void refresh(RoutingContext ctx) {
@@ -130,7 +154,13 @@ class OAuth2HandlerImpl implements OAuth2Handler {
         Session session = ctx.session();
         session.put(OAUTH2_TOKEN, new OAuth2Token(accessToken,refreshToken, token));
 
-        ctx.response().end();
+        String uri = session.get(REQUEST_URI);
+        if (uri != null) {
+          ctx.response().putHeader("Location", uri).setStatusCode(302).end();
+        } else {
+          ctx.response().end();
+        }
+
       }
     });
   }
@@ -143,7 +173,10 @@ class OAuth2HandlerImpl implements OAuth2Handler {
       return;
     }
 
+    HttpServerRequest request = ctx.request();
     HttpServerResponse response = ctx.response();
+
+    session.put(REQUEST_URI, request.uri());
 
     // when there is a need to access a protected resource or call a protected method,
     // call the authZ url for a challenge
@@ -157,7 +190,8 @@ class OAuth2HandlerImpl implements OAuth2Handler {
     // when working with web application use the above string as a redirect url
 
     // Redirect to **Github** using Vert.x
-    response.putHeader("Location", authorization_uri)
+    response
+      .putHeader("Location", authorization_uri)
       .setStatusCode(302)
       .end();
   }

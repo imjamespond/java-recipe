@@ -9,17 +9,18 @@ public class FailureHandler {
     return frc -> {
       int statusCode = frc.statusCode();
       Throwable failure = frc.failure();
-      String error = "Sorry! Not today";
+      String error = null;
       if (failure != null) {
         if (failure instanceof HttpStatusException) {
           error = ((HttpStatusException) failure).getPayload();
+          statusCode = ((HttpStatusException) failure).getStatusCode();
         }
         else if (error != failure.getMessage()){
           error = failure.getMessage();
         }
       }
       // Status code will be 500 for the RuntimeException, or 403 for the other failure
-      frc.response().setStatusCode(statusCode).end(error);
+      frc.response().setStatusCode(statusCode).end(error == null ? "Sorry! Not today" : error);
     };
   }
 }
