@@ -9,7 +9,6 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.auth.User;
 import io.vertx.ext.auth.authorization.AuthorizationProvider;
 import io.vertx.ext.auth.authorization.impl.RoleBasedAuthorizationImpl;
-import io.vertx.ext.auth.impl.UserImpl;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.Session;
@@ -22,6 +21,10 @@ import rx.Observable;
 import rx.schedulers.Schedulers;
 
 public interface ApiHandler extends Handler<RoutingContext> {
+  String AUTH_INFO = "AUTH_INFO";
+  String USER_NAME = "username";
+  String PASSWORD = "password";
+
   static ApiHandler create(Vertx vertx, Router router) {
     return new ApiHandlerImpl(vertx, router);
   }
@@ -30,10 +33,6 @@ public interface ApiHandler extends Handler<RoutingContext> {
 class ApiHandlerImpl implements ApiHandler {
 
   private final Router router;
-
-  private final String AUTH_INFO = "AUTH_INFO";
-  private final String USER_NAME = "userName";
-  private final String PASSWORD = "password";
 
   public ApiHandlerImpl(Vertx vertx, Router superRouter) {
     this.router = Router.router(vertx);
@@ -49,9 +48,10 @@ class ApiHandlerImpl implements ApiHandler {
     router.get("/set").handler(this::setSession);
     router.route("/github/*").handler(GithubHandler.create(vertx, router));
     router.route("/oauth2/*").handler(OAuth2Handler.create(vertx, router));
+    router.route("/jdbc/*").handler(JdbcHandler.create(vertx, router));
 
     router.route()
-      .handler(new DummyAuthHandler());// protect by AuthHandler
+      .handler(new AdminAuthHandler());// protected by AuthHandler
     router.get("/get").handler(this::getSession);
 
     router.mountSubRouter("/api", superRouter);
@@ -71,11 +71,11 @@ class ApiHandlerImpl implements ApiHandler {
 
   private void getSession(RoutingContext ctx) {
     Session session = ctx.session();
-    Object authInfo = session.get(AUTH_INFO);
+    User authInfo = session.get(AUTH_INFO);
     if (authInfo == null) {
       ctx.fail(403, new Throwable("user info is null"));
     } else {
-      ctx.response().end(authInfo.toString());
+      ctx.response().end(authInfo.principal().toString());
     }
   }
 
@@ -99,7 +99,7 @@ class ApiHandlerImpl implements ApiHandler {
       Observable
         .just("dummy")
         .doOnNext(val->{
-          user.authorizations().add(val, new RoleBasedAuthorizationImpl("role:admin"));//get the role of current user asynchronously
+          //user.authorizations().add(val, new RoleBasedAuthorizationImpl("role:admin"));//get the role of current user asynchronously
           handler.handle(Future.succeededFuture());
         })
         .subscribeOn(Schedulers.newThread())
@@ -107,8 +107,8 @@ class ApiHandlerImpl implements ApiHandler {
     }
   }
 
-  class DummyAuthHandler extends AuthorizationHandlerImpl {
-    public DummyAuthHandler() {
+  class AdminAuthHandler extends AuthorizationHandlerImpl {
+    public AdminAuthHandler() {
       super(new RoleBasedAuthorizationImpl("role:admin"));//the role needed to access
       this.addAuthorizationProvider(new DummyAuthProvider());
     }
@@ -117,13 +117,13 @@ class ApiHandlerImpl implements ApiHandler {
     public void handle(RoutingContext ctx) {
 
       Session session = ctx.session();
-      JsonObject authInfo = session.get(AUTH_INFO);
+      User authInfo = session.get(AUTH_INFO);
 
       if (session != null) {
         if (authInfo == null) {
           ctx.fail(new HttpStatusException(401, "AuthInfo is null!"));
         } else {
-          ctx.setUser(new UserImpl(authInfo));
+          ctx.setUser(authInfo);
           super.handle(ctx);
         }
       }else {
