@@ -15,7 +15,7 @@ public class FailureHandler {
           error = ((HttpStatusException) failure).getPayload();
           statusCode = ((HttpStatusException) failure).getStatusCode();
         }
-        else {
+        if (error == null) {
           error = failure.getMessage();
         }
       }

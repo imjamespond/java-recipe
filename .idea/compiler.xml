@@ -6,11 +6,12 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="test-vertx-4" />
         <module name="vertx-starter" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="vertx-starter" target="11" />
+    <bytecodeTargetLevel target="11">
+      <module name="test-vertx-4" target="11" />
     </bytecodeTargetLevel>
   </component>
 </project>

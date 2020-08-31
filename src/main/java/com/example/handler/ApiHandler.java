@@ -1,9 +1,12 @@
 package com.example.handler;
 
+import com.example.utils.MessageDigestUtil;
+import com.example.utils.RequestWrapper;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
+import io.vertx.core.http.Cookie;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.auth.User;
@@ -20,7 +23,7 @@ import io.vertx.ext.web.sstore.SessionStore;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
-public interface ApiHandler extends Handler<RoutingContext> {
+public interface ApiHandler {
   String AUTH_INFO = "AUTH_INFO";
   String USER_NAME = "username";
   String PASSWORD = "password";
@@ -52,20 +55,73 @@ class ApiHandlerImpl implements ApiHandler {
 
     router.route().handler(new AdminAuthHandler());// protected by AuthHandler
     router.get("/get").handler(this::getSession);
+    router.get("/clean").handler(this::cleanSession);
 
     superRouter.mountSubRouter("/api", router);
   }
 
+  private void cleanSession(RoutingContext ctx) {
+    Session session = ctx.session();
+    session.remove(AUTH_INFO);
+    //ctx.removeCookie("rememberMe");
+
+    ctx.response().end("OK");
+  }
+
   private void setSession(RoutingContext ctx) {
+    _setSession(ctx);
+    setRememberMe(ctx);
+    ctx.response().end("OK");
+  }
+
+  private void _setSession(RoutingContext ctx) {
     HttpServerRequest request = ctx.request();
     Session session = ctx.session();
 
     JsonObject authInfo = new JsonObject();
-    authInfo.put(USER_NAME, request.getParam(USER_NAME));//dummy checking
-    authInfo.put(PASSWORD, request.getParam(PASSWORD));
-    session.put(AUTH_INFO, authInfo);
+    RequestWrapper reqWrapper = new RequestWrapper(request);
+    authInfo.put(USER_NAME, reqWrapper.getWithDefault(USER_NAME, "foobar"));//dummy checking
+    authInfo.put(PASSWORD, reqWrapper.getWithDefault(PASSWORD, "pwd"));
+    User user = User.create(authInfo);
+    user.authorizations().add("dummy", new RoleBasedAuthorizationImpl("role:admin"));
+    session.put(AUTH_INFO, user);
 
-    ctx.response().end("OK");
+  }
+
+  final String secret = "uWillNeverGuess";
+  private void setRememberMe(RoutingContext ctx) {
+    HttpServerRequest request = ctx.request();
+    String rememberMe = request.getParam("rememberMe");
+    if ( rememberMe != null && rememberMe.compareTo("true") == 0) {
+
+      String expired = Long.toString(System.currentTimeMillis() + 360 * 1000l);
+      String sha1 = MessageDigestUtil.Sha1(secret + expired);
+
+      Cookie rmbMeCookie = Cookie.cookie("rememberMe", String.join("$",sha1, expired)).setPath("/");
+      ctx.addCookie(rmbMeCookie);
+    }
+  }
+
+  private boolean checkRememberMe(RoutingContext ctx) {
+    Cookie rmbMeCookie = ctx.getCookie("rememberMe");
+    if (null != rmbMeCookie) {
+      String rememberMe = rmbMeCookie.getValue();
+      if (null != rememberMe){
+        String[] arr = rememberMe.split("\\$");
+        if (arr.length == 2){
+          String sha1 = arr[0];
+          String expired = arr[1];
+          Long expiredVal = Long.parseLong(expired);
+          if (null != expiredVal && null != sha1 && sha1.compareTo(MessageDigestUtil.Sha1(secret + expired)) == 0){
+            if (expiredVal.compareTo(System.currentTimeMillis()) > 0){
+              _setSession(ctx); //Do remember me login
+              return true;
+            }
+          }
+        }
+      }
+    }
+    return false;
   }
 
   private void getSession(RoutingContext ctx) {
@@ -76,11 +132,6 @@ class ApiHandlerImpl implements ApiHandler {
     } else {
       ctx.response().end(authInfo.principal().toString());
     }
-  }
-
-  @Override
-  public void handle(RoutingContext ctx) {
-    router.handleContext(ctx);
   }
 
 
@@ -97,7 +148,7 @@ class ApiHandlerImpl implements ApiHandler {
       // fetch authorization from this provider
       Observable
         .just("dummy")
-        .doOnNext(val->{
+        .doOnNext(val -> {
           //user.authorizations().add(val, new RoleBasedAuthorizationImpl("role:admin"));//get the role of current user asynchronously
           handler.handle(Future.succeededFuture());
         })
@@ -114,18 +165,22 @@ class ApiHandlerImpl implements ApiHandler {
 
     @Override
     public void handle(RoutingContext ctx) {
-
       Session session = ctx.session();
-      User authInfo = session.get(AUTH_INFO);
-
       if (session != null) {
-        if (authInfo == null) {
-          ctx.fail(new HttpStatusException(401, "AuthInfo is null!"));
+        User authInfo = session.get(AUTH_INFO);
+        if (authInfo == null ) {
+          if (checkRememberMe(ctx)) {
+            authInfo = session.get(AUTH_INFO);
+            ctx.setUser(authInfo);
+            super.handle(ctx);
+          } else {
+            ctx.fail(new HttpStatusException(401, "AuthInfo is null!"));
+          }
         } else {
           ctx.setUser(authInfo);
           super.handle(ctx);
         }
-      }else {
+      } else {
         ctx.fail(new HttpStatusException(401, "Invalid session context!"));
       }
     }
