@@ -19,11 +19,11 @@ public class TestCli {
             Connection c = td.connect("jdbc:teiid:my-vdb@mm://localhost:33060", null);
             Statement s = c.createStatement();
 
-            ResultSet rs = s.executeQuery("select * from \"my-schema\".\"testdb\".\"foobar\"");
+            ResultSet rs = s.executeQuery("select * from \"my-schema\".\"testdb\".\"user\"");
             while (rs.next()) {
-                long id = rs.getLong(1);
+                String id = rs.getString(1);
                 String name = rs.getString(2);
-                System.out.printf("id: %d, name: %s\n", id, name);
+                System.out.printf("id: %s, name: %s\n", id, name);
             }
         }
 
@@ -34,10 +34,10 @@ public class TestCli {
 
             ResultSet rs = s.executeQuery("select * from \"virt\".\"my-view\" ");
             while (rs.next()) {
-                long id = rs.getLong(1);
+                String id = rs.getString(1);
                 String name = rs.getString(2);
                 String random = rs.getString(3);
-                System.out.printf("id: %d, name: %s, random: %s \n", id, name, random);
+                System.out.printf("id: %s, name: %s, random: %s \n", id, name, random);
             }
         }
     }

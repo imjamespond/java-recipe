@@ -41,11 +41,11 @@ public class Schema extends AbstractMetadataRecord {
     private boolean physical = true;
     private String primaryMetamodelUri = "http://www.metamatrix.com/metamodels/Relational"; //$NON-NLS-1$
 
-    private NavigableMap<String, Table> tables = new TreeMap<String, Table>(String.CASE_INSENSITIVE_ORDER);
-    private NavigableMap<String, Procedure> procedures = new TreeMap<String, Procedure>(String.CASE_INSENSITIVE_ORDER);
-    private NavigableMap<String, FunctionMethod> functions = new TreeMap<String, FunctionMethod>(String.CASE_INSENSITIVE_ORDER);
-    private NavigableMap<String, Server> servers = new TreeMap<String, Server>(String.CASE_INSENSITIVE_ORDER);
-    private List<AbstractMetadataRecord> resolvingOrder = new ArrayList<AbstractMetadataRecord>();
+    protected NavigableMap<String, Table> tables = new TreeMap<String, Table>(String.CASE_INSENSITIVE_ORDER);
+    protected NavigableMap<String, Procedure> procedures = new TreeMap<String, Procedure>(String.CASE_INSENSITIVE_ORDER);
+    protected NavigableMap<String, FunctionMethod> functions = new TreeMap<String, FunctionMethod>(String.CASE_INSENSITIVE_ORDER);
+    protected NavigableMap<String, Server> servers = new TreeMap<String, Server>(String.CASE_INSENSITIVE_ORDER);
+    protected List<AbstractMetadataRecord> resolvingOrder = new ArrayList<AbstractMetadataRecord>();
 
     public void addTable(Table table) {
         table.setParent(this);
@@ -53,8 +53,6 @@ public class Schema extends AbstractMetadataRecord {
             throw new DuplicateRecordException(DataPlugin.Event.TEIID60013, DataPlugin.Util.gs(DataPlugin.Event.TEIID60013, table.getName()));
         }
         resolvingOrder.add(table);
-
-        //System.out.printf("Schema::addTable: %s\n", table.getFullName());
     }
 
     public Table removeTable(String tableName) {

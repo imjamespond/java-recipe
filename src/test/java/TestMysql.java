@@ -6,7 +6,6 @@ import org.teiid.adminapi.Model;
 import org.teiid.adminapi.impl.ModelMetaData;
 import org.teiid.deployers.VirtualDatabaseException;
 import org.teiid.dqp.internal.datamgr.ConnectorManagerRepository;
-import org.teiid.jdbc.TeiidDriver;
 import org.teiid.metadata.MetadataFactory;
 import org.teiid.query.metadata.NativeMetadataRepository;
 import org.teiid.runtime.EmbeddedConfiguration;
@@ -20,9 +19,7 @@ import org.teiid.transport.SocketConfiguration;
 import org.teiid.transport.WireProtocol;
 
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 public class TestMysql {
 
@@ -54,12 +51,12 @@ public class TestMysql {
         scTeiid.setMaxSocketThreads(2);
         ec.addTransport(scTeiid);
 
-        SocketConfiguration scODBC = new SocketConfiguration();
-        scODBC.setProtocol(WireProtocol.pg);
-        scODBC.setBindAddress("0.0.0.0");
-        scODBC.setPortNumber(33061);
-        scODBC.setMaxSocketThreads(2);
-        ec.addTransport(scODBC);
+//        SocketConfiguration scODBC = new SocketConfiguration();
+//        scODBC.setProtocol(WireProtocol.pg);
+//        scODBC.setBindAddress("0.0.0.0");
+//        scODBC.setPortNumber(33061);
+//        scODBC.setMaxSocketThreads(2);
+//        ec.addTransport(scODBC);
 
         ec.setMaxActivePlans(1 << 4);
         ec.setMaxAsyncThreads(1 << 4);
@@ -69,6 +66,7 @@ public class TestMysql {
 
         //example of adding a translator by pre-initialized ExecutionFactory and given translator name
         MySQLExecutionFactory ef = new MyMySQLExecutionFactory();
+
         ef.setSupportsDirectQueryProcedure(true);
         ef.start();
         es.addTranslator("translator-mysql", ef);
@@ -102,7 +100,7 @@ public class TestMysql {
         mmd1.setName("virt");
         mmd1.setModelType(Model.Type.VIRTUAL);
         mmd1.addSourceMetadata("ddl", "create view \"my-view\" OPTIONS (UPDATABLE 'true') as " +
-                "select fb.id, fb.name, random(fb.name) from \"my-schema\".\"testdb\".\"foobar\" fb");//data-quality::OSDQFunctions::random
+                "select fb.username, fb.password_salt, random(fb.password) from \"my-schema\".\"testdb\".\"user\" fb");//data-quality::OSDQFunctions::random
 
         es.deployVDB("my-vdb", mmd,mmd1);
 
@@ -145,6 +143,7 @@ public class TestMysql {
         public MetadataProcessor<Connection> getMetadataProcessor() {
             JDBCMetadataProcessor processor = (JDBCMetadataProcessor) super.getMetadataProcessor();
             processor.setUseFullSchemaName(true);//避免多个系统表存在相同的表
+            processor.setSchemaName("testdb");
             return processor;
         }
     }
