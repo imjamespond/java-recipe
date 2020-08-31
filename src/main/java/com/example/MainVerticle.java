@@ -18,6 +18,10 @@ public class MainVerticle extends AbstractVerticle {
     router.route("/api/*")
       //.consumes("application/json").consumes("text/html") // match contentType within request in RouteState
       .produces("application/json")// match accept within request in RouteState
+      .handler(ctx->{
+        ctx.response().putHeader("content-type", "application/json");
+        ctx.next();
+      })
       .handler(ApiHandler.create(vertx, router));
 
     router.route()
