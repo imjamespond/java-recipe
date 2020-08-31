@@ -47,7 +47,7 @@ class OAuth2HandlerImpl implements OAuth2Handler {
     router.get("/refresh").handler(this::refresh);
     router.get("/date").handler(this::date);
 
-    router.mountSubRouter("/oauth2", superRouter);
+    superRouter.mountSubRouter("/oauth2", router);
 
     // Initialize the OAuth2 Library
     oauth2 = OAuth2Auth.create(vertx, new OAuth2Options()

@@ -43,18 +43,17 @@ class ApiHandlerImpl implements ApiHandler {
       .setNagHttps(false)// allow http
       .setSessionTimeout(60000l);// 1 minute
 
-    router.route()
-      .handler(sessionHandler);
+    router.route().handler(sessionHandler);
     router.get("/set").handler(this::setSession);
-    router.route("/github/*").handler(GithubHandler.create(vertx, router));
-    router.route("/oauth2/*").handler(OAuth2Handler.create(vertx, router));
-    router.route("/jdbc/*").handler(JdbcHandler.create(vertx, router));
 
-    router.route()
-      .handler(new AdminAuthHandler());// protected by AuthHandler
+    GithubHandler.create(vertx, router);
+    OAuth2Handler.create(vertx, router);
+    JdbcHandler.create(vertx, router);
+
+    router.route().handler(new AdminAuthHandler());// protected by AuthHandler
     router.get("/get").handler(this::getSession);
 
-    router.mountSubRouter("/api", superRouter);
+    superRouter.mountSubRouter("/api", router);
   }
 
   private void setSession(RoutingContext ctx) {

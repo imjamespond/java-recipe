@@ -15,17 +15,16 @@ public class MainVerticle extends AbstractVerticle {
 
     final Router router = Router.router(vertx);
 
-    router.route("/api/*")
+    router.route()
       //.consumes("application/json").consumes("text/html") // match contentType within request in RouteState
       .produces("application/json")// match accept within request in RouteState
       .handler(ctx->{
         ctx.response().putHeader("content-type", "application/json; charset=utf-8");
         ctx.next();
       })
-      .handler(ApiHandler.create(vertx, router));
-
-    router.route()
       .failureHandler(FailureHandler.GetFailureHandler());
+
+    ApiHandler.create(vertx, router);
 
     vertx.createHttpServer()
       .requestHandler(router)

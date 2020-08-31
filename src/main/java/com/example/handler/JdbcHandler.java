@@ -68,7 +68,7 @@ class JdbcHandlerImpl implements JdbcHandler {
     router.get("/createRole").handler(this::createRole);
     router.get("/createPerm").handler(this::createPerm);
     router.get("/selectUser").handler(this::selectUser);
-    router.mountSubRouter("/jdbc", superRouter);
+    superRouter.mountSubRouter("/jdbc", router);
   }
 
   void selectUser(RoutingContext ctx) {

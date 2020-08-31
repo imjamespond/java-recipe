@@ -42,7 +42,7 @@ class GithubHandlerImpl implements GithubHandler {
     router.get("/userInfo").handler(this::userInfo);
     router.get("/repos").handler(this::repos);
 
-    router.mountSubRouter("/github", superRouter);
+    superRouter.mountSubRouter("/github", router);
 
     // Initialize the OAuth2 Library
     oauth2 = GithubAuth.create(vertx, "61a625266449af34018a", "67e47ae896b28fd58be88a03aa0eeb87cbe823f3");
