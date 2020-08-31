@@ -23,6 +23,7 @@ import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
+import static com.example.handler.ApiHandler.AUTH_INFO;
 
 public interface JdbcHandler extends Handler<RoutingContext> {
   static JdbcHandler create(Vertx vertx, Router router) {
@@ -106,7 +107,7 @@ class JdbcHandlerImpl implements JdbcHandler {
         if (user != null) {
           jdbcAuthorization.getAuthorizations(user, _res -> {
             if (_res.succeeded()) {
-              session.put(ApiHandler.AUTH_INFO, user);
+              session.put(AUTH_INFO, user);
               JsonObject json = new JsonObject();
               json.put("authorizations", user.authorizations().getProviderIds().toString());
               json.put("principal", user.principal());
