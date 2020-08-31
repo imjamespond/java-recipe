@@ -4,6 +4,7 @@ import com.example.dao.Role;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpServerRequest;
+import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.auth.HashingStrategy;
@@ -21,6 +22,7 @@ import io.vertx.ext.web.handler.impl.HttpStatusException;
 import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public interface JdbcHandler extends Handler<RoutingContext> {
   static JdbcHandler create(Vertx vertx, Router router) {
@@ -54,7 +56,8 @@ class JdbcHandlerImpl implements JdbcHandler {
     config.put("user", "root");
     config.put("password", "dataSharing");
 
-    client = JDBCClient.createShared(vertx, config);
+    // Subsequent calls will return a new client instance that uses the same data source, **so the configuration won’t be used**.
+    client = JDBCClient.createShared(vertx, config, "DS-1");
     jdbcAuthentication = JDBCAuthentication.create(client, new JDBCAuthenticationOptions().setAuthenticationQuery(SELECT_USER));
     jdbcAuthorization = JDBCAuthorization.create("admin", client, new JDBCAuthorizationOptions().setRolesQuery(DEFAULT_ROLES_QUERY).setPermissionsQuery(DEFAULT_PERMISSIONS_QUERY));
 
@@ -70,17 +73,19 @@ class JdbcHandlerImpl implements JdbcHandler {
   void selectUser(RoutingContext ctx) {
     client.getConnection(res->{
       if (res.succeeded()) {
-        SQLConnection connection = res.result();
-        connection.query("SELECT * FROM user_roles", _res -> {
+        SQLConnection conn = res.result();
+        conn.query("SELECT * FROM user_roles", _res -> {
           if (_res.succeeded()) {
             ResultSet rs = _res.result();
             List<JsonObject> rows = rs.getRows();
             // Do something with results
-            for(JsonObject row : rows){
-              Role role = row.mapTo(Role.class);
-              System.out.printf("username: %s,role: %s\n", role.username, role.role);
-            }
-            ctx.response().end(rows.toString());
+//            for(JsonObject row : rows){
+//              Role role = row.mapTo(Role.class);
+//              System.out.printf("username: %s,role: %s\n", role.username, role.role);
+//            }
+//            ctx.response().end(rows.toString());
+            List<Role> roles = rows.stream().map(row->row.mapTo(Role.class)).collect(Collectors.toList());
+            ctx.response().end(Json.encodePrettily(roles));
           }
         });
       } else {
