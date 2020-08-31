@@ -1,5 +1,6 @@
 package com.example.handler;
 
+import com.example.dao.Role;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpServerRequest;
@@ -7,10 +8,11 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.auth.HashingStrategy;
 import io.vertx.ext.auth.User;
-import io.vertx.ext.auth.authorization.Authorization;
 import io.vertx.ext.auth.jdbc.*;
 import io.vertx.ext.auth.jdbc.impl.JDBCUserUtilImpl;
 import io.vertx.ext.jdbc.JDBCClient;
+import io.vertx.ext.sql.ResultSet;
+import io.vertx.ext.sql.SQLConnection;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.Session;
@@ -18,8 +20,7 @@ import io.vertx.ext.web.handler.impl.HttpStatusException;
 
 import java.security.SecureRandom;
 import java.util.Base64;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 public interface JdbcHandler extends Handler<RoutingContext> {
   static JdbcHandler create(Vertx vertx, Router router) {
@@ -62,7 +63,30 @@ class JdbcHandlerImpl implements JdbcHandler {
     router.get("/createUser").handler(this::createUser);
     router.get("/createRole").handler(this::createRole);
     router.get("/createPerm").handler(this::createPerm);
+    router.get("/selectUser").handler(this::selectUser);
     router.mountSubRouter("/jdbc", superRouter);
+  }
+
+  void selectUser(RoutingContext ctx) {
+    client.getConnection(res->{
+      if (res.succeeded()) {
+        SQLConnection connection = res.result();
+        connection.query("SELECT * FROM user_roles", _res -> {
+          if (_res.succeeded()) {
+            ResultSet rs = _res.result();
+            List<JsonObject> rows = rs.getRows();
+            // Do something with results
+            for(JsonObject row : rows){
+              Role role = row.mapTo(Role.class);
+              System.out.printf("username: %s,role: %s\n", role.username, role.role);
+            }
+            ctx.response().end(rows.toString());
+          }
+        });
+      } else {
+        ctx.fail(res.cause());
+      }
+    });
   }
 
   void login(RoutingContext ctx) {
@@ -150,4 +174,5 @@ class JdbcHandlerImpl implements JdbcHandler {
   public void handle(RoutingContext ctx) {
     router.handleContext(ctx);// sub router handle
   }
+
 }
