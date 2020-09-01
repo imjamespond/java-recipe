@@ -12,6 +12,7 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.auth.User;
 import io.vertx.ext.auth.authorization.AuthorizationProvider;
 import io.vertx.ext.auth.authorization.impl.RoleBasedAuthorizationImpl;
+import io.vertx.ext.web.Route;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.Session;
@@ -83,45 +84,44 @@ class ApiHandlerImpl implements ApiHandler {
     authInfo.put(USER_NAME, reqWrapper.getWithDefault(USER_NAME, "foobar"));//dummy checking
     authInfo.put(PASSWORD, reqWrapper.getWithDefault(PASSWORD, "pwd"));
     User user = User.create(authInfo);
-    user.authorizations().add("dummy", new RoleBasedAuthorizationImpl("role:admin"));
+    //user.authorizations().add("dummy", new RoleBasedAuthorizationImpl("role:admin"));
     session.put(AUTH_INFO, user);
 
   }
 
   final String secret = "uWillNeverGuess";
+
   private void setRememberMe(RoutingContext ctx) {
     HttpServerRequest request = ctx.request();
     String rememberMe = request.getParam("rememberMe");
-    if ( rememberMe != null && rememberMe.compareTo("true") == 0) {
+    if (rememberMe != null && rememberMe.compareTo("true") == 0) {
 
       String expired = Long.toString(System.currentTimeMillis() + 360 * 1000l);
       String sha1 = MessageDigestUtil.Sha1(secret + expired);
 
-      Cookie rmbMeCookie = Cookie.cookie("rememberMe", String.join("$",sha1, expired)).setPath("/");
+      Cookie rmbMeCookie = Cookie.cookie("rememberMe", String.join("$", sha1, expired)).setPath("/");
       ctx.addCookie(rmbMeCookie);
     }
   }
 
-  private boolean checkRememberMe(RoutingContext ctx) {
+  private void checkRememberMe(RoutingContext ctx) {
     Cookie rmbMeCookie = ctx.getCookie("rememberMe");
     if (null != rmbMeCookie) {
       String rememberMe = rmbMeCookie.getValue();
-      if (null != rememberMe){
+      if (null != rememberMe) {
         String[] arr = rememberMe.split("\\$");
-        if (arr.length == 2){
+        if (arr.length == 2) {
           String sha1 = arr[0];
           String expired = arr[1];
           Long expiredVal = Long.parseLong(expired);
-          if (null != expiredVal && null != sha1 && sha1.compareTo(MessageDigestUtil.Sha1(secret + expired)) == 0){
-            if (expiredVal.compareTo(System.currentTimeMillis()) > 0){
+          if (null != expiredVal && null != sha1 && sha1.compareTo(MessageDigestUtil.Sha1(secret + expired)) == 0) {
+            if (expiredVal.compareTo(System.currentTimeMillis()) > 0) {
               _setSession(ctx); //Do remember me login
-              return true;
             }
           }
         }
       }
     }
-    return false;
   }
 
   private void getSession(RoutingContext ctx) {
@@ -149,7 +149,7 @@ class ApiHandlerImpl implements ApiHandler {
       Observable
         .just("dummy")
         .doOnNext(val -> {
-          //user.authorizations().add(val, new RoleBasedAuthorizationImpl("role:admin"));//get the role of current user asynchronously
+          user.authorizations().add(val, new RoleBasedAuthorizationImpl("role:admin"));//get the role of current user asynchronously
           handler.handle(Future.succeededFuture());
         })
         .subscribeOn(Schedulers.newThread())
@@ -165,19 +165,19 @@ class ApiHandlerImpl implements ApiHandler {
 
     @Override
     public void handle(RoutingContext ctx) {
+      System.out.println(ctx.request().path());
+
       Session session = ctx.session();
       if (session != null) {
-        User authInfo = session.get(AUTH_INFO);
-        if (authInfo == null ) {
-          if (checkRememberMe(ctx)) {
-            authInfo = session.get(AUTH_INFO);
-            ctx.setUser(authInfo);
-            super.handle(ctx);
-          } else {
-            ctx.fail(new HttpStatusException(401, "AuthInfo is null!"));
-          }
+        User user = session.get(AUTH_INFO);
+        if (user == null) {
+          checkRememberMe(ctx);
+          user = session.get(AUTH_INFO);
+        }
+        if (user == null) {
+          ctx.fail(new HttpStatusException(401, "AuthInfo is null!"));
         } else {
-          ctx.setUser(authInfo);
+          ctx.setUser(user);
           super.handle(ctx);
         }
       } else {
