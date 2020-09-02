@@ -12,6 +12,7 @@
     </annotationProcessing>
     <bytecodeTargetLevel target="11">
       <module name="test-vertx-4" target="11" />
+      <module name="vertx-starter" target="11" />
     </bytecodeTargetLevel>
   </component>
 </project>

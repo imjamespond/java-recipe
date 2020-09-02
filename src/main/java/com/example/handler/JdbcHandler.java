@@ -1,7 +1,6 @@
 package com.example.handler;
 
 import com.example.dao.Role;
-import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.json.Json;
@@ -21,17 +20,23 @@ import io.vertx.ext.web.handler.impl.HttpStatusException;
 
 import java.security.SecureRandom;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+
 import static com.example.handler.ApiHandler.AUTH_INFO;
 
-public interface JdbcHandler extends Handler<RoutingContext> {
+public interface JdbcHandler  {
   static JdbcHandler create(Vertx vertx, Router router) {
     return new JdbcHandlerImpl(vertx, router);
   }
+
+  Map<String,String> test(RoutingContext ctx);
+  void selectUser(RoutingContext ctx);
 }
 
-class JdbcHandlerImpl implements JdbcHandler {
+class JdbcHandlerImpl extends GenericHandler<JdbcHandler> implements JdbcHandler {
 
   private static final String INSERT_USER = "INSERT INTO user (username, password, password_salt) VALUES (?, ?, ?)";
   private static final String INSERT_USER_ROLE = "INSERT INTO user_roles (username, role) VALUES (?, ?)";
@@ -67,11 +72,18 @@ class JdbcHandlerImpl implements JdbcHandler {
     router.get("/createUser").handler(this::createUser);
     router.get("/createRole").handler(this::createRole);
     router.get("/createPerm").handler(this::createPerm);
-    router.get("/selectUser").handler(this::selectUser);
+    router.get("/selectUser").handler(proxy::selectUser);
+    router.get("/test").handler(proxy::test);
     superRouter.mountSubRouter("/jdbc", router);
   }
 
-  void selectUser(RoutingContext ctx) {
+  public Map<String, String> test(RoutingContext ctx) {
+    Map<String, String> map = new HashMap<>();
+    map.put("foo","bar");
+    return map;
+  }
+
+  public void selectUser(RoutingContext ctx) {
     client.getConnection(res->{
       if (res.succeeded()) {
         SQLConnection conn = res.result();
@@ -126,19 +138,19 @@ class JdbcHandlerImpl implements JdbcHandler {
     });
   }
 
-  void createRole(RoutingContext ctx) {
+  public void createRole(RoutingContext ctx) {
     JDBCUserUtil util = new JDBCUserUtilImpl(client, INSERT_USER, INSERT_USER_ROLE, INSERT_ROLE_PERMISSION);
     util.createUserRole("foobar", "role:admin");
     ctx.response().end("OK");
   }
 
-  void createPerm(RoutingContext ctx) {
+  public void createPerm(RoutingContext ctx) {
     JDBCUserUtil util = new JDBCUserUtilImpl(client, INSERT_USER, INSERT_USER_ROLE, INSERT_ROLE_PERMISSION);
     util.createRolePermission("role:admin", "1,2,3,4,5");
     ctx.response().end("OK");
   }
 
-  void createUser(RoutingContext ctx) {
+  public void createUser(RoutingContext ctx) {
     HttpServerRequest request = ctx.request();
     String username = request.getParam("username");
     String password = request.getParam("password");
@@ -174,11 +186,6 @@ class JdbcHandlerImpl implements JdbcHandler {
           ctx.fail(insert.cause());
         }
       });
-  }
-
-  @Override
-  public void handle(RoutingContext ctx) {
-    router.handleContext(ctx);// sub router handle
   }
 
 }
