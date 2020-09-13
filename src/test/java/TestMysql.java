@@ -21,6 +21,10 @@ import org.teiid.transport.WireProtocol;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+/*
+* env: org.teiid.useValueCache=true
+* */
+
 public class TestMysql {
 
     EmbeddedServer es;
@@ -42,7 +46,8 @@ public class TestMysql {
 
         EmbeddedConfiguration ec = new EmbeddedConfiguration();
         //set any configuration properties
-        ec.setUseDisk(false);
+        ec.setUseDisk(true);
+        ec.setProcessorBatchSize(2);
 
         SocketConfiguration scTeiid = new SocketConfiguration();
         scTeiid.setProtocol(WireProtocol.teiid);
@@ -61,6 +66,7 @@ public class TestMysql {
         ec.setMaxActivePlans(1 << 4);
         ec.setMaxAsyncThreads(1 << 4);
         ec.setMaxRowsFetchSize(1 << 12);
+        ec.setMaxReserveKb(0);
 
         es.start(ec);
 
@@ -72,13 +78,10 @@ public class TestMysql {
         es.addTranslator("translator-mysql", ef);
 
         //add a Connection Factory with a third-party connection pool
-        HikariDataSource ds = new HikariDataSource();
-        ds.setMaximumPoolSize(2);
-        ds.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        ds.setJdbcUrl("jdbc:mysql://192.168.0.247:32495?autoReconnect=true&useSSL=false");
-        ds.setUsername("root");
-        ds.setPassword("dataSharing");
+        HikariDataSource ds = getDS();
+        HikariDataSource ds2 = getDS();
         es.addConnectionFactory("cf-1", ds);
+        es.addConnectionFactory("cf-2", ds2);
 
         //add a vdb
 
@@ -86,6 +89,9 @@ public class TestMysql {
         ModelMetaData mmd = new ModelMetaData();
         mmd.setModelType(Model.Type.PHYSICAL);
         mmd.setName("my-schema");
+        ModelMetaData mmd2 = new ModelMetaData();
+        mmd2.setModelType(Model.Type.PHYSICAL);
+        mmd2.setName("my-schema2");
         /*
         Properties mmdProps = new Properties();
         mmdProps.setProperty("multisource.addColumn", "true");
@@ -94,6 +100,7 @@ public class TestMysql {
         mmd.setSupportsMultiSourceBindings(true);
         */
         mmd.addSourceMapping("my-schema", "translator-mysql", "cf-1");
+        mmd2.addSourceMapping("my-schema2", "translator-mysql", "cf-2");
 
         //virtual model
         ModelMetaData mmd1 = new ModelMetaData();
@@ -102,7 +109,7 @@ public class TestMysql {
         mmd1.addSourceMetadata("ddl", "create view \"my-view\" OPTIONS (UPDATABLE 'true') as " +
                 "select fb.username, fb.password_salt, random(fb.password) from \"my-schema\".\"testdb\".\"user\" fb");//data-quality::OSDQFunctions::random
 
-        es.deployVDB("my-vdb", mmd,mmd1);
+        es.deployVDB("my-vdb", mmd,mmd1,mmd2);
 
 
         /*
@@ -136,6 +143,16 @@ public class TestMysql {
         }*/
 
         Thread.currentThread().join();
+    }
+
+    HikariDataSource getDS(){
+        HikariDataSource ds = new HikariDataSource();
+        ds.setMaximumPoolSize(2);
+        ds.setDriverClassName("com.mysql.cj.jdbc.Driver");
+        ds.setJdbcUrl("jdbc:mysql://192.168.0.247:32495?autoReconnect=true&useSSL=false");
+        ds.setUsername("root");
+        ds.setPassword("dataSharing");
+        return ds;
     }
 
     class MyMySQLExecutionFactory extends MySQLExecutionFactory{

@@ -28,7 +28,9 @@ public class SchemaTest extends Schema {
     }
     @Override
     public Table getTable(String tableName) {
-        System.out.printf("SchemaTest::getTable: %s\n", tableName);
+        Utils.PrintCaller((file,line,method,thread)->{
+            System.out.printf("SchemaTest::getTable: %s, caller: %s-%s(%d).%s\n", tableName, thread,file,line,method);
+        });
 
         return tables.get(tableName);
     }

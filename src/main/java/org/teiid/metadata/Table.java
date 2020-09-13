@@ -26,6 +26,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import com.test.Utils;
 import org.teiid.core.types.DataTypeManager;
 import org.teiid.metadata.AbstractMetadataRecord.DataModifiable;
 import org.teiid.metadata.AbstractMetadataRecord.Modifiable;
@@ -307,10 +308,18 @@ public class Table extends ColumnSet<Schema> implements Modifiable, DataModifiab
     }
 
     public String getSelectTransformation() {
+        Utils.PrintCaller((fileName, lineNum, methodName, thread)->{
+            System.out.printf("getSelectTransformation [%s]%s(%d).%s t:%s, %s\n", thread, fileName, lineNum, methodName, this.getFullName(), selectTransformation);
+        });
+
         return selectTransformation;
     }
 
     public void setSelectTransformation(String selectTransformation) {
+        Utils.PrintCaller((fileName, lineNum, methodName, thread)->{
+            System.out.printf("setSelectTransformation [%s]%s(%d).%s t:%s, %s\n", thread, fileName, lineNum, methodName, this.getFullName(), selectTransformation);
+        });
+
         this.selectTransformation = DataTypeManager.getCanonicalString(selectTransformation);
     }
 
@@ -354,6 +363,10 @@ public class Table extends ColumnSet<Schema> implements Modifiable, DataModifiab
     public void addColumn(Column column) {
         super.addColumn(column);
         column.setParent(this);
+
+        Utils.PrintCaller((file, line, method, thread)->{
+            //System.out.printf("addColumn: %s, caller: %s-%s(%d).%s\n", column.getFullName(), thread,file,line,method);
+        });
     }
 
     public long getLastDataModification() {

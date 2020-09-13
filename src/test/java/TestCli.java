@@ -19,7 +19,7 @@ public class TestCli {
             Connection c = td.connect("jdbc:teiid:my-vdb@mm://localhost:33060", null);
             Statement s = c.createStatement();
 
-            ResultSet rs = s.executeQuery("select * from \"my-schema\".\"testdb\".\"user\"");
+            ResultSet rs = s.executeQuery("select * from \"my-schema2\".\"testdb2\".\"user\" u1 left join \"my-schema\".\"testdb\".\"user\" u2 on u1.username = u2.username where u2.username in ('user100','user1000', 'user9999') order by u1.username desc");
             while (rs.next()) {
                 String id = rs.getString(1);
                 String name = rs.getString(2);
@@ -27,7 +27,7 @@ public class TestCli {
             }
         }
 
-        {
+        /*{
             TeiidDriver td = new TeiidDriver();
             Connection c = td.connect("jdbc:teiid:my-vdb@mm://localhost:33060", null);
             Statement s = c.createStatement();
@@ -39,7 +39,7 @@ public class TestCli {
                 String random = rs.getString(3);
                 System.out.printf("id: %s, name: %s, random: %s \n", id, name, random);
             }
-        }
+        }*/
     }
 
 }
