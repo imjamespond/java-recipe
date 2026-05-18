@@ -28,7 +28,7 @@ import java.util.Map;
 public class FoobarController {
 
     @GetMapping("/foobar")
-    public String foobar() {
+    public String foobar(Foobar foobar) {
         return "Hello Foobar";
     }
 
