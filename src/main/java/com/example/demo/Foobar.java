@@ -6,7 +6,7 @@ import org.springframework.lang.Nullable;
 public class Foobar {
 
     // @Schema(description = "Foo 对象，可以为 null", nullable = true) OPENAPI_30
-    @Schema(description = "Foo",  types = { "object",  "null" } )
+    @Schema(description = "nullable",  types = { "object",  "null" } )
     public Foo foo;
 
     public static class Foo {
