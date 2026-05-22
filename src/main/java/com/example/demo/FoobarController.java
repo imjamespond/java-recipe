@@ -28,6 +28,12 @@ import java.util.Map;
 public class FoobarController {
 
     @GetMapping("/foobar")
+    @ApiResponse(
+        responseCode = "200",
+        content = @Content(
+            schema = @Schema(types = {"string", "null"})
+        )
+    )
     public String foobar(Foobar foobar) {
         return "Hello Foobar";
     }
