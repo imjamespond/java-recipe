@@ -9,11 +9,18 @@ public class Foobar {
     @Schema(description = "nullable",  types = { "object",  "null" } )
     public Foo foo;
 
+    @Schema(oneOf = {Foobar.Foo.class, Foobar.Nullable.class, Nullable.class},  description = "Foo or Nullable")
+    public Object bar;
+
+    @Schema(oneOf = {Foobar.Foo.class, Nullable.class},  description = "Override Foo")
+    public Foo test;
+
     public static class Foo {
         @Schema(description = "value", types = {"string", "null"})
         public String value; 
     }
 
     public static class Nullable {
+      // 不能重名？
     }
 }

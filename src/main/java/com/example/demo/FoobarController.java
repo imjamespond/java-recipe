@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 
 import java.util.Arrays;
@@ -34,7 +35,12 @@ public class FoobarController {
             schema = @Schema(types = {"string", "null"})
         )
     )
-    public String foobar(Foobar foobar) {
+    public String foobar(
+      Foobar foobar, 
+      @RequestParam
+      @Schema(oneOf = {Foobar.Foo.class, Foobar.Nullable.class},  description = "Foo or Nullable")
+      Object bar
+    ) {
         return "Hello Foobar";
     }
 
